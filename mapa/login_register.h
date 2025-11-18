@@ -1,15 +1,24 @@
 #ifndef LOGIN_REGISTER_H
 #define LOGIN_REGISTER_H
 
-#include <QMainWindow>
+#include <QLabel>
+#include <QMouseEvent>
 
-class login : public QMainWindow
-{
+class ClickableLabel : public QLabel {
     Q_OBJECT
+
 public:
-    explicit login(QWidget *parent = nullptr);
+    explicit ClickableLabel(QWidget *parent = nullptr) : QLabel(parent) {}
+    ~ClickableLabel() = default;
 
 signals:
+    void clicked();
+
+protected:
+    void mousePressEvent(QMouseEvent *event) override {
+        emit clicked();
+        QLabel::mousePressEvent(event); // opcional pero recomendable
+    }
 };
 
-#endif // LOGIN_REGISTER_H
+#endif// LOGIN_REGISTER_H
