@@ -1,10 +1,10 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include "login_register.h"
+#include "ui_login_register.h"
 
-MainWindow::MainWindow(QWidget *parent)
+
+LoginRegister::LoginRegister(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::LoginRegister)
 {
     ui->setupUi(this);
 
@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 }
 
-MainWindow::~MainWindow()
+LoginRegister::~LoginRegister()
 {
     delete ui;
 }

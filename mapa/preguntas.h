@@ -1,13 +1,15 @@
 #ifndef PREGUNTAS_H
 #define PREGUNTAS_H
 
-#include <QWidget>
+#include <QMainWindow>
 
+QT_BEGIN_NAMESPACE
 namespace Ui {
 class Preguntas;
 }
+QT_END_NAMESPACE
 
-class Preguntas : public QWidget
+class Preguntas : public QMainWindow
 {
     Q_OBJECT
 

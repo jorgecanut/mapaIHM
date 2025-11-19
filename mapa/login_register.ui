@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>LoginRegister</class>
+ <widget class="QMainWindow" name="LoginRegister">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -18,7 +18,7 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page">
        <property name="sizePolicy">
@@ -41,7 +41,7 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <property name="spacing">
-          <number>-1</number>
+          <number>6</number>
          </property>
          <property name="leftMargin">
           <number>12</number>
@@ -103,7 +103,7 @@
           <widget class="QLineEdit" name="lineEdit_4">
            <property name="maximumSize">
             <size>
-             <width>900</width>
+             <width>300</width>
              <height>16777215</height>
             </size>
            </property>
@@ -142,7 +142,7 @@
           <widget class="QLineEdit" name="lineEdit_6">
            <property name="maximumSize">
             <size>
-             <width>900</width>
+             <width>300</width>
              <height>16777215</height>
             </size>
            </property>
@@ -323,9 +323,15 @@ ClickableLabel:hover {
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="minimumSize">
+             <size>
+              <width>300</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="maximumSize">
              <size>
-              <width>750</width>
+              <width>300</width>
               <height>16777215</height>
              </size>
             </property>
@@ -352,7 +358,26 @@ ClickableLabel:hover {
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_2"/>
+           <widget class="QLineEdit" name="lineEdit_2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>400</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>400</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
           </item>
           <item>
            <spacer name="verticalSpacer_2">
@@ -376,6 +401,24 @@ ClickableLabel:hover {
           </item>
           <item>
            <widget class="QLineEdit" name="lineEdit_3">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>300</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>300</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="echoMode">
              <enum>QLineEdit::EchoMode::Password</enum>
             </property>
@@ -413,9 +456,15 @@ ClickableLabel:hover {
           </item>
           <item>
            <widget class="QDateEdit" name="dateEdit">
+            <property name="minimumSize">
+             <size>
+              <width>200</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="maximumSize">
              <size>
-              <width>100</width>
+              <width>120</width>
               <height>16777215</height>
              </size>
             </property>
@@ -539,7 +588,7 @@ ClickableLabel:hover {
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>37</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

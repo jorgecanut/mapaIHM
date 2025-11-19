@@ -1,13 +1,15 @@
 #ifndef PERFIL_H
 #define PERFIL_H
 
-#include <QWidget>
+#include <QMainWindow>
 
+QT_BEGIN_NAMESPACE
 namespace Ui {
 class Perfil;
 }
+QT_END_NAMESPACE
 
-class Perfil : public QWidget
+class Perfil : public QMainWindow
 {
     Q_OBJECT
 
