@@ -34,6 +34,10 @@ LoginRegister::LoginRegister(QWidget *parent)
         }
     });
 
+    connect(ui->label_12, &ClickableLabel::clicked, this, [this](){
+        ui->stackedWidget->setCurrentWidget(ui->page_3);
+    });
+
 }
 
 LoginRegister::~LoginRegister()
