@@ -2,7 +2,7 @@
 #include "ui_preguntas.h"
 
 Preguntas::Preguntas(QWidget *parent)
-    : QWidget(parent)
+    : QMainWindow(parent)
     , ui(new Ui::Preguntas)
 {
     ui->setupUi(this);

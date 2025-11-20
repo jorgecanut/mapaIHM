@@ -2,7 +2,7 @@
 #include "ui_perfil.h"
 
 Perfil::Perfil(QWidget *parent)
-    : QWidget(parent)
+    : QMainWindow(parent)
     , ui(new Ui::Perfil)
 {
     ui->setupUi(this);
