@@ -440,7 +440,7 @@ public:
         LoginRegister->setCentralWidget(centralwidget);
         menubar = new QMenuBar(LoginRegister);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 794, 21));
+        menubar->setGeometry(QRect(0, 0, 794, 25));
         LoginRegister->setMenuBar(menubar);
         statusbar = new QStatusBar(LoginRegister);
         statusbar->setObjectName("statusbar");
@@ -448,7 +448,7 @@ public:
 
         retranslateUi(LoginRegister);
 
-        stackedWidget->setCurrentIndex(2);
+        stackedWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(LoginRegister);

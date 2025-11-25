@@ -30,7 +30,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page">
        <property name="sizePolicy">
@@ -693,7 +693,7 @@ ClickableLabel:hover {
      <x>0</x>
      <y>0</y>
      <width>794</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>
