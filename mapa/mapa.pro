@@ -13,13 +13,15 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     perfil.cpp \
-    preguntas.cpp
+    preguntas.cpp \
+    utils.cpp
 
 HEADERS += \
     login_register.h \
     mainwindow.h \
     perfil.h \
-    preguntas.h
+    preguntas.h \
+    utils.h
 
 FORMS += \
     login_register.ui \

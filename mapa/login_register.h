@@ -11,6 +11,8 @@ namespace Ui {
 class LoginRegister;
 }
 QT_END_NAMESPACE
+class QLabel;
+class QLineEdit;
 
 class LoginRegister : public QMainWindow
 {
@@ -18,9 +20,27 @@ class LoginRegister : public QMainWindow
 public:
     LoginRegister(QWidget *parent = nullptr);
     ~LoginRegister();
+
+private slots:
+    void onEmailEditingFinished();
+
 private:
     Ui::LoginRegister *ui;
     MainWindow *ventanaPrincipal;
+    bool validEmail;
+    bool validPassword;
+    static const int EQUALS = 0;
+
+    void manageError(QLabel *errorLabel, QLineEdit *edit, bool &flag);
+    void manageCorrect(QLabel *errorLabel, QLineEdit *edit, bool &flag);
+
+    void showErrorMessage(QLabel *errorLabel, QLineEdit *edit);
+    void hideErrorMessage(QLabel *errorLabel, QLineEdit *edit);
+
+    void checkEmail();
+    void checkPassword();
+
+    void updateAcceptEnabled();
 };
 
 class ClickableLabel : public QLabel {

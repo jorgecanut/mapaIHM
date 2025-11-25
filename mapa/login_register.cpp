@@ -1,12 +1,21 @@
 #include "login_register.h"
 #include "ui_login_register.h"
+#include "utils.h"
 
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
 
 LoginRegister::LoginRegister(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::LoginRegister)
+    , validEmail(false)
+    , validPassword(false)
 {
     ui->setupUi(this);
+
+    ui->lErrorEmail->setVisible(false);
+    ui->lErrorPassword->setVisible(false);
 
     // Conecta el click de label_3 para cambiar de página
     connect(ui->label_3, &ClickableLabel::clicked, this, [this]() {
@@ -26,17 +35,21 @@ LoginRegister::LoginRegister(QWidget *parent)
             ui->lineEdit_6->setEchoMode(QLineEdit::Password);
         }
     });
-    connect(ui->checkBox_3, &QCheckBox::toggled, this, [this](bool checked) {
+    connect(ui->checkContraseaRegister, &QCheckBox::toggled, this, [this](bool checked) {
         if (checked) {
-            ui->lineEdit_3->setEchoMode(QLineEdit::Normal);
+            ui->leContrasea->setEchoMode(QLineEdit::Normal);
         } else {
-            ui->lineEdit_3->setEchoMode(QLineEdit::Password);
+            ui->leContrasea->setEchoMode(QLineEdit::Password);
         }
     });
 
     connect(ui->label_12, &ClickableLabel::clicked, this, [this](){
         ui->stackedWidget->setCurrentWidget(ui->page_3);
     });
+    //
+    connect(ui->leEmail, &QLineEdit::editingFinished,this, &LoginRegister::onEmailEditingFinished);
+    connect(ui->leContrasea, &QLineEdit::editingFinished, this, &LoginRegister::checkPassword);
+
 //
 }
 
@@ -44,3 +57,87 @@ LoginRegister::~LoginRegister()
 {
     delete ui;
 }
+void LoginRegister::manageError(QLabel *errorLabel, QLineEdit *edit, bool &flag)
+{
+    flag = false;
+    showErrorMessage(errorLabel, edit);
+    edit->setFocus();
+    updateAcceptEnabled();
+}
+
+void LoginRegister::manageCorrect(QLabel *errorLabel, QLineEdit *edit, bool &flag)
+{
+    flag = true;
+    hideErrorMessage(errorLabel, edit);
+    updateAcceptEnabled();
+}
+
+void LoginRegister::showErrorMessage(QLabel *errorLabel, QLineEdit *edit)
+{
+    if (errorLabel) {
+        errorLabel->setVisible(true);
+    }
+    if (edit) {
+        edit->setStyleSheet("background-color: #FCE5E0;");
+    }
+}
+
+void LoginRegister::hideErrorMessage(QLabel *errorLabel, QLineEdit *edit)
+{
+    if (errorLabel) {
+        errorLabel->setVisible(false);
+    }
+    if (edit) {
+        edit->setStyleSheet("");
+    }
+}
+
+// ======= Validaciones =======
+
+void LoginRegister::checkEmail()
+{
+    const QString value = ui->leEmail->text();
+
+    if (!Utils::checkEmail(value)) {
+        manageError(ui->lErrorEmail, ui->leEmail, validEmail);
+    } else {
+        manageCorrect(ui->lErrorEmail, ui->leEmail, validEmail);
+    }
+}
+
+void LoginRegister::checkPassword()
+{
+    const QString value = ui->leContrasea->text();
+
+    if(!Utils::checkPassword(value)){
+        manageError(ui->lErrorPassword,ui->leContrasea, validPassword);
+    } else {
+        manageCorrect(ui->lErrorPassword,ui->leContrasea,validPassword);
+    }
+}
+
+// ======= Slots de edición finalizada =======
+
+void LoginRegister::onEmailEditingFinished()
+{
+    checkEmail();
+}
+
+
+
+
+
+// ======= Botones =======
+
+
+
+
+
+// ======= Habilitar / deshabilitar botón Aceptar =======
+
+void LoginRegister::updateAcceptEnabled()
+{
+    bool allValid = validEmail && validPassword;
+    ui->pushButton_2->setEnabled(allValid);
+}
+
