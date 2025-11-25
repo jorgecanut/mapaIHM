@@ -5,6 +5,9 @@
 LoginRegister::LoginRegister(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::LoginRegister)
+    , validEmail(false)
+    , validPassword(false)
+    , equalPasswords(false)
 {
     ui->setupUi(this);
 
@@ -21,16 +24,16 @@ LoginRegister::LoginRegister(QWidget *parent)
     });
     connect(ui->checkBox_2, &QCheckBox::toggled, this, [this](bool checked) {
         if (checked) {
-            ui->lineEdit_6->setEchoMode(QLineEdit::Normal);
+            ui->lePasswordLogin->setEchoMode(QLineEdit::Normal);
         } else {
-            ui->lineEdit_6->setEchoMode(QLineEdit::Password);
+            ui->lePasswordLogin->setEchoMode(QLineEdit::Password);
         }
     });
     connect(ui->checkBox_3, &QCheckBox::toggled, this, [this](bool checked) {
         if (checked) {
-            ui->lineEdit_3->setEchoMode(QLineEdit::Normal);
+            ui->lePasswordRegister->setEchoMode(QLineEdit::Normal);
         } else {
-            ui->lineEdit_3->setEchoMode(QLineEdit::Password);
+            ui->lePasswordRegister->setEchoMode(QLineEdit::Password);
         }
     });
 
@@ -38,9 +41,40 @@ LoginRegister::LoginRegister(QWidget *parent)
         ui->stackedWidget->setCurrentWidget(ui->page_3);
     });
 
+    // Para saber si has terminado de editar los campos (falta repetir contraseña en el register)
+    connect(ui->leUserRegister, &QLineEdit::editingFinished,this, &LoginRegister::onUserEditingFinished);
+    connect(ui->leMailRegister, &QLineEdit::editingFinished,this, &LoginRegister::onEmailEditingFinished);
+    connect(ui->lePasswordRegister, &QLineEdit::editingFinished,this, &::LoginRegister::onPasswordEditingFinished);
+
+    // En el login se debe poder introducir un mail también
+    connect(ui->leUserLogin, &QLineEdit::editingFinished,this, &LoginRegister::onUserEditingFinished);
+    connect(ui->lePasswordLogin, &QLineEdit::editingFinished,this, &::LoginRegister::onPasswordEditingFinished);
+
+    // Botones (falta boton de cancelar)
+    connect(ui->bConfirmarRegister, &QPushButton::clicked,this,&LoginRegister::onAcceptClicked);
+    connect(ui->bAceptarLogin, &QPushButton::clicked,this,&LoginRegister::onAcceptClicked);
 }
 
 LoginRegister::~LoginRegister()
 {
     delete ui;
+}
+
+
+void LoginRegister::onEmailEditingFinished()
+{
+    checkEmail();
+    updateAcceptEnabled();
+}
+
+void LoginRegister::onPasswordEditingFinished()
+{
+    checkPassword();
+    updateAcceptEnabled();
+}
+
+void LoginRegister::onUserEditingFinished()
+{
+    checkUser();
+    updateAcceptEnabled();
 }
