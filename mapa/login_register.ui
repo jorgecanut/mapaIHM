@@ -173,7 +173,8 @@
              <item>
               <widget class="ClickableLabel" name="label_12">
                <property name="styleSheet">
-                <string notr="true">color: #0066cc;
+                <string notr="true">ClickableLabel {
+    color: #0066cc;
 }
 ClickableLabel:hover {
     color: #004999;
@@ -243,7 +244,8 @@ ClickableLabel:hover {
            <item>
             <widget class="ClickableLabel" name="label_10">
              <property name="styleSheet">
-              <string notr="true">color: #0066cc;
+              <string notr="true">ClickableLabel {
+    color: #0066cc;
 }
 ClickableLabel:hover {
     color: #004999;
@@ -657,7 +659,8 @@ ClickableLabel:hover {
           <item>
            <widget class="ClickableLabel" name="label_3">
             <property name="styleSheet">
-             <string notr="true">color: #0066cc;
+             <string notr="true">ClickableLabel {
+    color: #0066cc;
 }
 ClickableLabel:hover {
     color: #004999;
