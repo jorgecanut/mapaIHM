@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>icons/compass_leg.svg</file>
+        <file>icons/transportador.svg</file>
+        <file>icons/ruler.svg</file>
+    </qresource>
+</RCC>
