@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>794</width>
-    <height>555</height>
+    <width>803</width>
+    <height>561</height>
    </rect>
   </property>
   <property name="maximumSize">
    <size>
     <width>16777215</width>
-    <height>555</height>
+    <height>561</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -299,7 +299,7 @@ ClickableLabel:hover {
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0">
+         <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0">
           <property name="spacing">
            <number>5</number>
           </property>
@@ -500,17 +500,39 @@ ClickableLabel:hover {
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="lErrorPassword">
-              <property name="styleSheet">
-               <string notr="true">color:red</string>
+             <spacer name="horizontalSpacer_4">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
               </property>
-              <property name="text">
-               <string>La contraseña debe incluir caracteres especiales y numéricos</string>
+              <property name="sizeType">
+               <enum>QSizePolicy::Policy::Fixed</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="leRepContrasea">
+              <property name="minimumSize">
+               <size>
+                <width>300</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>300</width>
+                <height>16777215</height>
+               </size>
               </property>
              </widget>
             </item>
             <item>
-             <spacer name="horizontalSpacer_4">
+             <spacer name="horizontalSpacer_5">
               <property name="orientation">
                <enum>Qt::Orientation::Horizontal</enum>
               </property>
@@ -523,6 +545,16 @@ ClickableLabel:hover {
              </spacer>
             </item>
            </layout>
+          </item>
+          <item>
+           <widget class="QLabel" name="lErrorPassword">
+            <property name="styleSheet">
+             <string notr="true">color:red</string>
+            </property>
+            <property name="text">
+             <string>La contraseña debe incluir caracteres especiales y numéricos</string>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QCheckBox" name="checkContraseaRegister">
@@ -749,8 +781,8 @@ ClickableLabel:hover {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>794</width>
-     <height>37</height>
+     <width>803</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>

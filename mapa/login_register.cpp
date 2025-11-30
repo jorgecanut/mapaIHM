@@ -49,6 +49,7 @@ LoginRegister::LoginRegister(QWidget *parent)
     //
     connect(ui->leEmail, &QLineEdit::editingFinished,this, &LoginRegister::onEmailEditingFinished);
     connect(ui->leContrasea, &QLineEdit::editingFinished, this, &LoginRegister::checkPassword);
+    connect(ui->leRepContrasea, &QLineEdit::editingFinished, this, &LoginRegister::checkEqualPassword);
 
 //
 }
@@ -113,6 +114,17 @@ void LoginRegister::checkPassword()
         manageError(ui->lErrorPassword,ui->leContrasea, validPassword);
     } else {
         manageCorrect(ui->lErrorPassword,ui->leContrasea,validPassword);
+    }
+}
+
+void LoginRegister::checkEqualPassword(){
+    const QString value_1 = ui->leContrasea->text();
+    const QString value_2 = ui->leRepContrasea-> text();
+
+    if(!Utils::checkRepPassword(value_2, value_1)){
+        manageError(ui->lErrorPassword, ui->leRepContrasea, validRepPassword);
+    }else{
+        manageCorrect(ui->lErrorPassword, ui->leRepContrasea, validRepPassword);
     }
 }
 
