@@ -16,6 +16,7 @@ LoginRegister::LoginRegister(QWidget *parent)
 
     ui->lErrorEmail->setVisible(false);
     ui->lErrorPassword->setVisible(false);
+    ui->lErrorRepPassword->setVisible(false);
 
     // Conecta el click de label_3 para cambiar de página
     connect(ui->label_3, &ClickableLabel::clicked, this, [this]() {
@@ -40,6 +41,13 @@ LoginRegister::LoginRegister(QWidget *parent)
             ui->leContrasea->setEchoMode(QLineEdit::Normal);
         } else {
             ui->leContrasea->setEchoMode(QLineEdit::Password);
+        }
+    });
+    connect(ui->checkContraseaEqualRegister, &QCheckBox::toggled, this, [this](bool checked) {
+        if (checked) {
+            ui->leRepContrasea->setEchoMode(QLineEdit::Normal);
+        } else {
+            ui->leRepContrasea->setEchoMode(QLineEdit::Password);
         }
     });
 
@@ -122,9 +130,9 @@ void LoginRegister::checkEqualPassword(){
     const QString value_2 = ui->leRepContrasea-> text();
 
     if(!Utils::checkRepPassword(value_2, value_1)){
-        manageError(ui->lErrorPassword, ui->leRepContrasea, validRepPassword);
+        manageError(ui->lErrorRepPassword, ui->leRepContrasea, validRepPassword);
     }else{
-        manageCorrect(ui->lErrorPassword, ui->leRepContrasea, validRepPassword);
+        manageCorrect(ui->lErrorRepPassword, ui->leRepContrasea, validRepPassword);
     }
 }
 

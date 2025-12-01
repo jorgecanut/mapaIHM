@@ -466,11 +466,22 @@ ClickableLabel:hover {
            </spacer>
           </item>
           <item>
-           <widget class="QLabel" name="label_4">
-            <property name="text">
-             <string>Contraseña</string>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_7">
+            <item>
+             <widget class="QLabel" name="label_15">
+              <property name="text">
+               <string>Contraseña</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>Repetir contraseña</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -509,7 +520,7 @@ ClickableLabel:hover {
               </property>
               <property name="sizeHint" stdset="0">
                <size>
-                <width>40</width>
+                <width>48</width>
                 <height>20</height>
                </size>
               </property>
@@ -529,6 +540,9 @@ ClickableLabel:hover {
                 <height>16777215</height>
                </size>
               </property>
+              <property name="echoMode">
+               <enum>QLineEdit::EchoMode::Password</enum>
+              </property>
              </widget>
             </item>
             <item>
@@ -547,24 +561,49 @@ ClickableLabel:hover {
            </layout>
           </item>
           <item>
-           <widget class="QLabel" name="lErrorPassword">
-            <property name="styleSheet">
-             <string notr="true">color:red</string>
-            </property>
-            <property name="text">
-             <string>La contraseña debe incluir caracteres especiales y numéricos</string>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_9">
+            <item>
+             <widget class="QLabel" name="lErrorPassword">
+              <property name="styleSheet">
+               <string notr="true">color:red</string>
+              </property>
+              <property name="text">
+               <string>La contraseña debe incluir caracteres especiales y numéricos</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lErrorRepPassword">
+              <property name="styleSheet">
+               <string notr="true">color:red</string>
+              </property>
+              <property name="text">
+               <string>Las contraseñas no coinciden</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
-           <widget class="QCheckBox" name="checkContraseaRegister">
-            <property name="text">
-             <string>Mostrar contraseña</string>
-            </property>
-            <property name="autoExclusive">
-             <bool>false</bool>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <item>
+             <widget class="QCheckBox" name="checkContraseaRegister">
+              <property name="text">
+               <string>Mostrar contraseña</string>
+              </property>
+              <property name="autoExclusive">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="checkContraseaEqualRegister">
+              <property name="text">
+               <string>Mostrar contraseña</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
            <spacer name="verticalSpacer_9">
@@ -782,7 +821,7 @@ ClickableLabel:hover {
      <x>0</x>
      <y>0</y>
      <width>803</width>
-     <height>21</height>
+     <height>37</height>
     </rect>
    </property>
   </widget>
