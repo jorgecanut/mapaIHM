@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "login_register.h"
+#include "navigation.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
