@@ -2,6 +2,9 @@
 #define PERFIL_H
 
 #include <QMainWindow>
+#include <QLabel>
+#include <QLineEdit>
+#include "mainwindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -19,6 +22,26 @@ public:
 
 private:
     Ui::Perfil *ui;
+    bool validEmail;
+    bool validPassword;
+    bool validRepPassword;
+
+    void manageError(QLabel *errorLabel, QLineEdit *edit, bool &flag);
+    void manageCorrect(QLabel *errorLabel, QLineEdit *edit, bool &flag);
+
+    void showErrorMessage(QLabel *errorLabel, QLineEdit *edit);
+    void hideErrorMessage(QLabel *errorLabel, QLineEdit *edit);
+
+    void checkEmail();
+    void checkPassword();
+
+    void updateAcceptEnabled();
+
+private slots:
+    void onEmailEditingFinished();
+
+signals:
+    void clicked();
 };
 
 #endif // PERFIL_H

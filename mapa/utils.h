@@ -8,5 +8,6 @@ class Utils
 public:
     static bool checkEmail(const QString &email);
     static bool checkPassword(const QString &password);
+    static bool checkRepPassword(const QString &repPassword, const QString &password);
 };
 #endif // UTILS_H
