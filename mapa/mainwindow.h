@@ -2,7 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
+#include <QGraphicsScene>
+#include <QGraphicsScale>
+#include <QGraphicsView>
+#include <QGraphicsPixmapItem>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -20,5 +23,15 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+    QGraphicsScene *scene;
+    QGraphicsView *view;
+
+    float escalado;
+    void applyZoom(double factor);
+
+private slots:
+    void zoomIn();
+    void zoomOut();
 };
 #endif // MAINWINDOW_H
