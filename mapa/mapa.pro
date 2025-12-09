@@ -15,6 +15,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    iconcombobox.cpp \
     login_register.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -23,6 +24,7 @@ SOURCES += \
     utils.cpp
 
 HEADERS += \
+    iconcombobox.h \
     login_register.h \
     mainwindow.h \
     perfil.h \

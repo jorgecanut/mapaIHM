@@ -1,6 +1,7 @@
 #include "perfil.h"
 #include "ui_perfil.h"
 #include "utils.h"
+#include "iconcombobox.h"
 
 Perfil::Perfil(QWidget *parent)
     : QMainWindow(parent)
@@ -13,6 +14,18 @@ Perfil::Perfil(QWidget *parent)
     ui->lErrorCorreo->setVisible(false);
     ui->lErrorContrasea->setVisible(false);
     ui->lErrorNombreUsuario->setVisible(false);
+
+    ui->cbAvatar->addIconItem(":/iconos_usuarios/aguacate.svg");
+    ui->cbAvatar->addIconItem(":/iconos_usuarios/arana.svg");
+    ui->cbAvatar->addIconItem(":/iconos_usuarios/batman.svg");
+    ui->cbAvatar->addIconItem(":/iconos_usuarios/cactus.svg");
+    ui->cbAvatar->addIconItem(":/iconos_usuarios/cafe.svg");
+    ui->cbAvatar->addIconItem(":/iconos_usuarios/joker.svg");
+    ui->cbAvatar->addIconItem(":/iconos_usuarios/oso.svg");
+    ui->cbAvatar->addIconItem(":/iconos_usuarios/perezoso.svg");
+    ui->cbAvatar->addIconItem(":/iconos_usuarios/vampiro.svg");
+    ui->cbAvatar->addIconItem(":/iconos_usuarios/zombie.svg");
+    ui->cbAvatar->setCurrentIndex(-1);
 
     connect(ui->cMostrarContrasea, &QCheckBox::toggled, this, [this](bool checked) {
         if (checked) {

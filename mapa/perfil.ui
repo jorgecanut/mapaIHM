@@ -60,17 +60,17 @@
      </widget>
     </item>
     <item>
-     <widget class="QComboBox" name="cbAvatar">
+     <widget class="IconComboBox" name="cbAvatar">
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>100</height>
+        <height>75</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>200</width>
-        <height>300</height>
+        <width>150</width>
+        <height>75</height>
        </size>
       </property>
      </widget>
@@ -309,6 +309,13 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>IconComboBox</class>
+   <extends>QComboBox</extends>
+   <header location="global">iconcombobox.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
