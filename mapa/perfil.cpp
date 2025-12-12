@@ -8,12 +8,16 @@ Perfil::Perfil(QWidget *parent)
     , ui(new Ui::Perfil)
     , validEmail(false)
     , validPassword(false)
+    , validAge(false)
 {
     ui->setupUi(this);
 
     ui->lErrorCorreo->setVisible(false);
     ui->lErrorContrasea->setVisible(false);
     ui->lErrorNombreUsuario->setVisible(false);
+    ui->lErrorFecha->setVisible(false);
+
+    ui->leContrasea->setEchoMode(QLineEdit::Password);
 
     ui->cbAvatar->addIconItem(":/iconos_usuarios/aguacate.svg");
     ui->cbAvatar->addIconItem(":/iconos_usuarios/arana.svg");
@@ -105,6 +109,20 @@ void Perfil::checkPassword()
     }
 }
 
+void Perfil::checkDate(){
+    const QDate today_date = QDate::currentDate();
+    const QDate date = ui->daFechaNacimiento->date();
+
+    if(date.addYears(16) > today_date){
+        validAge = false;
+        ui->lErrorFecha->setVisible(true);
+        ui->daFechaNacimiento->setFocus();
+    }else{
+        validAge = true;
+        ui->lErrorFecha->setVisible(false);
+    }
+    updateAcceptEnabled();
+}
 // ======= Slots de edición finalizada =======
 
 void Perfil::onEmailEditingFinished()
