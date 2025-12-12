@@ -25,6 +25,7 @@ private:
     bool validEmail;
     bool validPassword;
     bool validRepPassword;
+    bool validAge;
 
     void manageError(QLabel *errorLabel, QLineEdit *edit, bool &flag);
     void manageCorrect(QLabel *errorLabel, QLineEdit *edit, bool &flag);
@@ -34,6 +35,7 @@ private:
 
     void checkEmail();
     void checkPassword();
+    void checkDate();
 
     void updateAcceptEnabled();
 
