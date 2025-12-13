@@ -51,9 +51,6 @@ LoginRegister::LoginRegister(QWidget *parent)
         }
     });
 
-    connect(ui->label_12, &ClickableLabel::clicked, this, [this](){
-        ui->stackedWidget->setCurrentWidget(ui->page_3);
-    });
     //
     connect(ui->leEmail, &QLineEdit::editingFinished,this, &LoginRegister::onEmailEditingFinished);
     connect(ui->leContrasea, &QLineEdit::editingFinished, this, &LoginRegister::checkPassword);

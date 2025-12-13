@@ -60,11 +60,44 @@
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="lAvatar">
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <item>
+       <widget class="QLabel" name="lAvatar">
+        <property name="minimumSize">
+         <size>
+          <width>300</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pbCambiarAvatar">
+        <property name="text">
+         <string>Clicka para cambiar avatar</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_5">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Policy::Expanding</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
     </item>
     <item>
      <spacer name="verticalSpacer">
@@ -299,6 +332,9 @@
     </item>
     <item>
      <widget class="QPushButton" name="pbConfirmarCambios">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="maximumSize">
        <size>
         <width>200</width>
@@ -306,7 +342,7 @@
        </size>
       </property>
       <property name="layoutDirection">
-       <enum>Qt::LayoutDirection::RightToLeft</enum>
+       <enum>Qt::LayoutDirection::LeftToRight</enum>
       </property>
       <property name="text">
        <string>CONFIRMAR CAMBIOS</string>

@@ -1,7 +1,6 @@
 #include "perfil.h"
 #include "ui_perfil.h"
 #include "utils.h"
-#include "iconcombobox.h"
 
 Perfil::Perfil(QWidget *parent)
     : QMainWindow(parent)
@@ -17,9 +16,6 @@ Perfil::Perfil(QWidget *parent)
     ui->lErrorNombreUsuario->setVisible(false);
     ui->lErrorFecha->setVisible(false);
 
-    ui->lAvatar->setScaledContents(true);
-    //ui->label_6->setPixmap(QPixmap(fileName));
-
     ui->leContrasea->setEchoMode(QLineEdit::Password);
 
 
@@ -34,6 +30,8 @@ Perfil::Perfil(QWidget *parent)
     connect(ui->leCorreo, &QLineEdit::editingFinished,this, &Perfil::onEmailEditingFinished);
     connect(ui->leContrasea, &QLineEdit::editingFinished, this, &Perfil::checkPassword);
     connect(ui->daFechaNacimiento, &QDateEdit::editingFinished, this, &Perfil::checkDate);
+
+    connect(ui->pbCambiarAvatar, &QPushButton::clicked, this, &Perfil::seleccionAvatar);
 //TODO: funcion para comprobar que el usuario ya existe o no
     //connect(ui->leNombreUsuario, &QLineEdit::editingFinished, this, &Perfil::);
 }
@@ -124,11 +122,29 @@ void Perfil::onEmailEditingFinished()
 }
 
 
+// ======Cargar imagenes de la galeria=====
+void Perfil::seleccionAvatar(){
+    QString fileName = QFileDialog::getOpenFileName(this, "Seleccionar avatar", QDir::homePath(), "Imagenes:(*.png *.jpg *.jpeg *.bmp *.svg *.avif)");
+
+    if(fileName.isEmpty()) return;
+
+    QPixmap avatar(fileName);
+    if(avatar.isNull()){
+        qDebug() << "No se pudo cargar: " << fileName;
+        return;
+    }
+    ui->lAvatar->setFixedSize(128,128);
+    ui->lAvatar->setScaledContents(true);
+    ui->lAvatar->setPixmap(avatar);
+
+    ui->lAvatar->update();
+}
+
 // ======= Habilitar / deshabilitar botón Aceptar =======
 
 void Perfil::updateAcceptEnabled()
 {
-    bool allValid = validEmail && validPassword;
+    bool allValid = validEmail && validPassword && validAge;
     ui->pbConfirmarCambios->setEnabled(allValid);
 }
 

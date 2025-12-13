@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QLineEdit>
+#include <QFileDialog>
 #include "mainwindow.h"
 
 QT_BEGIN_NAMESPACE
@@ -36,6 +37,8 @@ private:
     void checkEmail();
     void checkPassword();
     void checkDate();
+
+    void seleccionAvatar();
 
     void updateAcceptEnabled();
 
