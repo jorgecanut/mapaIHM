@@ -6,6 +6,8 @@
 #include <QGraphicsScale>
 #include <QGraphicsView>
 #include <QGraphicsPixmapItem>
+#include <QGraphicsSvgItem>
+#include <QWheelEvent>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -30,8 +32,24 @@ private:
     float escalado;
     void applyZoom(double factor);
 
+    QGraphicsSvgItem *reglaActual;
+    QGraphicsSvgItem *compasActual;
+    QGraphicsSvgItem *transportadorActual;
+    bool reglaPuesta = false;
+    bool transportadorPuesto = false;
+    bool compasPuesto = false;
+    void cambiarCursor(QGraphicsSvgItem *svgItem);
+
+
 private slots:
     void zoomIn();
     void zoomOut();
+
+    void regla();
+    void transportador();
+    void compas();
+
+protected:
+    bool eventFilter(QObject *obj, QEvent *event) override;
 };
 #endif // MAINWINDOW_H
