@@ -9,8 +9,8 @@ int main(int argc, char *argv[])
     LoginRegister login;
     //login.show();
     Perfil perfil;
-    perfil.show();
+    //perfil.show();
     MainWindow w;
-    //w.show();
+    w.show();
     return a.exec();
 }
