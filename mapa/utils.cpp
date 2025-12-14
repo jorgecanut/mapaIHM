@@ -29,16 +29,9 @@ bool Utils::checkPassword(const QString &password)
 
 bool Utils::checkRepPassword(const QString &repPassword, const QString &password){
 
-    //Comprobamos primero si tienes el mismo número de carácteres si no es asi ya no son iguales
-    if(password.length() != repPassword.length()){
-        return false;
-    }
 
-    //Comprobamos letra a letra si son iguales
-    for(int i = 0; i <= password.length(); i++){
-        if(repPassword[i] != password[i]){
-            return false;
-        }
+    if(repPassword != password){
+        return false;
     }
     return true;
 }

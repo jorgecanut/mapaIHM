@@ -1,7 +1,7 @@
 #include "login_register.h"
 #include "ui_login_register.h"
 #include "utils.h"
-
+#include "mainwindow.h"
 
 
 LoginRegister::LoginRegister(QWidget *parent)
@@ -9,6 +9,8 @@ LoginRegister::LoginRegister(QWidget *parent)
     , ui(new Ui::LoginRegister)
     , validEmail(false)
     , validPassword(false)
+    , validRepPassword(false)
+    , validUsername(false)
 {
     ui->setupUi(this);
 
@@ -58,6 +60,7 @@ LoginRegister::LoginRegister(QWidget *parent)
     connect(ui->leRepContrasea, &QLineEdit::editingFinished, this, &LoginRegister::checkEqualPassword);
     connect(ui->leUsuario, &QLineEdit::editingFinished, this, &LoginRegister::checkUserName);
     connect(ui->pbInicioSesion, &QPushButton::clicked, this, &LoginRegister::user_contr_correct);
+    connect(ui->pushButton, &QPushButton::clicked, this, &LoginRegister::addUserButton);
 
 //
 }
@@ -151,8 +154,15 @@ void LoginRegister::checkUserName(){
 void LoginRegister::user_contr_correct(){
     Navigation &nav = Navigation::instance();
     if(nav.findUser(ui->leUsuario->text())){
+        validUsername = true;
         if(nav.findUser(ui->leUsuario->text())->password() == ui->leContrasea_IS->text()){
-            //w.show();
+            MainWindow *ventanaPrincipal = new MainWindow();
+
+            // 2. Mostrar la ventana principal
+            ventanaPrincipal->show();
+
+            // 3. Cerrar la ventana de Login actual
+            this->close();
         }else{
             ui->lErrorContrasea_IS->setVisible(true);
         }
@@ -177,7 +187,7 @@ void LoginRegister::onEmailEditingFinished()
 
 
 // ======= Añadir Usuario en Base de Datos =======
-void LoginRegister::on_addDummyUserButton_clicked()
+void LoginRegister::addUserButton()
 {
     try {
         Navigation &nav = Navigation::instance();
@@ -190,7 +200,17 @@ void LoginRegister::on_addDummyUserButton_clicked()
                    QImage("zombie.svg"),
                    ui->dateEdit->date());
             nav.addUser(u);
+
+            MainWindow *ventanaPrincipal = new MainWindow();
+
+            // 2. Mostrar la ventana principal
+            ventanaPrincipal->show();
+
+            // 3. Cerrar la ventana de Login actual
+            this->close();
         }
+
+
 
     } catch (const NavDAOException &ex) {
         QMessageBox::critical(this, tr("DB error"), ex.what());
@@ -201,7 +221,7 @@ void LoginRegister::on_addDummyUserButton_clicked()
 
 void LoginRegister::updateAcceptEnabled()
 {
-    bool allValid = validEmail && validPassword;
+    bool allValid = validEmail && validPassword && validUsername && validRepPassword;
     ui->pbInicioSesion->setEnabled(allValid);
 }
 

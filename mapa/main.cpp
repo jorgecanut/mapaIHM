@@ -8,9 +8,11 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     LoginRegister login;
     login.show();
+    MainWindow w;
+
+    //w.show();
     Perfil perfil;
     //perfil.show();
-    MainWindow w;
-    //w.show();
+
     return a.exec();
 }

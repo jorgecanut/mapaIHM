@@ -28,7 +28,7 @@ public:
 
 private slots:
     void onEmailEditingFinished();
-    void on_addDummyUserButton_clicked();
+    void addUserButton();
 
 private:
     Ui::LoginRegister *ui;
