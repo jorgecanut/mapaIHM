@@ -32,13 +32,15 @@ private:
     float escalado;
     void applyZoom(double factor);
 
+
     QGraphicsSvgItem *reglaActual;
     QGraphicsSvgItem *compasActual;
     QGraphicsSvgItem *transportadorActual;
-    bool reglaPuesta = false;
-    bool transportadorPuesto = false;
-    bool compasPuesto = false;
-    void cambiarCursor(QGraphicsSvgItem *svgItem);
+    // Para saber si estan puestas o no
+    bool reglaPuesta;
+    bool transportadorPuesto;
+    bool compasPuesto;
+    void ponerSvg(QGraphicsSvgItem *svgItem, int multiplier);
 
 
 private slots:
