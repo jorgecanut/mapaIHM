@@ -5,6 +5,8 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QFileDialog>
+#include <navigation.h>
+#include <QMessageBox>
 #include "mainwindow.h"
 
 QT_BEGIN_NAMESPACE
@@ -27,6 +29,7 @@ private:
     bool validPassword;
     bool validRepPassword;
     bool validAge;
+    bool validUsername;
 
     void manageError(QLabel *errorLabel, QLineEdit *edit, bool &flag);
     void manageCorrect(QLabel *errorLabel, QLineEdit *edit, bool &flag);
@@ -37,6 +40,7 @@ private:
     void checkEmail();
     void checkPassword();
     void checkDate();
+    void checkUserName();
 
     void seleccionAvatar();
 
@@ -44,6 +48,7 @@ private:
 
 private slots:
     void onEmailEditingFinished();
+    void updateUserButton();
 
 signals:
     void clicked();

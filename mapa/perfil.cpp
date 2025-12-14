@@ -30,10 +30,13 @@ Perfil::Perfil(QWidget *parent)
     connect(ui->leCorreo, &QLineEdit::editingFinished,this, &Perfil::onEmailEditingFinished);
     connect(ui->leContrasea, &QLineEdit::editingFinished, this, &Perfil::checkPassword);
     connect(ui->daFechaNacimiento, &QDateEdit::editingFinished, this, &Perfil::checkDate);
+    connect(ui->leNombreUsuario, &QLineEdit::editingFinished, this, &Perfil::checkUserName);
 
     connect(ui->pbCambiarAvatar, &QPushButton::clicked, this, &Perfil::seleccionAvatar);
-//TODO: funcion para comprobar que el usuario ya existe o no
-    //connect(ui->leNombreUsuario, &QLineEdit::editingFinished, this, &Perfil::);
+
+
+
+    connect(ui->pbConfirmarCambios, &QPushButton::clicked, this, &Perfil::updateUserButton);
 }
 
 Perfil::~Perfil()
@@ -114,6 +117,18 @@ void Perfil::checkDate(){
     }
     updateAcceptEnabled();
 }
+
+void Perfil::checkUserName(){
+    Navigation &nav = Navigation::instance();
+    if(!nav.findUser(ui->leNombreUsuario->text())){
+        validUsername = true;
+        ui->lErrorNombreUsuario->setVisible(false);
+    }else{
+        validUsername = false;
+        ui->lErrorNombreUsuario->setVisible(true);
+        ui->leNombreUsuario->setFocus();
+    }
+}
 // ======= Slots de edición finalizada =======
 
 void Perfil::onEmailEditingFinished()
@@ -121,6 +136,24 @@ void Perfil::onEmailEditingFinished()
     checkEmail();
 }
 
+void Perfil::updateUserButton()
+{
+    try {
+        Navigation &nav = Navigation::instance();
+        if (nav.findUser(ui->leNombreUsuario->text())) {
+            User u(ui->leNombreUsuario->text(),
+                   ui->leCorreo->text(),
+                   ui->leContrasea->text(),
+                   ui->lAvatar->pixmap().toImage(),
+                   ui->daFechaNacimiento->date());
+            nav.updateUser(u);
+            QMessageBox::information(this, "Información", "Información actualizada correctamente");
+        }
+
+    } catch (const NavDAOException &ex) {
+        QMessageBox::critical(this, tr("DB error"), ex.what());
+    }
+}
 
 // ======Cargar imagenes de la galeria=====
 void Perfil::seleccionAvatar(){

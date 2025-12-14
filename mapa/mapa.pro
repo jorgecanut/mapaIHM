@@ -4,10 +4,12 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 QT += widgets sql
 
-QT += svgwidgets
-
 INCLUDEPATH += $$PWD/lib/include
 LIBS += -L$$PWD/lib -lnavlib
+
+QT += svgwidgets
+
+
 
 
 CONFIG += c++17

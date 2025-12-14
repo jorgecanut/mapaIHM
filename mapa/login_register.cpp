@@ -2,9 +2,7 @@
 #include "ui_login_register.h"
 #include "utils.h"
 
-#include <QLabel>
-#include <QLineEdit>
-#include <QPushButton>
+
 
 LoginRegister::LoginRegister(QWidget *parent)
     : QMainWindow(parent)
@@ -148,7 +146,31 @@ void LoginRegister::onEmailEditingFinished()
 
 
 
+// ======= Añadir Usuario en Base de Datos =======
+void LoginRegister::on_addDummyUserButton_clicked()
+{
+    try {
+        Navigation &nav = Navigation::instance();
 
+        // Crear usuario si no existe
+        if (!nav.findUser("alumno")) {
+            User u("alumno",
+                   "alumno@example.com",
+                   "1234",
+                   QImage(),
+                   QDate(2000, 1, 1));
+            nav.addUser(u);
+        }
+
+        // Añadir una sesión de prueba usando SIEMPRE Navigation::addSession
+        Session s(QDateTime::currentDateTime(), 10, 2);
+        nav.addSession("alumno", s);
+
+
+    } catch (const NavDAOException &ex) {
+        QMessageBox::critical(this, tr("DB error"), ex.what());
+    }
+}
 
 // ======= Habilitar / deshabilitar botón Aceptar =======
 

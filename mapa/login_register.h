@@ -4,7 +4,12 @@
 #include <QLabel>
 #include <QMouseEvent>
 #include <QMainWindow>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QMessageBox>
 #include "mainwindow.h"
+#include "navdaoexception.h"
+#include "navigation.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -23,6 +28,7 @@ public:
 
 private slots:
     void onEmailEditingFinished();
+    void on_addDummyUserButton_clicked();
 
 private:
     Ui::LoginRegister *ui;
