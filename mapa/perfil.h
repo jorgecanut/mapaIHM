@@ -40,7 +40,7 @@ private:
     void checkEmail();
     void checkPassword();
     void checkDate();
-    void checkUserName();
+
 
     void seleccionAvatar();
 

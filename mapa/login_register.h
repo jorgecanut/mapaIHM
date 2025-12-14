@@ -36,6 +36,7 @@ private:
     bool validEmail;
     bool validPassword;
     bool validRepPassword;
+    bool validUsername;
     static const int EQUALS = 0;
 
     void manageError(QLabel *errorLabel, QLineEdit *edit, bool &flag);
@@ -47,6 +48,8 @@ private:
     void checkEmail();
     void checkPassword();
     void checkEqualPassword();
+    void checkUserName();
+    void user_contr_correct();
 
     void updateAcceptEnabled();
 };

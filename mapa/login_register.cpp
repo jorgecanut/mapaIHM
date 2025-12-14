@@ -15,6 +15,9 @@ LoginRegister::LoginRegister(QWidget *parent)
     ui->lErrorEmail->setVisible(false);
     ui->lErrorPassword->setVisible(false);
     ui->lErrorRepPassword->setVisible(false);
+    ui->lErrorNombreUsuario->setVisible(false);
+    ui->lErrorUsuario_IS->setVisible(false);
+    ui->lErrorContrasea_IS->setVisible(false);
 
     // Conecta el click de label_3 para cambiar de página
     connect(ui->label_3, &ClickableLabel::clicked, this, [this]() {
@@ -29,9 +32,9 @@ LoginRegister::LoginRegister(QWidget *parent)
     });
     connect(ui->checkBox_2, &QCheckBox::toggled, this, [this](bool checked) {
         if (checked) {
-            ui->lineEdit_6->setEchoMode(QLineEdit::Normal);
+            ui->leContrasea_IS->setEchoMode(QLineEdit::Normal);
         } else {
-            ui->lineEdit_6->setEchoMode(QLineEdit::Password);
+            ui->leContrasea_IS->setEchoMode(QLineEdit::Password);
         }
     });
     connect(ui->checkContraseaRegister, &QCheckBox::toggled, this, [this](bool checked) {
@@ -53,6 +56,8 @@ LoginRegister::LoginRegister(QWidget *parent)
     connect(ui->leEmail, &QLineEdit::editingFinished,this, &LoginRegister::onEmailEditingFinished);
     connect(ui->leContrasea, &QLineEdit::editingFinished, this, &LoginRegister::checkPassword);
     connect(ui->leRepContrasea, &QLineEdit::editingFinished, this, &LoginRegister::checkEqualPassword);
+    connect(ui->leUsuario, &QLineEdit::editingFinished, this, &LoginRegister::checkUserName);
+    connect(ui->pbInicioSesion, &QPushButton::clicked, this, &LoginRegister::user_contr_correct);
 
 //
 }
@@ -131,6 +136,31 @@ void LoginRegister::checkEqualPassword(){
     }
 }
 
+void LoginRegister::checkUserName(){
+    Navigation &nav = Navigation::instance();
+    if(!nav.findUser(ui->leUsuario->text())){
+        validUsername = true;
+        ui->lErrorNombreUsuario->setVisible(false);
+    }else{
+        validUsername = false;
+        ui->lErrorNombreUsuario->setVisible(true);
+        ui->leUsuario->setFocus();
+    }
+}
+
+void LoginRegister::user_contr_correct(){
+    Navigation &nav = Navigation::instance();
+    if(nav.findUser(ui->leUsuario->text())){
+        if(nav.findUser(ui->leUsuario->text())->password() == ui->leContrasea_IS->text()){
+            //w.show();
+        }else{
+            ui->lErrorContrasea_IS->setVisible(true);
+        }
+    }else{
+        ui->lErrorUsuario_IS->setVisible(true);
+    }
+}
+
 // ======= Slots de edición finalizada =======
 
 void LoginRegister::onEmailEditingFinished()
@@ -153,19 +183,14 @@ void LoginRegister::on_addDummyUserButton_clicked()
         Navigation &nav = Navigation::instance();
 
         // Crear usuario si no existe
-        if (!nav.findUser("alumno")) {
-            User u("alumno",
-                   "alumno@example.com",
-                   "1234",
-                   QImage(),
-                   QDate(2000, 1, 1));
+        if (!nav.findUser(ui->leUsuario->text())) {
+            User u(ui->leUsuario->text(),
+                   ui->leEmail->text(),
+                   ui->leContrasea->text(),
+                   QImage("zombie.svg"),
+                   ui->dateEdit->date());
             nav.addUser(u);
         }
-
-        // Añadir una sesión de prueba usando SIEMPRE Navigation::addSession
-        Session s(QDateTime::currentDateTime(), 10, 2);
-        nav.addSession("alumno", s);
-
 
     } catch (const NavDAOException &ex) {
         QMessageBox::critical(this, tr("DB error"), ex.what());
@@ -177,6 +202,6 @@ void LoginRegister::on_addDummyUserButton_clicked()
 void LoginRegister::updateAcceptEnabled()
 {
     bool allValid = validEmail && validPassword;
-    ui->pushButton_2->setEnabled(allValid);
+    ui->pbInicioSesion->setEnabled(allValid);
 }
 

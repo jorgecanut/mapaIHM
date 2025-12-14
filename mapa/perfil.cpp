@@ -13,7 +13,6 @@ Perfil::Perfil(QWidget *parent)
 
     ui->lErrorCorreo->setVisible(false);
     ui->lErrorContrasea->setVisible(false);
-    ui->lErrorNombreUsuario->setVisible(false);
     ui->lErrorFecha->setVisible(false);
 
     ui->leContrasea->setEchoMode(QLineEdit::Password);
@@ -30,7 +29,6 @@ Perfil::Perfil(QWidget *parent)
     connect(ui->leCorreo, &QLineEdit::editingFinished,this, &Perfil::onEmailEditingFinished);
     connect(ui->leContrasea, &QLineEdit::editingFinished, this, &Perfil::checkPassword);
     connect(ui->daFechaNacimiento, &QDateEdit::editingFinished, this, &Perfil::checkDate);
-    connect(ui->leNombreUsuario, &QLineEdit::editingFinished, this, &Perfil::checkUserName);
 
     connect(ui->pbCambiarAvatar, &QPushButton::clicked, this, &Perfil::seleccionAvatar);
 
@@ -38,7 +36,8 @@ Perfil::Perfil(QWidget *parent)
 
     connect(ui->pbConfirmarCambios, &QPushButton::clicked, this, &Perfil::updateUserButton);
 }
-
+//TODO: Mostrar en todos los datos de la cuenta
+//TODO: Resize de las pestañas
 Perfil::~Perfil()
 {
     delete ui;
@@ -65,7 +64,7 @@ void Perfil::showErrorMessage(QLabel *errorLabel, QLineEdit *edit)
         errorLabel->setVisible(true);
     }
     if (edit) {
-        edit->setStyleSheet("background-color: #FCE5E0;");
+        edit->setStyleSheet("background-color: #e30b16;");
     }
 }
 
@@ -118,17 +117,7 @@ void Perfil::checkDate(){
     updateAcceptEnabled();
 }
 
-void Perfil::checkUserName(){
-    Navigation &nav = Navigation::instance();
-    if(!nav.findUser(ui->leNombreUsuario->text())){
-        validUsername = true;
-        ui->lErrorNombreUsuario->setVisible(false);
-    }else{
-        validUsername = false;
-        ui->lErrorNombreUsuario->setVisible(true);
-        ui->leNombreUsuario->setFocus();
-    }
-}
+
 // ======= Slots de edición finalizada =======
 
 void Perfil::onEmailEditingFinished()
