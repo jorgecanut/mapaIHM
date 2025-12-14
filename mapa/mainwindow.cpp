@@ -149,7 +149,6 @@ void MainWindow::ponerSvg(QGraphicsSvgItem *svgItem, int multiplier){
     svgItem->setScale(escaladoHerramienta);
 
     scene->addItem(svgItem);
-    herramientas.append(svgItem);
 
     view->setRenderHint(QPainter::Antialiasing);
     view->setDragMode(QGraphicsView::RubberBandDrag);
