@@ -11,6 +11,14 @@
         <file>icons/eraser.png</file>
         <file>icons/pencil.png</file>
         <file>icons/text.png</file>
+        <file>icons/aleatorio.png</file>
+        <file>icons/bloquear.png</file>
+        <file>icons/rotar_horario.png</file>
+        <file>icons/usuario.png</file>
+        <file>icons/mas.png</file>
+        <file>icons/menos.png</file>
+        <file>icons/reiniciar.png</file>
+        <file>icons/rotar_antihorario.png</file>
     </qresource>
     <qresource prefix="/iconos_usuarios">
         <file>oso.svg</file>

@@ -95,6 +95,12 @@
          <height>0</height>
         </size>
        </property>
+       <property name="minimum">
+        <number>5</number>
+       </property>
+       <property name="sliderPosition">
+        <number>10</number>
+       </property>
        <property name="orientation">
         <enum>Qt::Orientation::Horizontal</enum>
        </property>
@@ -188,6 +194,10 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/icons/cursor_ruler.png</normaloff>:/icons/icons/cursor_ruler.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Regla</string>
    </property>
@@ -198,6 +208,10 @@
   <action name="actionCompas">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/icons/compas-de-dibujo.png</normaloff>:/icons/icons/compas-de-dibujo.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Compas</string>
@@ -210,6 +224,10 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/icons/angulo.png</normaloff>:/icons/icons/angulo.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Transportador</string>
    </property>
@@ -218,6 +236,10 @@
    </property>
   </action>
   <action name="actionRotar_horario">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/icons/rotar_horario.png</normaloff>:/icons/icons/rotar_horario.png</iconset>
+   </property>
    <property name="text">
     <string>Rotar horario</string>
    </property>
@@ -226,6 +248,10 @@
    </property>
   </action>
   <action name="actionRotar_antihorario">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/icons/rotar_antihorario.png</normaloff>:/icons/icons/rotar_antihorario.png</iconset>
+   </property>
    <property name="text">
     <string>Rotar antihorario</string>
    </property>
@@ -234,6 +260,10 @@
    </property>
   </action>
   <action name="actionZoom_In">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/icons/mas.png</normaloff>:/icons/icons/mas.png</iconset>
+   </property>
    <property name="text">
     <string>Zoom In</string>
    </property>
@@ -245,6 +275,10 @@
    </property>
   </action>
   <action name="actionZoom_Out">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/icons/menos.png</normaloff>:/icons/icons/menos.png</iconset>
+   </property>
    <property name="text">
     <string>Zoom Out</string>
    </property>
@@ -256,6 +290,10 @@
    </property>
   </action>
   <action name="actionResetear">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/icons/reiniciar.png</normaloff>:/icons/icons/reiniciar.png</iconset>
+   </property>
    <property name="text">
     <string>Resetear</string>
    </property>
@@ -267,6 +305,10 @@
    </property>
   </action>
   <action name="actionMi_Perfil">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/icons/usuario.png</normaloff>:/icons/icons/usuario.png</iconset>
+   </property>
    <property name="text">
     <string>Mi &amp;Perfil</string>
    </property>
@@ -275,6 +317,10 @@
    </property>
   </action>
   <action name="actionCerrar_Sesion">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/icons/bloquear.png</normaloff>:/icons/icons/bloquear.png</iconset>
+   </property>
    <property name="text">
     <string>Cerrar Sesion</string>
    </property>
@@ -286,6 +332,10 @@
    </property>
   </action>
   <action name="actionAleatoria">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/icons/aleatorio.png</normaloff>:/icons/icons/aleatorio.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Aleatoria</string>
    </property>
@@ -294,6 +344,10 @@
    </property>
   </action>
   <action name="actionGoma">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/icons/eraser.png</normaloff>:/icons/icons/eraser.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Goma</string>
    </property>
@@ -302,6 +356,10 @@
    </property>
   </action>
   <action name="actionTexto">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/icons/text.png</normaloff>:/icons/icons/text.png</iconset>
+   </property>
    <property name="text">
     <string>Te&amp;xto</string>
    </property>
@@ -310,6 +368,10 @@
    </property>
   </action>
   <action name="actionLapiz">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/icons/pencil.png</normaloff>:/icons/icons/pencil.png</iconset>
+   </property>
    <property name="text">
     <string>Lapiz</string>
    </property>
@@ -318,6 +380,8 @@
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="resource.qrc"/>
+ </resources>
  <connections/>
 </ui>

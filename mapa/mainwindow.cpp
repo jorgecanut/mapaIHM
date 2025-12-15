@@ -21,6 +21,7 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     , gomaActiva(false)
     , colorLinea(Qt::black)
     , grosorLinea(2)
+    , textoActivo(false)
 {
     ui->setupUi(this);
 
@@ -57,6 +58,7 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     connect(ui->actionMi_Perfil, &QAction::triggered,this,&MainWindow::abrirPerfil);
     connect(ui->actionCerrar_Sesion, &QAction::triggered,this,&MainWindow::cerrarSesion);
     connect(ui->actionResetear, &QAction::triggered, this, &MainWindow::reset);
+    connect(ui->actionTexto, &QAction::triggered, this, &MainWindow::texto);
 
     connect(ui->sliderGrosor2, &QSlider::valueChanged, this, [=](int value){
         grosorLinea = value;
@@ -84,8 +86,6 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     // Esto es para poder hacer shift scroll no quitar
     view->viewport()->installEventFilter(this);
 }
-
-
 
 
 MainWindow::~MainWindow()
@@ -179,31 +179,30 @@ QPointF MainWindow::posicionRaton(){
 }
 
 void MainWindow::regla() {
-    toggleHerramienta(reglaActual, reglaPuesta, ":/icons/icons/ruler2.svg", ":/icons/icons/cursor_ruler.png", 0.3);
+    toggleHerramienta(reglaActual, reglaPuesta, ":/icons/icons/ruler2.svg", 0.3);
 }
 void MainWindow::transportador() {
-    toggleHerramienta(transportadorActual, transportadorPuesto, ":/icons/icons/transportador.svg", ":/icons/icons/angulo.png", 0.15);
+    toggleHerramienta(transportadorActual, transportadorPuesto, ":/icons/icons/transportador.svg",0.15);
 }
 void MainWindow::compas() {
-    toggleHerramienta(compasActual, compasPuesto, ":/icons/icons/compass_leg.svg", ":/icons/icons/compas-de-dibujo.png", 0.5);
+    toggleHerramienta(compasActual, compasPuesto, ":/icons/icons/compass_leg.svg", 0.5);
 }
 
 
-void MainWindow::toggleHerramienta(QGraphicsSvgItem* &herr, bool &puesta, const QString &icono, const QString &cursor, double escala){
+void MainWindow::toggleHerramienta(QGraphicsSvgItem* &herr, bool &puesta, const QString &icono, double escala){
     if (puesta){
         scene->removeItem(herr);
         delete herr;
-        view->viewport()->unsetCursor();
         herr = nullptr;
         puesta = false;
     } else {
         lapizActivo = false;
+        ui->panelLapiz->hide();
+        gomaActiva = false;
+        textoActivo = false;
         herr = new QGraphicsSvgItem(icono);
         ponerSvg(herr, escala/escalado);
         herr->setPos(posicionRaton() - herr->boundingRect().center());
-        QPixmap pm(cursor);
-        QCursor cursor(pm.scaled(24,24, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-        view->viewport()->setCursor(cursor);
         puesta = true;
     }
 }
@@ -262,7 +261,8 @@ void MainWindow::reset(){
 void MainWindow::lapiz()
 {
     lapizActivo = !lapizActivo;
-
+    gomaActiva = false;
+    textoActivo = false;
     if (lapizActivo) {
         ui->panelLapiz->show();
         QPixmap pm(":/icons/icons/pencil.png");
@@ -279,6 +279,7 @@ void MainWindow::goma()
 {
     gomaActiva = !gomaActiva;
     lapizActivo = false;
+    textoActivo = false;
     ui->panelLapiz->hide();
     if (gomaActiva) {
         QPixmap pm(":/icons/icons/eraser.png");
@@ -289,7 +290,22 @@ void MainWindow::goma()
     }
 }
 
+// ----- TEXTO -------
 
+void MainWindow::texto(){
+    textoActivo = !textoActivo;
+    lapizActivo = false;
+    gomaActiva = false;
+    ui->panelLapiz->hide();
+
+    if (textoActivo) {
+        QPixmap pm(":/icons/icons/text.png");
+        QCursor cursor(pm.scaled(24, 24, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        view->viewport()->setCursor(cursor);
+    } else {
+        view->viewport()->unsetCursor();
+    }
+}
 
 
 
@@ -405,6 +421,31 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
             return true;
         }
     }
+
+    // TEXTO
+    if (obj == view->viewport() && textoActivo) {
+        if (event->type() == QEvent::MouseButtonPress) {
+            QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+            if (mouseEvent->button() == Qt::LeftButton) {
+                QPointF pos = view->mapToScene(mouseEvent->pos());
+
+                // Crear un item de texto editable
+                QGraphicsTextItem* textoItem = scene->addText("");
+                textoItem->setDefaultTextColor(Qt::black); // color por defecto
+                textoItem->setPos(pos);
+                textoItem->setFlag(QGraphicsItem::ItemIsMovable);
+                textoItem->setFlag(QGraphicsItem::ItemIsSelectable);
+                textoItem->setFlag(QGraphicsItem::ItemIsFocusable);
+
+                // Esto permite escribir directamente en el item
+                textoItem->setTextInteractionFlags(Qt::TextEditorInteraction);
+                textoItem->setFocus(); // pone el foco para escribir inmediatamente
+            }
+            return true;
+        }
+    }
+
+
 
     return QMainWindow::eventFilter(obj, event);
 }

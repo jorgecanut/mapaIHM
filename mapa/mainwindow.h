@@ -57,12 +57,12 @@ private:
     QGraphicsLineItem *lineaActual;
     bool lapizActivo;
     bool gomaActiva;
-    QGraphicsLineItem* lineaSeleccionada;
 
     QColor colorLinea;
     float grosorLinea;
 
     // ------- TEXTO -------
+    bool textoActivo;
     QColor colorTexto;
     int tamañoTexto;
 
@@ -75,7 +75,7 @@ private:
     QPointF posicionRaton();
     void reset();
     void random_pregunta();
-    void toggleHerramienta(QGraphicsSvgItem* &herr, bool &puesta, const QString &icono, const QString &cursor, double escala);
+    void toggleHerramienta(QGraphicsSvgItem* &herr, bool &puesta, const QString &icono, double escala);
 
 private slots:
     void zoomIn();
@@ -94,6 +94,7 @@ private slots:
 
     void lapiz();
     void goma();
+    void texto();
 
 protected:
     // Para el zoom y la rueda
