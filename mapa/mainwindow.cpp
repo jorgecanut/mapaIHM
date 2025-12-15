@@ -274,7 +274,6 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
             return true;
         }
 
-
         else if (event->type() == QEvent::MouseButtonRelease) {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
             QPointF finLinea = view->mapToScene(mouseEvent->pos());

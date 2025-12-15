@@ -37,7 +37,13 @@
     <property name="title">
      <string>Herramientas</string>
     </property>
-    <addaction name="actionLapiz"/>
+    <widget class="QMenu" name="menu_Lapiz">
+     <property name="title">
+      <string>&amp;Lapiz</string>
+     </property>
+     <addaction name="actionGrosor"/>
+    </widget>
+    <addaction name="menu_Lapiz"/>
     <addaction name="actionGoma"/>
     <addaction name="actionTexto"/>
     <addaction name="separator"/>
@@ -184,14 +190,6 @@
     <string>A</string>
    </property>
   </action>
-  <action name="actionLapiz">
-   <property name="text">
-    <string>&amp;Lapiz</string>
-   </property>
-   <property name="shortcut">
-    <string>L</string>
-   </property>
-  </action>
   <action name="actionGoma">
    <property name="text">
     <string>&amp;Goma</string>
@@ -206,6 +204,11 @@
    </property>
    <property name="shortcut">
     <string>T</string>
+   </property>
+  </action>
+  <action name="actionGrosor">
+   <property name="text">
+    <string>Grosor</string>
    </property>
   </action>
  </widget>
