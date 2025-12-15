@@ -695,7 +695,7 @@ ClickableLabel:hover {
                <enum>Qt::Orientation::Horizontal</enum>
               </property>
               <property name="sizeType">
-               <enum>QSizePolicy::Policy::Fixed</enum>
+               <enum>QSizePolicy::Policy::Expanding</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -980,7 +980,7 @@ ClickableLabel:hover {
      <x>0</x>
      <y>0</y>
      <width>794</width>
-     <height>37</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>

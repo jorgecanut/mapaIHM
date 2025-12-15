@@ -2,9 +2,6 @@
 #include "ui_mainwindow.h"
 #include "login_register.h"
 #include "perfil.h"
-#include "login_register.h"
-
-
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -18,10 +15,10 @@ MainWindow::MainWindow(QWidget *parent)
     , reglaPuesta(false)
     , transportadorPuesto(false)
     , compasPuesto(false)
+    , lapizActivo(false)
+    , lineaSeleccionada(nullptr)
     , colorLinea(Qt::black)
     , grosorLinea(2)
-    , lapizActivo(false)
-
 {
     ui->setupUi(this);
 
@@ -36,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     view->scale(escalado, escalado);
     view->setDragMode(QGraphicsView::ScrollHandDrag);
 
+    ui->dockLapiz->hide();
     connect(ui->actionZoom_In, &QAction::triggered, this, &MainWindow::zoomIn);
     connect(ui->actionZoom_Out, &QAction::triggered, this, &MainWindow::zoomOut);
 
@@ -45,20 +43,43 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionRotar_horario, &QAction::triggered, this, &MainWindow::rotarHorario);
     connect(ui->actionRotar_antihorario, &QAction::triggered, this, &MainWindow::rotarAntiHorario);
 
-    connect(ui->actionLapiz, &QAction::triggered, this, &MainWindow::lapiz);
-
     connect(scene, &QGraphicsScene::selectionChanged, this, &MainWindow::actualizarAcciones);
 
+    connect(ui->actionLapiz, &QAction::triggered, this, &MainWindow::lapiz);
     connect(ui->actionRegla, &QAction::triggered, this, &MainWindow::regla);
     connect(ui->actionTransportador, &QAction::triggered, this, &MainWindow::transportador);
     connect(ui->actionCompas, &QAction::triggered, this, &MainWindow::compas);
     connect(ui->actionMi_Perfil, &QAction::triggered,this,&MainWindow::abrirPerfil);
     connect(ui->actionCerrar_Sesion, &QAction::triggered,this,&MainWindow::cerrarSesion);
-
     connect(ui->actionResetear, &QAction::triggered, this, &MainWindow::reset);
+
+    connect(ui->sliderGrosor, &QSlider::valueChanged, this, [=](int value){
+        grosorLinea = value;
+        if(lineaSeleccionada){
+            QPen pen = lineaSeleccionada->pen();
+            pen.setWidth(value);
+            lineaSeleccionada->setPen(pen);
+        }
+    });
+
+    connect(ui->botonColor, &QPushButton::clicked, this, [=](){
+        QColor color = QColorDialog::getColor(colorLinea, this);
+        if (color.isValid()) {
+            colorLinea = color;
+            if(lineaSeleccionada){
+                QPen pen = lineaSeleccionada->pen();
+                pen.setColor(color);
+                lineaSeleccionada->setPen(pen);
+            }
+        }
+    });
+
     // Esto es para poder hacer shift scroll no quitar
     view->viewport()->installEventFilter(this);
 }
+
+
+
 
 MainWindow::~MainWindow()
 {
@@ -105,8 +126,24 @@ void MainWindow::applyZoom(double factor){
 // --------- ROTACION --------------
 void MainWindow::actualizarAcciones(){
     bool hay_seleccion = !scene->selectedItems().isEmpty();
+    if (!hay_seleccion){
+        return;
+    }
+
     ui->actionRotar_horario->setEnabled(hay_seleccion);
     ui->actionRotar_antihorario->setEnabled(hay_seleccion);
+
+    QGraphicsItem* item = scene->selectedItems().first();
+    QGraphicsLineItem* linea = dynamic_cast<QGraphicsLineItem*>(item);
+
+    if (linea) {
+        lineaSeleccionada = linea;
+        ui->dockLapiz->show();
+        QPen pen = linea->pen();
+        ui->sliderGrosor->setValue(pen.widthF());
+        colorLinea = pen.color();
+    }
+
 }
 
 void MainWindow::rotarHorario(){ rotarSeleccion(5); }
@@ -116,9 +153,11 @@ void MainWindow::rotarSeleccion(int angulo){
     QList<QGraphicsItem*> items = scene->selectedItems();
     if (!items.isEmpty()){
         QGraphicsItem *item = items.first();
+        item->setTransformOriginPoint(item->boundingRect().center());
         item->setRotation(item->rotation() + angulo);
     }
 }
+
 
 // ------- HERRAMIENTAS -------------
 QPointF MainWindow::posicionRaton(){
@@ -211,12 +250,17 @@ void MainWindow::reset(){
 }
 
 // ---------- DIBUJAR -------------
-void MainWindow::lapiz(){
-    if(lapizActivo)
-        lapizActivo = false;
-    else
-        lapizActivo = true;
+void MainWindow::lapiz()
+{
+    lapizActivo = !lapizActivo;
+
+    if (lapizActivo) {
+        ui->dockLapiz->show();
+    } else {
+        ui->dockLapiz->hide();
+    }
 }
+
 
 // Para poder hacer zoom con el ratón
 bool MainWindow::eventFilter(QObject *obj, QEvent *event){

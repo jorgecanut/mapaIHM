@@ -8,6 +8,13 @@
 #include <QGraphicsSvgItem>
 #include <QWheelEvent>
 #include <QShortcut>
+#include <QWidget>
+#include <QSlider>
+#include <QPushButton>
+#include <QMouseEvent>
+#include <QColorDialog>
+#include <QDockWidget>
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -40,13 +47,16 @@ private:
     bool transportadorPuesto;
     bool compasPuesto;
 
-    // --- LINEAS Y TEXTO -----
-    QColor colorLinea;
-    int grosorLinea;
-    bool lapizActivo;
+    // ----- LINEAS -----
     QPointF inicioLinea;
     QGraphicsLineItem *lineaActual;
+    bool lapizActivo;
+    QGraphicsLineItem* lineaSeleccionada;
 
+    QColor colorLinea;
+    float grosorLinea;
+
+    // ------- TEXTO -------
     QColor colorTexto;
     int tamañoTexto;
 
