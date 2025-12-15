@@ -18,6 +18,10 @@ MainWindow::MainWindow(QWidget *parent)
     , reglaPuesta(false)
     , transportadorPuesto(false)
     , compasPuesto(false)
+    , colorLinea(Qt::black)
+    , grosorLinea(2)
+    , lapizActivo(false)
+
 {
     ui->setupUi(this);
 
@@ -41,6 +45,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionRotar_horario, &QAction::triggered, this, &MainWindow::rotarHorario);
     connect(ui->actionRotar_antihorario, &QAction::triggered, this, &MainWindow::rotarAntiHorario);
 
+    connect(ui->actionLapiz, &QAction::triggered, this, &MainWindow::lapiz);
 
     connect(scene, &QGraphicsScene::selectionChanged, this, &MainWindow::actualizarAcciones);
 
@@ -141,6 +146,7 @@ void MainWindow::toggleHerramienta(QGraphicsSvgItem* &herr, bool &puesta, const 
         herr = nullptr;
         puesta = false;
     } else {
+        lapizActivo = false;
         herr = new QGraphicsSvgItem(icono);
         ponerSvg(herr, escala/escalado);
         herr->setPos(posicionRaton() - herr->boundingRect().center());
@@ -204,10 +210,16 @@ void MainWindow::reset(){
     scene->clearSelection();
 }
 
+// ---------- DIBUJAR -------------
+void MainWindow::lapiz(){
+    if(lapizActivo)
+        lapizActivo = true;
+    else
+        lapizActivo = false;
+}
 
 // Para poder hacer zoom con el ratón
-bool MainWindow::eventFilter(QObject *obj, QEvent *event)
-{
+bool MainWindow::eventFilter(QObject *obj, QEvent *event){
     if (obj == view->viewport() && event->type() == QEvent::Wheel) {
         QWheelEvent *wheelEvent = static_cast<QWheelEvent*>(event);
 
@@ -222,8 +234,71 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
             return true;
         }
     }
+
+    if (obj == view->viewport() && lapizActivo){
+        if (event->type() == QEvent::MouseButtonPress) {
+            QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+
+            if (mouseEvent->button() == Qt::LeftButton) {
+                inicioLinea = view->mapToScene(mouseEvent->pos());
+                lineaActual = nullptr;
+            }
+            return true;
+        }
+
+
+        else if (event->type() == QEvent::MouseMove) {
+            QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+            QPointF posActual = view->mapToScene(mouseEvent->pos());
+
+            if (mouseEvent->buttons() & Qt::LeftButton) {
+                if (!lineaActual) {
+                    lineaActual = new QGraphicsLineItem(
+                        QLineF(inicioLinea, posActual)
+                        );
+
+                    QPen pen(colorLinea, grosorLinea);
+                    lineaActual->setPen(pen);
+
+                    lineaActual->setFlag(QGraphicsItem::ItemIsMovable);
+                    lineaActual->setFlag(QGraphicsItem::ItemIsSelectable);
+                    lineaActual->setFlag(QGraphicsItem::ItemIsFocusable);
+
+                    scene->addItem(lineaActual);
+                } else {
+                    lineaActual->setLine(
+                        QLineF(inicioLinea, posActual)
+                        );
+                }
+            }
+            return true;
+        }
+
+
+        else if (event->type() == QEvent::MouseButtonRelease) {
+            QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+            QPointF finLinea = view->mapToScene(mouseEvent->pos());
+
+            if (!lineaActual) {
+                QGraphicsEllipseItem *punto = new QGraphicsEllipseItem(
+                    finLinea.x() - grosorLinea,
+                    finLinea.y() - grosorLinea,
+                    grosorLinea * 2,
+                    grosorLinea * 2
+                    );
+
+                punto->setBrush(colorLinea);
+                punto->setPen(QPen(colorLinea));
+
+                punto->setFlag(QGraphicsItem::ItemIsMovable);
+                punto->setFlag(QGraphicsItem::ItemIsSelectable);
+
+                scene->addItem(punto);
+            }
+
+            lineaActual = nullptr;
+            return true;
+        }
+    }
     return QMainWindow::eventFilter(obj, event);
 }
-
-
-

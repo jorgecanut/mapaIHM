@@ -37,6 +37,10 @@
     <property name="title">
      <string>Herramientas</string>
     </property>
+    <addaction name="actionLapiz"/>
+    <addaction name="actionGoma"/>
+    <addaction name="actionTexto"/>
+    <addaction name="separator"/>
     <addaction name="actionRegla"/>
     <addaction name="actionCompas"/>
     <addaction name="actionTransportador"/>
@@ -178,6 +182,30 @@
    </property>
    <property name="shortcut">
     <string>A</string>
+   </property>
+  </action>
+  <action name="actionLapiz">
+   <property name="text">
+    <string>&amp;Lapiz</string>
+   </property>
+   <property name="shortcut">
+    <string>L</string>
+   </property>
+  </action>
+  <action name="actionGoma">
+   <property name="text">
+    <string>&amp;Goma</string>
+   </property>
+   <property name="shortcut">
+    <string>G</string>
+   </property>
+  </action>
+  <action name="actionTexto">
+   <property name="text">
+    <string>&amp;Texto</string>
+   </property>
+   <property name="shortcut">
+    <string>T</string>
    </property>
   </action>
  </widget>

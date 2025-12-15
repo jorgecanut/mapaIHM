@@ -40,6 +40,17 @@ private:
     bool transportadorPuesto;
     bool compasPuesto;
 
+    // --- LINEAS Y TEXTO -----
+    QColor colorLinea;
+    int grosorLinea;
+    bool lapizActivo;
+    QPointF inicioLinea;
+    QGraphicsLineItem *lineaActual;
+
+    QColor colorTexto;
+    int tamañoTexto;
+
+
     // ----- COSAS UTILES ------
     void applyZoom(double factor);
     void ponerSvg(QGraphicsSvgItem *svgItem, double escaladoHerramienta);
@@ -63,6 +74,8 @@ private slots:
 
     void abrirPerfil();
     void cerrarSesion();
+
+    void lapiz();
 
 protected:
     // Para el zoom y la rueda
