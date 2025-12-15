@@ -2,6 +2,7 @@
 #define PREGUNTAS_H
 
 #include <QMainWindow>
+#include "mainwindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -14,11 +15,13 @@ class Preguntas : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit Preguntas(QWidget *parent = nullptr);
+    explicit Preguntas(User *user, QWidget *parent = nullptr);
     ~Preguntas();
 
 private:
     Ui::Preguntas *ui;
+    User *m_user;
+    void random_pregunta();
 };
 
 #endif // PREGUNTAS_H

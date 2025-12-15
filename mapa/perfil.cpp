@@ -45,8 +45,7 @@ Perfil::Perfil(User *user,QWidget *parent)
 
     connect(ui->pbConfirmarCambios, &QPushButton::clicked, this, &Perfil::updateUserButton);
 }
-//TODO: Mostrar en todos los datos de la cuenta
-//TODO: Resize de las pestañas
+
 Perfil::~Perfil()
 {
     delete ui;
@@ -183,7 +182,7 @@ void Perfil::seleccionAvatar(){
         qDebug() << "No se pudo cargar: " << fileName;
         return;
     }
-    ui->lAvatar->setFixedSize(128,128);
+    ui->lAvatar->setFixedSize(150,150);
     ui->lAvatar->setScaledContents(true);
     ui->lAvatar->setPixmap(avatar);
 

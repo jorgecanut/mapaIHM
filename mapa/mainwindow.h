@@ -14,6 +14,7 @@
 #include <QMouseEvent>
 #include <QColorDialog>
 #include <QDockWidget>
+#include <QRandomGenerator>
 
 #include <navigation.h>
 
@@ -73,6 +74,7 @@ private:
     QPointF posicionRaton();
     void reset();
     void toggleHerramienta(QGraphicsSvgItem* &herr, bool &puesta, const QString &icono, double escala);
+    void random_pregunta();
 
 private slots:
     void zoomIn();

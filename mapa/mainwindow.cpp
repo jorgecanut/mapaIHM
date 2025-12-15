@@ -75,6 +75,8 @@ MainWindow::MainWindow(User *user, QWidget *parent)
         }
     });
 
+    connect(ui->actionAleatoria, &QAction::triggered, this, &MainWindow::random_pregunta);
+
     // Esto es para poder hacer shift scroll no quitar
     view->viewport()->installEventFilter(this);
 }
@@ -346,4 +348,14 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
         }
     }
     return QMainWindow::eventFilter(obj, event);
+}
+
+//---------Preguntas----------
+void MainWindow::random_pregunta(){
+    Navigation &nav = Navigation::instance();
+    QVector preguntas = nav.problems();
+
+    int i = rand() % preguntas.size();
+    const Problem &p = preguntas[i];
+
 }
