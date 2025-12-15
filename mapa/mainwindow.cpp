@@ -213,9 +213,9 @@ void MainWindow::reset(){
 // ---------- DIBUJAR -------------
 void MainWindow::lapiz(){
     if(lapizActivo)
-        lapizActivo = true;
-    else
         lapizActivo = false;
+    else
+        lapizActivo = true;
 }
 
 // Para poder hacer zoom con el ratón
