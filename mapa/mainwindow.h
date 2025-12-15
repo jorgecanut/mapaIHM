@@ -55,6 +55,7 @@ private:
     QPointF inicioLinea;
     QGraphicsLineItem *lineaActual;
     bool lapizActivo;
+    bool gomaActiva;
     QGraphicsLineItem* lineaSeleccionada;
 
     QColor colorLinea;
@@ -72,7 +73,7 @@ private:
     void rotarSeleccion(int angulo);
     QPointF posicionRaton();
     void reset();
-    void toggleHerramienta(QGraphicsSvgItem* &herr, bool &puesta, const QString &icono, double escala);
+    void toggleHerramienta(QGraphicsSvgItem* &herr, bool &puesta, const QString &icono, const QString &cursor, double escala);
 
 private slots:
     void zoomIn();
@@ -90,6 +91,7 @@ private slots:
     void cerrarSesion();
 
     void lapiz();
+    void goma();
 
 protected:
     // Para el zoom y la rueda
