@@ -3,9 +3,10 @@
 #include "login_register.h"
 #include "perfil.h"
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(User *user, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , m_user(user)
     , scene(new QGraphicsScene(this))
     , view(new QGraphicsView(this))
     , escalado(0.2)
@@ -208,7 +209,7 @@ void MainWindow::ponerSvg(QGraphicsSvgItem *svgItem, double escaladoHerramienta)
 
 // -------------------- PERFIL / SESIÓN --------------------
 void MainWindow::abrirPerfil(){
-    Perfil *perfil = new Perfil(this);
+    Perfil *perfil = new Perfil(m_user);
     perfil->show();
 }
 

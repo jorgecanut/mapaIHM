@@ -20,16 +20,21 @@ class Perfil : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit Perfil(QWidget *parent = nullptr);
+    explicit Perfil(User *user ,QWidget *parent = nullptr);
     ~Perfil();
 
 private:
     Ui::Perfil *ui;
+    User *m_user;
     bool validEmail;
     bool validPassword;
     bool validRepPassword;
     bool validAge;
     bool validUsername;
+
+
+
+    void loadUserData();
 
     void manageError(QLabel *errorLabel, QLineEdit *edit, bool &flag);
     void manageCorrect(QLabel *errorLabel, QLineEdit *edit, bool &flag);

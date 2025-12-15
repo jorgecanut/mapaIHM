@@ -9,7 +9,7 @@
 #include <QMessageBox>
 #include "mainwindow.h"
 #include "navdaoexception.h"
-#include "navigation.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

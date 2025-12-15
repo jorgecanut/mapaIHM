@@ -2,14 +2,16 @@
 #include "ui_perfil.h"
 #include "utils.h"
 
-Perfil::Perfil(QWidget *parent)
+Perfil::Perfil(User *user,QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::Perfil)
+    , m_user(user)
     , validEmail(false)
     , validPassword(false)
     , validAge(false)
 {
     ui->setupUi(this);
+    loadUserData();
 
     QFile file(":/estilos/estilo.qss"); // Ruta al archivo en el recurso
     if (file.open(QFile::ReadOnly)) {
@@ -123,6 +125,22 @@ void Perfil::checkDate(){
     updateAcceptEnabled();
 }
 
+void Perfil::loadUserData(){
+    if(!m_user) return;
+
+    ui->leNombreUsuario->setText(m_user->nickName());
+    ui->leCorreo->setText(m_user->email());
+    ui->leContrasea->setText(m_user->password());
+    ui->daFechaNacimiento->setDate(m_user->birthdate());
+
+    if(!m_user->avatar().isNull()){
+        ui->lAvatar->setPixmap(
+            QPixmap::fromImage(m_user->avatar())
+            );
+        ui->lAvatar->setScaledContents(true);
+    }
+    updateAcceptEnabled();
+}
 
 // ======= Slots de edición finalizada =======
 
