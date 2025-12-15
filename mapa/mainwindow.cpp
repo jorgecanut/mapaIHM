@@ -9,9 +9,13 @@ MainWindow::MainWindow(QWidget *parent)
     , scene(new QGraphicsScene(this))
     , view(new QGraphicsView(this))
     , escalado(0.2)
+    , reglaActual(nullptr)
+    , compasActual(nullptr)
+    , transportadorActual(nullptr)
     , reglaPuesta(false)
     , transportadorPuesto(false)
     , compasPuesto(false)
+    , herramientaPendiente(Ninguna)
 {
     ui->setupUi(this);
 
@@ -26,21 +30,12 @@ MainWindow::MainWindow(QWidget *parent)
     view->scale(escalado, escalado);
     view->setDragMode(QGraphicsView::ScrollHandDrag);
 
+    connect(ui->actionZoom_In, &QAction::triggered, this, &MainWindow::zoomIn);
+    connect(ui->actionZoom_Out, &QAction::triggered, this, &MainWindow::zoomOut);
 
-    QAction *actZoomIn = ui->toolBar->addAction("+");
-    QAction *actZoomOut = ui->toolBar->addAction("-");
-
-    QAction *ponerRegla = ui->toolBar->addAction("Regla");
-    QAction *ponerTransportador = ui->toolBar->addAction("Transportador");
-    QAction *ponerCompas = ui->toolBar->addAction("Compas");
-
-
-    connect(actZoomIn, &QAction::triggered, this, &MainWindow::zoomIn);
-    connect(actZoomOut, &QAction::triggered, this, &MainWindow::zoomOut);
-
-    connect(ponerRegla, &QAction::triggered, this, &MainWindow::regla);
-    connect(ponerTransportador, &QAction::triggered, this, &MainWindow::transportador);
-    connect(ponerCompas, &QAction::triggered, this, &MainWindow::compas);
+    connect(ui->actionRegla, &QAction::triggered, this, &MainWindow::regla);
+    connect(ui->actionTransportador, &QAction::triggered, this, &MainWindow::transportador);
+    connect(ui->actionCompas, &QAction::triggered, this, &MainWindow::compas);
 
     // Esto es para poder hacer shift scroll no quitar
     view->viewport()->installEventFilter(this);
@@ -76,32 +71,26 @@ void MainWindow::applyZoom(double factor){
     view->scale(factor, factor);
     escalado = newScale;
 
-    double escaladoHerramienta = 0.2 / escalado;
-
     if (reglaPuesta){
-        reglaActual->setScale(escaladoHerramienta);
+        reglaActual->setScale(0.5/escalado);
     }
     if (transportadorPuesto){
-        transportadorActual->setScale(escaladoHerramienta);
+        transportadorActual->setScale(0.1/escalado);
     }
     if (compasPuesto){
-        compasActual->setScale(escaladoHerramienta*5);
+        compasActual->setScale(0.5/escalado);
     }
-
-
-
 }
 
 void MainWindow::regla(){
     if (reglaPuesta){
         scene->removeItem(reglaActual);
         delete reglaActual;
+        reglaActual = nullptr;
         reglaPuesta = false;
     }
     else{
-        reglaActual = new QGraphicsSvgItem(":icons/icons/ruler.svg");
-        ponerSvg(reglaActual, 1);
-        reglaPuesta = true;
+        herramientaPendiente = ReglaPendiente;
     }
 }
 
@@ -109,49 +98,42 @@ void MainWindow::transportador(){
     if (transportadorPuesto){
         scene->removeItem(transportadorActual);
         delete transportadorActual;
+        transportadorActual = nullptr;
         transportadorPuesto = false;
     }
     else{
-        transportadorActual = new QGraphicsSvgItem(":icons/icons/transportador.svg");
-        ponerSvg(transportadorActual, 1);
-        transportadorPuesto = true;
+        herramientaPendiente = TransportadorPendiente;
     }
-
 }
 
 void MainWindow::compas(){
     if (compasPuesto){
         scene->removeItem(compasActual);
         delete compasActual;
+        compasActual = nullptr;
         compasPuesto = false;
     }
     else {
-        compasActual = new QGraphicsSvgItem(":icons/icons/compass_leg.svg");
-        ponerSvg(compasActual, 5);
-        compasPuesto = true;
+        herramientaPendiente = CompasPendiente;
     }
 
 }
 
-void MainWindow::ponerSvg(QGraphicsSvgItem *svgItem, int multiplier){
+void MainWindow::ponerSvg(QGraphicsSvgItem *svgItem, double escaladoHerramienta){
     svgItem->setFlag(QGraphicsItem::ItemIsMovable);
     svgItem->setFlag(QGraphicsItem::ItemIsSelectable);
     svgItem->setFlag(QGraphicsItem::ItemSendsGeometryChanges);
 
     svgItem->setTransformOriginPoint(svgItem->boundingRect().center());
-
-    QPointF centroVista = view->mapToScene(view->viewport()->rect().center());
-    QPointF offset = svgItem->boundingRect().center();
-    svgItem->setPos(centroVista - offset);
-
-    // 0.1 para la regla
-    double escaladoHerramienta = (0.2 / escalado) * multiplier;
     svgItem->setScale(escaladoHerramienta);
 
     scene->addItem(svgItem);
-
     view->setRenderHint(QPainter::Antialiasing);
-    view->setDragMode(QGraphicsView::RubberBandDrag);
+}
+
+void MainWindow::rotarSvg(QGraphicsItem *svgItem, int rotacion){
+    qreal anguloActual = svgItem->rotation();
+    svgItem->setRotation(anguloActual+rotacion);
 }
 
 // Hecho con chat
@@ -160,6 +142,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     if (obj == view->viewport() && event->type() == QEvent::Wheel) {
         QWheelEvent *wheelEvent = static_cast<QWheelEvent*>(event);
 
+        // ZOOM
         if (wheelEvent->modifiers() & Qt::CTRL) {
             double factor = 1.15;
             if (wheelEvent->angleDelta().y() > 0)
@@ -169,8 +152,61 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 
             return true;
         }
+        // ROTAR HERRAMIENTAS
+        else if (wheelEvent->modifiers() & Qt::SHIFT) {
+            QGraphicsItem *itemSeleccionado = nullptr;
+            QList<QGraphicsItem*> items = scene->selectedItems();
+
+            if (!items.isEmpty()) {
+                itemSeleccionado = items.first();
+                if (wheelEvent->angleDelta().y() > 0)
+                    rotarSvg(itemSeleccionado, 5);
+                else
+                    rotarSvg(itemSeleccionado, -5);
+
+                return true;
+            }
+        }
+    }
+
+    if (obj == view->viewport() && event->type() == QEvent::MouseButtonPress) {
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+
+        if (mouseEvent->button() == Qt::LeftButton &&
+            herramientaPendiente != Ninguna) {
+
+            QPointF posScene = view->mapToScene(mouseEvent->pos());
+
+            switch (herramientaPendiente) {
+            case ReglaPendiente:
+                reglaActual = new QGraphicsSvgItem(":/icons/icons/ruler2.svg");
+                reglaPuesta = true;
+                ponerSvg(reglaActual, 0.3/escalado);
+                reglaActual->setPos(posScene - reglaActual->boundingRect().center());
+                break;
+
+            case TransportadorPendiente:
+                transportadorActual = new QGraphicsSvgItem(":/icons/icons/transportador.svg");
+                transportadorPuesto = true;
+                ponerSvg(transportadorActual, 0.15/escalado);
+                transportadorActual->setPos(posScene - transportadorActual->boundingRect().center());
+                break;
+
+            case CompasPendiente:
+                compasActual = new QGraphicsSvgItem(":/icons/icons/compass_leg.svg");
+                compasPuesto = true;
+                ponerSvg(compasActual, 0.5/escalado);
+                compasActual->setPos(posScene - compasActual->boundingRect().center());
+                break;
+
+            default:
+                break;
+            }
+
+            herramientaPendiente = Ninguna;
+            return true;
+        }
     }
 
     return QMainWindow::eventFilter(obj, event);
 }
-

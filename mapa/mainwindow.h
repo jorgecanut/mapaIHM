@@ -41,8 +41,17 @@ private:
     bool reglaPuesta;
     bool transportadorPuesto;
     bool compasPuesto;
-    void ponerSvg(QGraphicsSvgItem *svgItem, int multiplier);
+    void ponerSvg(QGraphicsSvgItem *svgItem, double escaladaHerramienta);
+    void rotarSvg(QGraphicsItem *svgItem, int rotacion);
 
+    enum HerramientaPendiente {
+        Ninguna,
+        ReglaPendiente,
+        TransportadorPendiente,
+        CompasPendiente
+    };
+
+    HerramientaPendiente herramientaPendiente = Ninguna;
 
 private slots:
     void zoomIn();
