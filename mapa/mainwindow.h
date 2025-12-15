@@ -8,6 +8,7 @@
 #include <QGraphicsSvgItem>
 #include <QWheelEvent>
 #include <QShortcut>
+#include <navigation.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -20,14 +21,17 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(User *user,QWidget *parent = nullptr);
     ~MainWindow();
 
 private:
     // ------- UI ---------
     Ui::MainWindow *ui;
+    User *m_user;
     QGraphicsScene *scene;
     QGraphicsView *view;
+
+
 
     float escalado;
 

@@ -15,6 +15,7 @@ LoginRegister::LoginRegister(QWidget *parent)
 {
     ui->setupUi(this);
 
+
     QFile file(":/estilos/estilo.qss"); // Ruta al archivo en el recurso
     if (file.open(QFile::ReadOnly)) {
         QString styleSheet = QString::fromUtf8(file.readAll());
@@ -161,20 +162,21 @@ void LoginRegister::checkUserName(){
 
 void LoginRegister::user_contr_correct(){
     Navigation &nav = Navigation::instance();
-    if(nav.findUser(ui->leUsuario_IS->text())){
-        if(nav.findUser(ui->leUsuario_IS->text())->password() == ui->leContrasea_IS->text()){
-            MainWindow *ventanaPrincipal = new MainWindow();
+    User *user = nav.authenticate(
+        ui->leUsuario_IS->text(),
+        ui->leContrasea_IS->text()
+        );
+    if(user){
+            MainWindow *ventanaPrincipal = new MainWindow(user);
 
             // 2. Mostrar la ventana principal
             ventanaPrincipal->show();
 
             // 3. Cerrar la ventana de Login actual
             this->close();
-        }else{
-            ui->lErrorContrasea_IS->setVisible(true);
-        }
     }else{
-        ui->lErrorUsuario_IS->setVisible(true);
+         ui->lErrorContrasea_IS->setVisible(true);
+            ui->lErrorUsuario_IS->setVisible(true);
     }
 }
 
@@ -208,7 +210,8 @@ void LoginRegister::addUserButton()
                    ui->dateEdit->date());
             nav.addUser(u);
 
-            MainWindow *ventanaPrincipal = new MainWindow();
+            User *user = nav.findUser(ui->leUsuario->text());
+            MainWindow *ventanaPrincipal = new MainWindow(user);
 
             // 2. Mostrar la ventana principal
             ventanaPrincipal->show();
