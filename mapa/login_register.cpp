@@ -310,11 +310,10 @@ void LoginRegister::updateRegisterAcceptEnabled()
     ui->pbConfirmar->setEnabled(allValid);
 }
 
-// (Tu función original, renombrada para mayor claridad)
 void LoginRegister::updateLoginAcceptEnabled()
 {
     bool allValid = validEmail && validPassword && validUsername && validRepPassword;
     ui->pbInicioSesion->setEnabled(allValid);
 }
 
-// **Nota:** No modifiques check_register_fields() todavía, ya que ahora es redundante.
+
