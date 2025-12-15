@@ -223,4 +223,8 @@ void LoginRegister::updateAcceptEnabled()
     bool allValid = validEmail && validPassword && validUsername && validRepPassword;
     ui->pbInicioSesion->setEnabled(allValid);
 }
+void LoginRegister::mostrarLogin()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+}
 

@@ -2,6 +2,10 @@
 #include "ui_mainwindow.h"
 #include "login_register.h"
 #include "navigation.h"
+#include "perfil.h"
+#include "login_register.h"
+
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -33,7 +37,8 @@ MainWindow::MainWindow(QWidget *parent)
     QAction *ponerRegla = ui->toolBar->addAction("Regla");
     QAction *ponerTransportador = ui->toolBar->addAction("Transportador");
     QAction *ponerCompas = ui->toolBar->addAction("Compas");
-
+    QAction *ponerPerfil = ui->toolBar->addAction("Perfil");
+    QAction *ponerLogin = ui->toolBar->addAction("Cerrar sesión");
 
     connect(actZoomIn, &QAction::triggered, this, &MainWindow::zoomIn);
     connect(actZoomOut, &QAction::triggered, this, &MainWindow::zoomOut);
@@ -41,7 +46,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ponerRegla, &QAction::triggered, this, &MainWindow::regla);
     connect(ponerTransportador, &QAction::triggered, this, &MainWindow::transportador);
     connect(ponerCompas, &QAction::triggered, this, &MainWindow::compas);
-
+    connect(ponerPerfil, &QAction::triggered, this, &MainWindow::abrirPerfil);
+    connect(ponerLogin, &QAction::triggered,this,&MainWindow::cerrarSesion);
     // Esto es para poder hacer shift scroll no quitar
     view->viewport()->installEventFilter(this);
 }
@@ -174,3 +180,16 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     return QMainWindow::eventFilter(obj, event);
 }
 
+void MainWindow::abrirPerfil()
+{
+    Perfil *perfil = new Perfil(this);
+    perfil->show();     // modal
+};
+void MainWindow::cerrarSesion()
+{
+    LoginRegister *login = new LoginRegister();
+    login->show();
+    login->mostrarLogin();
+
+    this->close();
+}

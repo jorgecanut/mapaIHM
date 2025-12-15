@@ -51,6 +51,8 @@ private slots:
     void regla();
     void transportador();
     void compas();
+    void abrirPerfil();
+    void cerrarSesion();
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;

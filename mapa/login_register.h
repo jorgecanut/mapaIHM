@@ -25,6 +25,7 @@ class LoginRegister : public QMainWindow
 public:
     LoginRegister(QWidget *parent = nullptr);
     ~LoginRegister();
+    void mostrarLogin();
 
 private slots:
     void onEmailEditingFinished();
