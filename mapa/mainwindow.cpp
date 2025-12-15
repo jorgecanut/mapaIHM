@@ -40,6 +40,12 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     ui->panelLapiz->move(20, 20);
     ui->panelLapiz->raise();
     ui->panelLapiz->hide();
+
+    ui->widget->setParent(view);
+    ui->widget->move(40, 40);
+    ui->widget->raise();
+    ui->widget->hide();
+
     connect(ui->actionZoom_In, &QAction::triggered, this, &MainWindow::zoomIn);
     connect(ui->actionZoom_Out, &QAction::triggered, this, &MainWindow::zoomOut);
 
@@ -456,6 +462,8 @@ void MainWindow::random_pregunta(){
     QVector preguntas = nav.problems();
 
     int i = rand() % preguntas.size();
-    const Problem &p = preguntas[i];
-
+    const QString &p = preguntas[i].text();
+    ui->lPreguntas->setWordWrap(true);
+    ui->lPreguntas->setText(p);
+    ui->widget->show();
 }
