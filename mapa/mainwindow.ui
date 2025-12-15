@@ -33,6 +33,35 @@
      <height>37</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuHerramientas">
+    <property name="title">
+     <string>Herramientas</string>
+    </property>
+    <addaction name="actionRegla"/>
+    <addaction name="actionCompas"/>
+    <addaction name="actionTransportador"/>
+    <addaction name="separator"/>
+    <addaction name="actionRotar_horario"/>
+    <addaction name="actionRotar_antihorario"/>
+   </widget>
+   <widget class="QMenu" name="menuMapa">
+    <property name="title">
+     <string>Mapa</string>
+    </property>
+    <addaction name="actionZoom_In"/>
+    <addaction name="actionZoom_Out"/>
+    <addaction name="actionResetear"/>
+   </widget>
+   <widget class="QMenu" name="menuPerfil">
+    <property name="title">
+     <string>Perfil</string>
+    </property>
+    <addaction name="actionMi_Perfil"/>
+    <addaction name="actionCerrar_Sesion"/>
+   </widget>
+   <addaction name="menuMapa"/>
+   <addaction name="menuHerramientas"/>
+   <addaction name="menuPerfil"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -46,6 +75,56 @@
     <bool>false</bool>
    </attribute>
   </widget>
+  <action name="actionRegla">
+   <property name="text">
+    <string>Regla</string>
+   </property>
+  </action>
+  <action name="actionCompas">
+   <property name="text">
+    <string>Compas</string>
+   </property>
+  </action>
+  <action name="actionTransportador">
+   <property name="text">
+    <string>Transportador</string>
+   </property>
+  </action>
+  <action name="actionRotar_horario">
+   <property name="text">
+    <string>Rotar horario</string>
+   </property>
+  </action>
+  <action name="actionRotar_antihorario">
+   <property name="text">
+    <string>Rotar antihorario</string>
+   </property>
+  </action>
+  <action name="actionZoom_In">
+   <property name="text">
+    <string>Zoom In (+)</string>
+   </property>
+  </action>
+  <action name="actionZoom_Out">
+   <property name="text">
+    <string>Zoom Out (-)</string>
+   </property>
+  </action>
+  <action name="actionResetear">
+   <property name="text">
+    <string>Resetear</string>
+   </property>
+  </action>
+  <action name="actionMi_Perfil">
+   <property name="text">
+    <string>Mi Perfil</string>
+   </property>
+  </action>
+  <action name="actionCerrar_Sesion">
+   <property name="text">
+    <string>Cerrar Sesion</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

@@ -4,6 +4,7 @@
         <file>icons/transportador.svg</file>
         <file>icons/ruler.svg</file>
         <file>icons/carta_nautica.jpg</file>
+        <file>icons/ruler2.svg</file>
     </qresource>
     <qresource prefix="/iconos_usuarios">
         <file>oso.svg</file>
