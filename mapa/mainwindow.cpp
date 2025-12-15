@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "login_register.h"
-#include "navigation.h"
 #include "perfil.h"
 #include "login_register.h"
 
@@ -37,6 +36,15 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionZoom_In, &QAction::triggered, this, &MainWindow::zoomIn);
     connect(ui->actionZoom_Out, &QAction::triggered, this, &MainWindow::zoomOut);
 
+    // Desactivadas hasta que se selecciona algo
+    ui->actionRotar_horario->setEnabled(false);
+    ui->actionRotar_antihorario->setEnabled(false);
+    connect(ui->actionRotar_horario, &QAction::triggered, this, &MainWindow::rotarHorario);
+    connect(ui->actionRotar_antihorario, &QAction::triggered, this, &MainWindow::rotarAntiHorario);
+
+
+    connect(scene, &QGraphicsScene::selectionChanged, this, &MainWindow::actualizarAcciones);
+
     connect(ui->actionRegla, &QAction::triggered, this, &MainWindow::regla);
     connect(ui->actionTransportador, &QAction::triggered, this, &MainWindow::transportador);
     connect(ui->actionCompas, &QAction::triggered, this, &MainWindow::compas);
@@ -52,6 +60,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+// ------------- ZOOM ---------------
 void MainWindow::zoomIn(){
     applyZoom(1.15);
 }
@@ -78,15 +87,42 @@ void MainWindow::applyZoom(double factor){
     escalado = newScale;
 
     if (reglaPuesta){
-        reglaActual->setScale(0.5/escalado);
+        reglaActual->setScale(0.3/escalado);
     }
     if (transportadorPuesto){
-        transportadorActual->setScale(0.1/escalado);
+        transportadorActual->setScale(0.15/escalado);
     }
     if (compasPuesto){
         compasActual->setScale(0.5/escalado);
     }
 }
+
+// --------- ROTACION --------------
+void MainWindow::actualizarAcciones(){
+    bool hay_seleccion = !scene->selectedItems().isEmpty();
+    ui->actionRotar_horario->setEnabled(hay_seleccion);
+    ui->actionRotar_antihorario->setEnabled(hay_seleccion);
+}
+
+void MainWindow::rotarHorario(){ rotarSeleccion(5); }
+void MainWindow::rotarAntiHorario(){ rotarSeleccion(-5); }
+
+void MainWindow::rotarSeleccion(int angulo){
+    QList<QGraphicsItem*> items = scene->selectedItems();
+    if (!items.isEmpty()){
+        QGraphicsItem *item = items.first();
+        item->setRotation(item->rotation() + angulo);
+    }
+}
+
+// ------- HERRAMIENTAS -------------
+QPointF MainWindow::posicionRaton(){
+    QPoint posGlobal = QCursor::pos();
+    QPoint posView = view->mapFromGlobal(posGlobal);
+    return view->mapToScene(posView);
+
+}
+
 
 void MainWindow::regla(){
     if (reglaPuesta){
@@ -96,7 +132,10 @@ void MainWindow::regla(){
         reglaPuesta = false;
     }
     else{
-        herramientaPendiente = ReglaPendiente;
+        reglaActual = new QGraphicsSvgItem(":/icons/icons/ruler2.svg");
+        ponerSvg(reglaActual, 0.3/escalado);
+        reglaActual->setPos(posicionRaton() - reglaActual->boundingRect().center());
+        reglaPuesta = true;
     }
 }
 
@@ -108,7 +147,10 @@ void MainWindow::transportador(){
         transportadorPuesto = false;
     }
     else{
-        herramientaPendiente = TransportadorPendiente;
+        transportadorActual = new QGraphicsSvgItem(":/icons/icons/transportador.svg");
+        transportadorPuesto = true;
+        ponerSvg(transportadorActual, 0.15/escalado);
+        transportadorActual->setPos(posicionRaton() - transportadorActual->boundingRect().center());
     }
 }
 
@@ -120,9 +162,11 @@ void MainWindow::compas(){
         compasPuesto = false;
     }
     else {
-        herramientaPendiente = CompasPendiente;
+        compasActual = new QGraphicsSvgItem(":/icons/icons/compass_leg.svg");
+        compasPuesto = true;
+        ponerSvg(compasActual, 0.5/escalado);
+        compasActual->setPos(posicionRaton() - compasActual->boundingRect().center());
     }
-
 }
 
 void MainWindow::ponerSvg(QGraphicsSvgItem *svgItem, double escaladoHerramienta){
@@ -137,12 +181,21 @@ void MainWindow::ponerSvg(QGraphicsSvgItem *svgItem, double escaladoHerramienta)
     view->setRenderHint(QPainter::Antialiasing);
 }
 
-void MainWindow::rotarSvg(QGraphicsItem *svgItem, int rotacion){
-    qreal anguloActual = svgItem->rotation();
-    svgItem->setRotation(anguloActual+rotacion);
+
+// -------------------- PERFIL / SESIÓN --------------------
+void MainWindow::abrirPerfil(){
+    Perfil *perfil = new Perfil(this);
+    perfil->show();
 }
 
-// Hecho con chat
+void MainWindow::cerrarSesion(){
+    LoginRegister *login = new LoginRegister();
+    login->show();
+    login->mostrarLogin();
+    this->close();
+}
+
+// Para poder hacer zoom con el ratón
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
     if (obj == view->viewport() && event->type() == QEvent::Wheel) {
@@ -158,76 +211,9 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 
             return true;
         }
-        // ROTAR HERRAMIENTAS
-        else if (wheelEvent->modifiers() & Qt::SHIFT) {
-            QGraphicsItem *itemSeleccionado = nullptr;
-            QList<QGraphicsItem*> items = scene->selectedItems();
-
-            if (!items.isEmpty()) {
-                itemSeleccionado = items.first();
-                if (wheelEvent->angleDelta().y() > 0)
-                    rotarSvg(itemSeleccionado, 5);
-                else
-                    rotarSvg(itemSeleccionado, -5);
-
-                return true;
-            }
-        }
     }
-
-    if (obj == view->viewport() && event->type() == QEvent::MouseButtonPress) {
-        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-
-        if (mouseEvent->button() == Qt::LeftButton &&
-            herramientaPendiente != Ninguna) {
-
-            QPointF posScene = view->mapToScene(mouseEvent->pos());
-
-            switch (herramientaPendiente) {
-            case ReglaPendiente:
-                reglaActual = new QGraphicsSvgItem(":/icons/icons/ruler2.svg");
-                reglaPuesta = true;
-                ponerSvg(reglaActual, 0.3/escalado);
-                reglaActual->setPos(posScene - reglaActual->boundingRect().center());
-                break;
-
-            case TransportadorPendiente:
-                transportadorActual = new QGraphicsSvgItem(":/icons/icons/transportador.svg");
-                transportadorPuesto = true;
-                ponerSvg(transportadorActual, 0.15/escalado);
-                transportadorActual->setPos(posScene - transportadorActual->boundingRect().center());
-                break;
-
-            case CompasPendiente:
-                compasActual = new QGraphicsSvgItem(":/icons/icons/compass_leg.svg");
-                compasPuesto = true;
-                ponerSvg(compasActual, 0.5/escalado);
-                compasActual->setPos(posScene - compasActual->boundingRect().center());
-                break;
-
-            default:
-                break;
-            }
-
-            herramientaPendiente = Ninguna;
-            return true;
-        }
-    }
-
     return QMainWindow::eventFilter(obj, event);
 }
 
 
-void MainWindow::abrirPerfil()
-{
-    Perfil *perfil = new Perfil(this);
-    perfil->show();     // modal
-};
-void MainWindow::cerrarSesion()
-{
-    LoginRegister *login = new LoginRegister();
-    login->show();
-    login->mostrarLogin();
 
-    this->close();
-}

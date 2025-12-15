@@ -30,7 +30,7 @@
      <x>0</x>
      <y>0</y>
      <width>744</width>
-     <height>37</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHerramientas">
@@ -59,70 +59,125 @@
     <addaction name="actionMi_Perfil"/>
     <addaction name="actionCerrar_Sesion"/>
    </widget>
+   <widget class="QMenu" name="menuCuestiones">
+    <property name="title">
+     <string>Cuestiones</string>
+    </property>
+    <addaction name="actionAleatoria"/>
+   </widget>
    <addaction name="menuMapa"/>
    <addaction name="menuHerramientas"/>
+   <addaction name="menuCuestiones"/>
    <addaction name="menuPerfil"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QToolBar" name="toolBar">
-   <property name="windowTitle">
-    <string>toolBar</string>
-   </property>
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-  </widget>
   <action name="actionRegla">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>Regla</string>
+    <string>&amp;Regla</string>
+   </property>
+   <property name="shortcut">
+    <string>R</string>
    </property>
   </action>
   <action name="actionCompas">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>Compas</string>
+    <string>&amp;Compas</string>
+   </property>
+   <property name="shortcut">
+    <string>C</string>
    </property>
   </action>
   <action name="actionTransportador">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>Transportador</string>
+    <string>&amp;Transportador</string>
+   </property>
+   <property name="shortcut">
+    <string>T</string>
    </property>
   </action>
   <action name="actionRotar_horario">
    <property name="text">
     <string>Rotar horario</string>
    </property>
+   <property name="shortcut">
+    <string>Shift+Right</string>
+   </property>
   </action>
   <action name="actionRotar_antihorario">
    <property name="text">
     <string>Rotar antihorario</string>
    </property>
+   <property name="shortcut">
+    <string>Shift+Left</string>
+   </property>
   </action>
   <action name="actionZoom_In">
    <property name="text">
-    <string>Zoom In (+)</string>
+    <string>Zoom In</string>
+   </property>
+   <property name="toolTip">
+    <string>Zoom In</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl++</string>
    </property>
   </action>
   <action name="actionZoom_Out">
    <property name="text">
-    <string>Zoom Out (-)</string>
+    <string>Zoom Out</string>
+   </property>
+   <property name="toolTip">
+    <string>Zoom Out</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+-</string>
    </property>
   </action>
   <action name="actionResetear">
    <property name="text">
     <string>Resetear</string>
    </property>
+   <property name="toolTip">
+    <string>Resetear</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+R</string>
+   </property>
   </action>
   <action name="actionMi_Perfil">
    <property name="text">
-    <string>Mi Perfil</string>
+    <string>Mi &amp;Perfil</string>
+   </property>
+   <property name="shortcut">
+    <string>P</string>
    </property>
   </action>
   <action name="actionCerrar_Sesion">
    <property name="text">
     <string>Cerrar Sesion</string>
+   </property>
+   <property name="toolTip">
+    <string>Cerrar Sesion</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+C</string>
+   </property>
+  </action>
+  <action name="actionAleatoria">
+   <property name="text">
+    <string>&amp;Aleatoria</string>
+   </property>
+   <property name="shortcut">
+    <string>A</string>
    </property>
   </action>
  </widget>

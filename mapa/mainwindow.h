@@ -8,6 +8,7 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsSvgItem>
 #include <QWheelEvent>
+#include <QShortcut>
 
 
 QT_BEGIN_NAMESPACE
@@ -43,7 +44,8 @@ private:
     bool compasPuesto;
     void ponerSvg(QGraphicsSvgItem *svgItem, double escaladaHerramienta);
     void rotarSvg(QGraphicsItem *svgItem, int rotacion);
-
+    void rotarSeleccion(int angulo);
+    QPointF posicionRaton();
     enum HerramientaPendiente {
         Ninguna,
         ReglaPendiente,
@@ -56,12 +58,16 @@ private:
 private slots:
     void zoomIn();
     void zoomOut();
+    void actualizarAcciones();
+    void rotarHorario();
+    void rotarAntiHorario();
 
     void regla();
     void transportador();
     void compas();
     void abrirPerfil();
     void cerrarSesion();
+
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
