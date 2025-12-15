@@ -7,10 +7,10 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     LoginRegister login;
-    //login.show();
+    login.show();
     MainWindow w;
 
-    w.show();
+    //w.show();
     Perfil perfil;
     //perfil.show();
 
