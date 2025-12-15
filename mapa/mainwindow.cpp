@@ -16,8 +16,9 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     , reglaPuesta(false)
     , transportadorPuesto(false)
     , compasPuesto(false)
+    , lineaActual(nullptr)
     , lapizActivo(false)
-    , lineaSeleccionada(nullptr)
+    , gomaActiva(false)
     , colorLinea(Qt::black)
     , grosorLinea(2)
 {
@@ -34,7 +35,10 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     view->scale(escalado, escalado);
     view->setDragMode(QGraphicsView::ScrollHandDrag);
 
-    ui->dockLapiz->hide();
+    ui->panelLapiz->setParent(view);
+    ui->panelLapiz->move(20, 20);
+    ui->panelLapiz->raise();
+    ui->panelLapiz->hide();
     connect(ui->actionZoom_In, &QAction::triggered, this, &MainWindow::zoomIn);
     connect(ui->actionZoom_Out, &QAction::triggered, this, &MainWindow::zoomOut);
 
@@ -54,28 +58,28 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     connect(ui->actionCerrar_Sesion, &QAction::triggered,this,&MainWindow::cerrarSesion);
     connect(ui->actionResetear, &QAction::triggered, this, &MainWindow::reset);
 
-    connect(ui->sliderGrosor, &QSlider::valueChanged, this, [=](int value){
+    connect(ui->sliderGrosor2, &QSlider::valueChanged, this, [=](int value){
         grosorLinea = value;
-        if(lineaSeleccionada){
-            QPen pen = lineaSeleccionada->pen();
+        if(lineaActual){
+            QPen pen = lineaActual->pen();
             pen.setWidth(value);
-            lineaSeleccionada->setPen(pen);
+            lineaActual->setPen(pen);
         }
     });
 
-    connect(ui->botonColor, &QPushButton::clicked, this, [=](){
+    connect(ui->botonColor2, &QPushButton::clicked, this, [=](){
         QColor color = QColorDialog::getColor(colorLinea, this);
         if (color.isValid()) {
             colorLinea = color;
-            if(lineaSeleccionada){
-                QPen pen = lineaSeleccionada->pen();
+            if(lineaActual){
+                QPen pen = lineaActual->pen();
                 pen.setColor(color);
-                lineaSeleccionada->setPen(pen);
+                lineaActual->setPen(pen);
             }
         }
     });
-
     connect(ui->actionAleatoria, &QAction::triggered, this, &MainWindow::random_pregunta);
+    connect(ui->actionGoma, &QAction::triggered, this, &MainWindow::goma);
 
     // Esto es para poder hacer shift scroll no quitar
     view->viewport()->installEventFilter(this);
@@ -129,25 +133,29 @@ void MainWindow::applyZoom(double factor){
 // --------- ROTACION --------------
 void MainWindow::actualizarAcciones(){
     bool hay_seleccion = !scene->selectedItems().isEmpty();
-    if (!hay_seleccion){
-        return;
-    }
-
     ui->actionRotar_horario->setEnabled(hay_seleccion);
     ui->actionRotar_antihorario->setEnabled(hay_seleccion);
 
-    QGraphicsItem* item = scene->selectedItems().first();
-    QGraphicsLineItem* linea = dynamic_cast<QGraphicsLineItem*>(item);
-
-    if (linea) {
-        lineaSeleccionada = linea;
-        ui->dockLapiz->show();
-        QPen pen = linea->pen();
-        ui->sliderGrosor->setValue(pen.widthF());
-        colorLinea = pen.color();
+    if (gomaActiva) {
+        lineaActual = nullptr;
+        ui->panelLapiz->hide();
+        return;
     }
 
+    if (hay_seleccion) {
+        QGraphicsItem* item = scene->selectedItems().first();
+        QGraphicsLineItem* linea = dynamic_cast<QGraphicsLineItem*>(item);
+
+        if (linea) {
+            lineaActual = linea;
+            ui->panelLapiz->show();
+            QPen pen = linea->pen();
+            ui->sliderGrosor2->setValue(pen.widthF());
+            colorLinea = pen.color();
+        }
+    }
 }
+
 
 void MainWindow::rotarHorario(){ rotarSeleccion(5); }
 void MainWindow::rotarAntiHorario(){ rotarSeleccion(-5); }
@@ -171,20 +179,21 @@ QPointF MainWindow::posicionRaton(){
 }
 
 void MainWindow::regla() {
-    toggleHerramienta(reglaActual, reglaPuesta, ":/icons/icons/ruler2.svg", 0.3);
+    toggleHerramienta(reglaActual, reglaPuesta, ":/icons/icons/ruler2.svg", ":/icons/icons/cursor_ruler.png", 0.3);
 }
 void MainWindow::transportador() {
-    toggleHerramienta(transportadorActual, transportadorPuesto, ":/icons/icons/transportador.svg", 0.15);
+    toggleHerramienta(transportadorActual, transportadorPuesto, ":/icons/icons/transportador.svg", ":/icons/icons/angulo.png", 0.15);
 }
 void MainWindow::compas() {
-    toggleHerramienta(compasActual, compasPuesto, ":/icons/icons/compass_leg.svg", 0.5);
+    toggleHerramienta(compasActual, compasPuesto, ":/icons/icons/compass_leg.svg", ":/icons/icons/compas-de-dibujo.png", 0.5);
 }
 
 
-void MainWindow::toggleHerramienta(QGraphicsSvgItem* &herr, bool &puesta, const QString &icono, double escala){
+void MainWindow::toggleHerramienta(QGraphicsSvgItem* &herr, bool &puesta, const QString &icono, const QString &cursor, double escala){
     if (puesta){
         scene->removeItem(herr);
         delete herr;
+        view->viewport()->unsetCursor();
         herr = nullptr;
         puesta = false;
     } else {
@@ -192,6 +201,9 @@ void MainWindow::toggleHerramienta(QGraphicsSvgItem* &herr, bool &puesta, const 
         herr = new QGraphicsSvgItem(icono);
         ponerSvg(herr, escala/escalado);
         herr->setPos(posicionRaton() - herr->boundingRect().center());
+        QPixmap pm(cursor);
+        QCursor cursor(pm.scaled(24,24, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        view->viewport()->setCursor(cursor);
         puesta = true;
     }
 }
@@ -226,31 +238,24 @@ void MainWindow::cerrarSesion(){
 
 // ------------------ RESET ---------------
 void MainWindow::reset(){
-    // Elimina herramientas de la escena
-    if (reglaPuesta){
-        scene->removeItem(reglaActual);
-        delete reglaActual;
-        reglaActual = nullptr;
-        reglaPuesta = false;
-    }
-    if (transportadorPuesto){
-        scene->removeItem(transportadorActual);
-        delete transportadorActual;
-        transportadorActual = nullptr;
-        transportadorPuesto = false;
-    }
-    if (compasPuesto){
-        scene->removeItem(compasActual);
-        delete compasActual;
-        compasActual = nullptr;
-        compasPuesto = false;
-    }
+    scene->clear();
+
+    reglaActual = nullptr;
+    transportadorActual = nullptr;
+    compasActual = nullptr;
+    lineaActual = nullptr;
+
+    reglaPuesta = false;
+    transportadorPuesto = false;
+    compasPuesto = false;
+
+    QPixmap pm(":/icons/icons/carta_nautica.jpg");
+    QGraphicsPixmapItem *item = scene->addPixmap(pm);
+    item->setZValue(0);
 
     escalado = 0.2;
     view->resetTransform();
     view->scale(escalado, escalado);
-
-    scene->clearSelection();
 }
 
 // ---------- DIBUJAR -------------
@@ -259,19 +264,41 @@ void MainWindow::lapiz()
     lapizActivo = !lapizActivo;
 
     if (lapizActivo) {
-        ui->dockLapiz->show();
+        ui->panelLapiz->show();
+        QPixmap pm(":/icons/icons/pencil.png");
+        QCursor cursor(pm.scaled(24,24, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        view->viewport()->setCursor(cursor);
     } else {
-        ui->dockLapiz->hide();
+        ui->panelLapiz->hide();
+        view->viewport()->unsetCursor();
+    }
+}
+
+// -------- BORRAR -------------
+void MainWindow::goma()
+{
+    gomaActiva = !gomaActiva;
+    lapizActivo = false;
+    ui->panelLapiz->hide();
+    if (gomaActiva) {
+        QPixmap pm(":/icons/icons/eraser.png");
+        QCursor cursor(pm.scaled(24,24, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        view->viewport()->setCursor(cursor);
+    } else {
+        view->viewport()->unsetCursor(); // vuelve al cursor normal
     }
 }
 
 
+
+
+
 // Para poder hacer zoom con el ratón
 bool MainWindow::eventFilter(QObject *obj, QEvent *event){
+    // ZOOM
     if (obj == view->viewport() && event->type() == QEvent::Wheel) {
         QWheelEvent *wheelEvent = static_cast<QWheelEvent*>(event);
 
-        // ZOOM
         if (wheelEvent->modifiers() & Qt::CTRL) {
             double factor = 1.15;
             if (wheelEvent->angleDelta().y() > 0)
@@ -283,6 +310,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
         }
     }
 
+    // LINEAS
     if (obj == view->viewport() && lapizActivo){
         if (event->type() == QEvent::MouseButtonPress) {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
@@ -347,6 +375,37 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
             return true;
         }
     }
+
+    // GOMA
+    if (obj == view->viewport() && gomaActiva) {
+
+        if (event->type() == QEvent::MouseButtonPress) {
+            QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+            if (mouseEvent->button() == Qt::LeftButton) {
+
+                QPointF pos = view->mapToScene(mouseEvent->pos());
+                QList<QGraphicsItem*> items = scene->items(pos);
+
+                for (QGraphicsItem* item : std::as_const(items)) {
+                    if (auto linea = dynamic_cast<QGraphicsLineItem*>(item)) {
+                        if (linea == lineaActual)
+                            lineaActual = nullptr;
+                        scene->removeItem(linea);
+                        delete linea;
+                        break;
+                    }
+                    else if (auto punto = dynamic_cast<QGraphicsEllipseItem*>(item)) {
+                        scene->removeItem(punto);
+                        delete punto;
+                        break;
+                    }
+                }
+
+            }
+            return true;
+        }
+    }
+
     return QMainWindow::eventFilter(obj, event);
 }
 

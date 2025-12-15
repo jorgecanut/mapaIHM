@@ -5,6 +5,12 @@
         <file>icons/ruler.svg</file>
         <file>icons/carta_nautica.jpg</file>
         <file>icons/ruler2.svg</file>
+        <file>icons/angulo.png</file>
+        <file>icons/compas-de-dibujo.png</file>
+        <file>icons/cursor_ruler.png</file>
+        <file>icons/eraser.png</file>
+        <file>icons/pencil.png</file>
+        <file>icons/text.png</file>
     </qresource>
     <qresource prefix="/iconos_usuarios">
         <file>oso.svg</file>
