@@ -4,6 +4,7 @@
 #include "mainwindow.h"
 #include <QFile>
 #include <QString>
+#include <QFileDialog>
 
 LoginRegister::LoginRegister(QWidget *parent)
     : QMainWindow(parent)
@@ -30,16 +31,9 @@ LoginRegister::LoginRegister(QWidget *parent)
     ui->lErrorContrasea_IS->setVisible(false);
 
     // Conecta el click de label_3 para cambiar de página
-    connect(ui->label_3, &ClickableLabel::clicked, this, [this]() {
-        ui->stackedWidget->setCurrentWidget(ui->page);
+    connect(ui->label_3, &ClickableLabel::clicked, this,&LoginRegister::cambiarPag2);
+    connect(ui->label_10, &ClickableLabel::clicked, this, &LoginRegister::cambiarPag1);
 
-
-    });
-    connect(ui->label_10, &ClickableLabel::clicked, this, [this]() {
-        ui->stackedWidget->setCurrentWidget(ui->page_2);
-
-
-    });
     connect(ui->checkBox_2, &QCheckBox::toggled, this, [this](bool checked) {
         if (checked) {
             ui->leContrasea_IS->setEchoMode(QLineEdit::Normal);
@@ -68,7 +62,11 @@ LoginRegister::LoginRegister(QWidget *parent)
     connect(ui->leRepContrasea, &QLineEdit::editingFinished, this, &LoginRegister::checkEqualPassword);
     connect(ui->leUsuario, &QLineEdit::editingFinished, this, &LoginRegister::checkUserName);
     connect(ui->pbInicioSesion, &QPushButton::clicked, this, &LoginRegister::user_contr_correct);
-    connect(ui->pushButton, &QPushButton::clicked, this, &LoginRegister::addUserButton);
+    connect(ui->pbConfirmar, &QPushButton::clicked, this, &LoginRegister::addUserButton);
+    connect(ui->pbAvatarElegir, &QPushButton::clicked,this, &LoginRegister::seleccionAvatar);
+    connect(ui->leUsuario_IS, &QLineEdit::textChanged,this, &LoginRegister::check_login_fields);
+    connect(ui->leContrasea_IS, &QLineEdit::textChanged, this, &LoginRegister::check_login_fields);
+    check_login_fields();
 
 //
 }
@@ -82,14 +80,14 @@ void LoginRegister::manageError(QLabel *errorLabel, QLineEdit *edit, bool &flag)
     flag = false;
     showErrorMessage(errorLabel, edit);
     edit->setFocus();
-    updateAcceptEnabled();
+    updateRegisterAcceptEnabled();
 }
 
 void LoginRegister::manageCorrect(QLabel *errorLabel, QLineEdit *edit, bool &flag)
 {
     flag = true;
     hideErrorMessage(errorLabel, edit);
-    updateAcceptEnabled();
+    updateRegisterAcceptEnabled();
 }
 
 void LoginRegister::showErrorMessage(QLabel *errorLabel, QLineEdit *edit)
@@ -201,10 +199,18 @@ void LoginRegister::addUserButton()
 
         // Crear usuario si no existe
         if (!nav.findUser(ui->leUsuario->text())) {
+            QPixmap avatar(":/iconos_usuarios/batman.svg");
+            if(ui->lAvatar->pixmap().isNull()){
+                ui->lAvatar->setFixedSize(128,128);
+                ui->lAvatar->setScaledContents(true);
+                ui->lAvatar->setPixmap(avatar);
+
+                ui->lAvatar->update();
+            }
             User u(ui->leUsuario->text(),
                    ui->leEmail->text(),
                    ui->leContrasea->text(),
-                   QImage("zombie.svg"),
+                   ui->lAvatar->pixmap().toImage(),
                    ui->dateEdit->date());
             nav.addUser(u);
 
@@ -235,4 +241,80 @@ void LoginRegister::mostrarLogin()
 {
     ui->stackedWidget->setCurrentIndex(0);
 }
+void LoginRegister::seleccionAvatar(){
+    QString fileName = QFileDialog::getOpenFileName(this, "Seleccionar avatar", QDir::homePath(), "Imagenes:(*.png *.jpg *.jpeg *.bmp *.svg *.avif)");
 
+    if(fileName.isEmpty()) return;
+
+    QPixmap avatar(fileName);
+    if(avatar.isNull()){
+        qDebug() << "No se pudo cargar: " << fileName;
+        return;
+    }
+    ui->lAvatar->setFixedSize(128,128);
+    ui->lAvatar->setScaledContents(true);
+    ui->lAvatar->setPixmap(avatar);
+
+    ui->lAvatar->update();
+}
+void LoginRegister::cambiarPag1()
+{
+    // 1. Limpiar campos del formulario de LOGIN
+    ui->leUsuario_IS->clear();
+    ui->leContrasea_IS->clear();
+    ui->lErrorEmail->setVisible(false);
+    ui->lErrorPassword->setVisible(false);
+    ui->lErrorRepPassword->setVisible(false);
+    ui->lErrorNombreUsuario->setVisible(false);
+    QPixmap emptyPixmap;
+    ui->lAvatar->setPixmap(emptyPixmap);
+    ui->stackedWidget->setCurrentIndex(1);
+}
+void LoginRegister::cambiarPag2()
+{
+    // 1. Limpiar campos del formulario de REGISTRO
+    ui->leUsuario->clear();
+    ui->leEmail->clear();
+    ui->leContrasea->clear();
+    ui->leRepContrasea->clear();
+    ui->lErrorUsuario_IS->setVisible(false);
+    ui->lErrorContrasea_IS->setVisible(false);
+    ui->stackedWidget->setCurrentIndex(0);
+}
+void LoginRegister::check_login_fields()
+{
+    bool camposLlenos = !ui->leUsuario_IS->text().isEmpty() &&
+                        !ui->leContrasea_IS->text().isEmpty();
+
+    ui->pbInicioSesion->setEnabled(camposLlenos);
+}
+
+void LoginRegister::check_register_fields()
+{
+    bool camposLlenos = !ui->leUsuario->text().isEmpty() &&
+                        !ui->leEmail->text().isEmpty() &&
+                        !ui->leContrasea->text().isEmpty() &&
+                        !ui->leRepContrasea->text().isEmpty();
+
+    ui->pbConfirmar->setEnabled(camposLlenos);
+}
+void LoginRegister::updateRegisterAcceptEnabled()
+{
+    // Criterio de validación estricto: TODOS deben ser válidos Y no vacíos.
+    bool allValid = validEmail && validPassword && validUsername && validRepPassword &&
+                    !ui->leUsuario->text().isEmpty() &&
+                    !ui->leEmail->text().isEmpty() &&
+                    !ui->leContrasea->text().isEmpty() &&
+                    !ui->leRepContrasea->text().isEmpty();
+
+    ui->pbConfirmar->setEnabled(allValid);
+}
+
+// (Tu función original, renombrada para mayor claridad)
+void LoginRegister::updateLoginAcceptEnabled()
+{
+    bool allValid = validEmail && validPassword && validUsername && validRepPassword;
+    ui->pbInicioSesion->setEnabled(allValid);
+}
+
+// **Nota:** No modifiques check_register_fields() todavía, ya que ahora es redundante.
