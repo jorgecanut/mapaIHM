@@ -18,4 +18,7 @@
         <file>arana.svg</file>
         <file>cafe.svg</file>
     </qresource>
+    <qresource prefix="/estilos">
+        <file>estilo.qss</file>
+    </qresource>
 </RCC>

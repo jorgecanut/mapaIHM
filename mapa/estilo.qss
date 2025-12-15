@@ -1,0 +1,150 @@
+/* ------------------------------------------------ */
+/* ESTILO GLOBAL y VENTANA PRINCIPAL                */
+/* ------------------------------------------------ */
+
+* {
+    /* Fuente base ligeramente más pequeña para evitar recortes en Linedit */
+    font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    color: #E0E0E0; /* Texto gris claro por defecto */
+}
+
+QMainWindow, QWidget#LoginRegister, QWidget#centralwidget, QStackedWidget {
+    background-color: #2D2D30; /* Fondo gris oscuro uniforme */
+}
+
+/* ------------------------------------------------ */
+/* ENCABEZADOS Y TÍTULOS (label_11 = Login, label_7 = Register) */
+/* ------------------------------------------------ */
+
+QLabel#label_11, QLabel#label_7 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #00A9FF; /* Color de acento azul */
+
+    /* Aumento del padding para evitar que el texto grande se corte (SOLUCIÓN AL ÚLTIMO PROBLEMA) */
+    padding-top: 15px;
+    padding-bottom: 25px;
+    min-height: 40px;
+}
+
+/* Etiquetas de campo (Usuario, Contraseña, etc.) */
+QLabel {
+    color: #F5F5F5;
+    margin-top: 5px;
+    margin-bottom: 3px;
+}
+
+/* Etiquetas de Error (lErrorUsuario_IS, lErrorEmail, etc.) */
+QLabel[styleSheet*="color:red"] {
+    color: #FF6B6B; /* Rojo vibrante */
+    font-size: 12px;
+}
+
+/* ------------------------------------------------ */
+/* CONTROLES DE ENTRADA (QLineEdit)                 */
+/* ------------------------------------------------ */
+
+QLineEdit {
+    background-color: #3C3C3F;
+    border: 1px solid #505055;
+    border-radius: 5px;
+    /* Padding reducido y simétrico para evitar que el texto se corte (SOLUCIÓN A TEXTO CORTADO) */
+    padding: 6px 8px;
+    min-height: 20px;
+    color: #F0F0F0;
+}
+
+QLineEdit:focus {
+    border: 1px solid #00A9FF;
+    background-color: #454548;
+}
+
+/* ------------------------------------------------ */
+/* BOTONES DE ACCIÓN (QPushButton)                  */
+/* ------------------------------------------------ */
+
+/* pbInicioSesion (Login) y pushButton (CONFIRMAR/Registro) */
+QPushButton#pbInicioSesion, QPushButton#pushButton {
+    background-color: #00A9FF;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 25px;
+    font-size: 15px;
+    font-weight: bold;
+    /* Tamaños ajustados para evitar desbordes */
+    min-width: 140px;
+    min-height: 40px;
+    max-height: 45px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+QPushButton:hover {
+    background-color: #007ACC;
+}
+
+QPushButton:pressed {
+    background-color: #005A99;
+}
+
+/* ------------------------------------------------ */
+/* CHECKBOXES (checkBox, checkBox_2, etc.)          */
+/* ------------------------------------------------ */
+
+QCheckBox {
+    color: #C0C0C0;
+    spacing: 5px;
+}
+
+QCheckBox::indicator {
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    border: 1px solid #808080;
+    background-color: #4A4A4D;
+}
+
+QCheckBox::indicator:checked {
+    background-color: #4EC9B0; /* Turquesa para check */
+    border: 1px solid #4EC9B0;
+}
+
+/* ------------------------------------------------ */
+/* ENLACES (ClickableLabel)                         */
+/* ------------------------------------------------ */
+
+/* label_10 (¿No tienes cuenta?) y label_3 (¿Ya tienes cuenta?) */
+ClickableLabel {
+    color: #4EC9B0;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+ClickableLabel:hover {
+    color: #00A9FF;
+}
+
+/* ------------------------------------------------ */
+/* DATE EDIT y COMBO BOX (Registro)                 */
+/* ------------------------------------------------ */
+
+QDateEdit, QComboBox {
+    background-color: #3C3C3F;
+    border: 1px solid #505055;
+    border-radius: 5px;
+    padding: 4px;
+    min-height: 25px;
+}
+
+QDateEdit::drop-down, QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left-width: 1px;
+    border-left-color: #505055;
+    border-left-style: solid;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}

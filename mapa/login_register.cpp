@@ -2,7 +2,8 @@
 #include "ui_login_register.h"
 #include "utils.h"
 #include "mainwindow.h"
-
+#include <QFile>
+#include <QString>
 
 LoginRegister::LoginRegister(QWidget *parent)
     : QMainWindow(parent)
@@ -13,6 +14,13 @@ LoginRegister::LoginRegister(QWidget *parent)
     , validUsername(false)
 {
     ui->setupUi(this);
+
+    QFile file(":/estilos/estilo.qss"); // Ruta al archivo en el recurso
+    if (file.open(QFile::ReadOnly)) {
+        QString styleSheet = QString::fromUtf8(file.readAll());
+        this->setStyleSheet(styleSheet);
+        file.close();
+    }
 
     ui->lErrorEmail->setVisible(false);
     ui->lErrorPassword->setVisible(false);
@@ -90,7 +98,7 @@ void LoginRegister::showErrorMessage(QLabel *errorLabel, QLineEdit *edit)
         errorLabel->setVisible(true);
     }
     if (edit) {
-        edit->setStyleSheet("background-color: #FCE5E0;");
+        edit->setStyleSheet("");
     }
 }
 
