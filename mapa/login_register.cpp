@@ -153,9 +153,8 @@ void LoginRegister::checkUserName(){
 
 void LoginRegister::user_contr_correct(){
     Navigation &nav = Navigation::instance();
-    if(nav.findUser(ui->leUsuario->text())){
-        validUsername = true;
-        if(nav.findUser(ui->leUsuario->text())->password() == ui->leContrasea_IS->text()){
+    if(nav.findUser(ui->leUsuario_IS->text())){
+        if(nav.findUser(ui->leUsuario_IS->text())->password() == ui->leContrasea_IS->text()){
             MainWindow *ventanaPrincipal = new MainWindow();
 
             // 2. Mostrar la ventana principal
