@@ -52,7 +52,7 @@
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>30</y>
+          <y>-10</y>
           <width>751</width>
           <height>511</height>
          </rect>
@@ -145,6 +145,19 @@
              </property>
             </widget>
            </item>
+           <item>
+            <spacer name="horizontalSpacer_8">
+             <property name="orientation">
+              <enum>Qt::Orientation::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
           </layout>
          </item>
          <item>
@@ -211,6 +224,19 @@
                 <string>La contraseña no coincide</string>
                </property>
               </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_7">
+               <property name="orientation">
+                <enum>Qt::Orientation::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
              </item>
             </layout>
            </item>
@@ -835,7 +861,7 @@ ClickableLabel:hover {
      <x>0</x>
      <y>0</y>
      <width>794</width>
-     <height>21</height>
+     <height>37</height>
     </rect>
    </property>
   </widget>
