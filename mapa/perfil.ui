@@ -33,7 +33,6 @@
     </size>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_Main">
-    
     <item>
      <spacer name="verticalSpacer_Top">
       <property name="orientation">
@@ -50,7 +49,6 @@
       </property>
      </spacer>
     </item>
-    
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_AvatarBlock">
       <item>
@@ -166,7 +164,6 @@
       </item>
      </layout>
     </item>
-    
     <item>
      <widget class="QLabel" name="label_2">
       <property name="text">
@@ -196,7 +193,6 @@
       </property>
      </widget>
     </item>
-    
     <item>
      <spacer name="verticalSpacer_2">
       <property name="orientation">
@@ -213,7 +209,6 @@
       </property>
      </spacer>
     </item>
-    
     <item>
      <widget class="QLabel" name="label_3">
       <property name="text">
@@ -274,7 +269,6 @@
       </property>
      </widget>
     </item>
-    
     <item>
      <spacer name="verticalSpacer_3">
       <property name="orientation">
@@ -291,7 +285,6 @@
       </property>
      </spacer>
     </item>
-    
     <item>
      <widget class="QLabel" name="label_4">
       <property name="text">
@@ -345,7 +338,6 @@
       </item>
      </layout>
     </item>
-    
     <item>
      <spacer name="verticalSpacer_4">
       <property name="orientation">
@@ -362,7 +354,6 @@
       </property>
      </spacer>
     </item>
-    
     <item>
      <widget class="QLabel" name="label_5">
       <property name="text">
@@ -379,6 +370,9 @@
           <width>120</width>
           <height>16777215</height>
          </size>
+        </property>
+        <property name="displayFormat">
+         <string>d/M/yyyy</string>
         </property>
        </widget>
       </item>
@@ -410,7 +404,6 @@
       </item>
      </layout>
     </item>
-    
     <item>
      <spacer name="verticalSpacer_5">
       <property name="orientation">
@@ -427,7 +420,6 @@
       </property>
      </spacer>
     </item>
-    
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_6">
       <item>
@@ -480,7 +472,6 @@
       </item>
      </layout>
     </item>
-    
     <item>
      <spacer name="verticalSpacer_Bottom">
       <property name="orientation">
@@ -497,7 +488,6 @@
       </property>
      </spacer>
     </item>
-    
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -506,7 +496,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>37</height>
     </rect>
    </property>
   </widget>
