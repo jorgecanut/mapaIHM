@@ -11,6 +11,12 @@ Perfil::Perfil(QWidget *parent)
 {
     ui->setupUi(this);
 
+    QFile file(":/estilos/estilo.qss"); // Ruta al archivo en el recurso
+    if (file.open(QFile::ReadOnly)) {
+        QString styleSheet = QString::fromUtf8(file.readAll());
+        this->setStyleSheet(styleSheet);
+        file.close();
+    }
     ui->lErrorCorreo->setVisible(false);
     ui->lErrorContrasea->setVisible(false);
     ui->lErrorFecha->setVisible(false);
@@ -64,7 +70,7 @@ void Perfil::showErrorMessage(QLabel *errorLabel, QLineEdit *edit)
         errorLabel->setVisible(true);
     }
     if (edit) {
-        edit->setStyleSheet("background-color: #e30b16;");
+        edit->setStyleSheet("");
     }
 }
 

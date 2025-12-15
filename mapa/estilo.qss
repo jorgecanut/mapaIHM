@@ -65,7 +65,7 @@ QLineEdit:focus {
 /* ------------------------------------------------ */
 
 /* pbInicioSesion (Login) y pushButton (CONFIRMAR/Registro) */
-QPushButton#pbInicioSesion, QPushButton#pushButton {
+QPushButton#pbInicioSesion, QPushButton#pbConfirmar {
     background-color: #00A9FF;
     color: #FFFFFF;
     border: none;
@@ -81,14 +81,27 @@ QPushButton#pbInicioSesion, QPushButton#pushButton {
     margin-bottom: 10px;
 }
 
-QPushButton:hover {
+QPushButton#pbInicioSesion:hover {
+    background-color: #007ACC;
+}
+QPushButton#pbConfirmar:hover {
     background-color: #007ACC;
 }
 
-QPushButton:pressed {
+QPushButton#pbInicioSesion:pressed {
     background-color: #005A99;
 }
-
+QPushButton#pbConfirmar:pressed {
+    background-color: #005A99;
+}
+QPushButton#pbConfirmar:disabled {
+    background-color: #505055;
+    color: #A0A0A0;
+}
+QPushButton#pbInicioSesion:disabled{
+background-color: #505055;
+color: #A0A0A0;
+}
 /* ------------------------------------------------ */
 /* CHECKBOXES (checkBox, checkBox_2, etc.)          */
 /* ------------------------------------------------ */
@@ -136,6 +149,172 @@ QDateEdit, QComboBox {
     border-radius: 5px;
     padding: 4px;
     min-height: 25px;
+}
+
+QDateEdit::drop-down, QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left-width: 1px;
+    border-left-color: #505055;
+    border-left-style: solid;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+/* ------------------------------------------------ */
+/* ESTILO GLOBAL y VENTANA PRINCIPAL                */
+/* ------------------------------------------------ */
+
+* {
+    /* Fuente base: Segoe UI es común en Windows, asegura compatibilidad */
+    font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    color: #E0E0E0; /* Texto gris claro por defecto */
+}
+
+/* Aplicado a ambas ventanas (LoginRegister y Perfil) */
+QMainWindow, QWidget#LoginRegister, QWidget#Perfil, QWidget#centralwidget, QStackedWidget {
+    background-color: #2D2D30; /* Fondo gris oscuro uniforme */
+}
+
+/* ------------------------------------------------ */
+/* ENCABEZADOS Y TÍTULOS */
+/* ------------------------------------------------ */
+
+/* Títulos principales (Login, Register, Perfil) */
+QLabel#label_11, QLabel#label_7, QLabel#label {
+    font-size: 22px;
+    font-weight: bold;
+    color: #00A9FF; /* Color de acento azul */
+
+    /* Padding generoso para asegurar que el título grande no se corte */
+    padding-top: 15px;
+    padding-bottom: 25px;
+    min-height: 40px;
+}
+
+/* Etiquetas de campo (Usuario, Contraseña, Correo, etc.) */
+QLabel {
+    color: #F5F5F5;
+    margin-top: 5px;
+    margin-bottom: 3px;
+    /* Asegura un espacio mínimo para la altura de la fuente (corrección de recorte) */
+    min-height: 18px;
+}
+
+/* Etiquetas de Error */
+QLabel[styleSheet*="color:red"], QLabel#lErrorContrasea, QLabel#lErrorCorreo, QLabel#lErrorFecha {
+    color: #FF6B6B; /* Rojo vibrante */
+    font-size: 12px;
+}
+
+/* ------------------------------------------------ */
+/* CONTROLES DE ENTRADA (QLineEdit)                 */
+/* ------------------------------------------------ */
+
+QLineEdit {
+    background-color: #3C3C3F;
+    border: 1px solid #505055;
+    border-radius: 5px;
+    /* Padding balanceado y min-height ajustado (corrección de recorte) */
+    padding: 5px 8px;
+    min-height: 25px;
+    color: #F0F0F0;
+}
+
+QLineEdit:focus {
+    border: 1px solid #00A9FF;
+    background-color: #454548;
+}
+
+/* Estilo para campos de solo lectura (como el nombre de usuario en Perfil) */
+QLineEdit[readOnly="true"] {
+    background-color: #333336;
+    color: #A0A0A0;
+    border: 1px solid #454548;
+}
+
+/* ------------------------------------------------ */
+/* BOTONES DE ACCIÓN (QPushButton)                  */
+/* ------------------------------------------------ */
+
+/* Estilo unificado para todos los botones principales de acción */
+QPushButton {
+    background-color: #00A9FF;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 25px;
+    font-size: 15px;
+    font-weight: bold;
+    /* Tamaños ajustados para asegurar visibilidad */
+    min-width: 140px;
+    max-height: 45px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+QPushButton:hover {
+    background-color: #007ACC;
+}
+
+QPushButton:pressed {
+    background-color: #005A99;
+}
+
+/* Botón deshabilitado */
+QPushButton:disabled {
+    background-color: #505055;
+    color: #A0A0A0;
+}
+
+/* ------------------------------------------------ */
+/* CHECKBOXES (QCheckBox)                          */
+/* ------------------------------------------------ */
+
+QCheckBox {
+    color: #C0C0C0;
+    spacing: 5px;
+}
+
+QCheckBox::indicator {
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    border: 1px solid #808080;
+    background-color: #4A4A4D;
+}
+
+QCheckBox::indicator:checked {
+    background-color: #4EC9B0; /* Turquesa */
+    border: 1px solid #4EC9B0;
+}
+
+/* ------------------------------------------------ */
+/* ENLACES (ClickableLabel)                         */
+/* ------------------------------------------------ */
+
+ClickableLabel {
+    color: #4EC9B0;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+ClickableLabel:hover {
+    color: #00A9FF;
+}
+
+/* ------------------------------------------------ */
+/* DATE EDIT y COMBO BOX (QDateEdit, QComboBox)     */
+/* ------------------------------------------------ */
+
+QDateEdit, QComboBox {
+    background-color: #3C3C3F;
+    border: 1px solid #505055;
+    border-radius: 5px;
+    padding: 4px;
+    min-height: 25px;
+    color: #F0F0F0;
 }
 
 QDateEdit::drop-down, QComboBox::drop-down {

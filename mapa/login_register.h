@@ -53,6 +53,13 @@ private:
     void user_contr_correct();
 
     void updateAcceptEnabled();
+    void seleccionAvatar();
+    void cambiarPag1();
+    void cambiarPag2();
+    void check_login_fields();
+    void check_register_fields();
+    void updateLoginAcceptEnabled();
+    void updateRegisterAcceptEnabled();
 };
 
 class ClickableLabel : public QLabel {
