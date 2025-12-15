@@ -211,6 +211,7 @@ void MainWindow::ponerSvg(QGraphicsSvgItem *svgItem, double escaladoHerramienta)
 void MainWindow::abrirPerfil(){
     Perfil *perfil = new Perfil(m_user);
     perfil->show();
+    this->close();
 }
 
 void MainWindow::cerrarSesion(){

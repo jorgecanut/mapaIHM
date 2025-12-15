@@ -1,18 +1,19 @@
 #include "perfil.h"
 #include "ui_perfil.h"
 #include "utils.h"
+#include "mainwindow.h"
 
 Perfil::Perfil(User *user,QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::Perfil)
     , m_user(user)
-    , validEmail(false)
-    , validPassword(false)
-    , validAge(false)
+    , validEmail(true)
+    , validPassword(true)
+    , validAge(true)
 {
     ui->setupUi(this);
     loadUserData();
-
+    this->adjustSize();
     QFile file(":/estilos/estilo.qss"); // Ruta al archivo en el recurso
     if (file.open(QFile::ReadOnly)) {
         QString styleSheet = QString::fromUtf8(file.readAll());
@@ -40,7 +41,7 @@ Perfil::Perfil(User *user,QWidget *parent)
 
     connect(ui->pbCambiarAvatar, &QPushButton::clicked, this, &Perfil::seleccionAvatar);
 
-
+    connect(ui->leContrasea, &QLineEdit::textChanged, this, &Perfil::checkPassword);
 
     connect(ui->pbConfirmarCambios, &QPushButton::clicked, this, &Perfil::updateUserButton);
 }
@@ -161,6 +162,9 @@ void Perfil::updateUserButton()
                    ui->daFechaNacimiento->date());
             nav.updateUser(u);
             QMessageBox::information(this, "Información", "Información actualizada correctamente");
+            MainWindow *ventanaPrincipal = new MainWindow(m_user);
+            ventanaPrincipal->show();
+            this->close();
         }
 
     } catch (const NavDAOException &ex) {

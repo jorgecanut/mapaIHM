@@ -50,7 +50,6 @@ private:
     void seleccionAvatar();
 
     void updateAcceptEnabled();
-
 private slots:
     void onEmailEditingFinished();
     void updateUserButton();
