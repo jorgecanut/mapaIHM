@@ -18,7 +18,6 @@ MainWindow::MainWindow(QWidget *parent)
     , reglaPuesta(false)
     , transportadorPuesto(false)
     , compasPuesto(false)
-    , herramientaPendiente(Ninguna)
 {
     ui->setupUi(this);
 
@@ -51,6 +50,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionMi_Perfil, &QAction::triggered,this,&MainWindow::abrirPerfil);
     connect(ui->actionCerrar_Sesion, &QAction::triggered,this,&MainWindow::cerrarSesion);
 
+    connect(ui->actionResetear, &QAction::triggered, this, &MainWindow::reset);
     // Esto es para poder hacer shift scroll no quitar
     view->viewport()->installEventFilter(this);
 }
@@ -123,49 +123,28 @@ QPointF MainWindow::posicionRaton(){
 
 }
 
-
-void MainWindow::regla(){
-    if (reglaPuesta){
-        scene->removeItem(reglaActual);
-        delete reglaActual;
-        reglaActual = nullptr;
-        reglaPuesta = false;
-    }
-    else{
-        reglaActual = new QGraphicsSvgItem(":/icons/icons/ruler2.svg");
-        ponerSvg(reglaActual, 0.3/escalado);
-        reglaActual->setPos(posicionRaton() - reglaActual->boundingRect().center());
-        reglaPuesta = true;
-    }
+void MainWindow::regla() {
+    toggleHerramienta(reglaActual, reglaPuesta, ":/icons/icons/ruler2.svg", 0.3);
+}
+void MainWindow::transportador() {
+    toggleHerramienta(transportadorActual, transportadorPuesto, ":/icons/icons/transportador.svg", 0.15);
+}
+void MainWindow::compas() {
+    toggleHerramienta(compasActual, compasPuesto, ":/icons/icons/compass_leg.svg", 0.5);
 }
 
-void MainWindow::transportador(){
-    if (transportadorPuesto){
-        scene->removeItem(transportadorActual);
-        delete transportadorActual;
-        transportadorActual = nullptr;
-        transportadorPuesto = false;
-    }
-    else{
-        transportadorActual = new QGraphicsSvgItem(":/icons/icons/transportador.svg");
-        transportadorPuesto = true;
-        ponerSvg(transportadorActual, 0.15/escalado);
-        transportadorActual->setPos(posicionRaton() - transportadorActual->boundingRect().center());
-    }
-}
 
-void MainWindow::compas(){
-    if (compasPuesto){
-        scene->removeItem(compasActual);
-        delete compasActual;
-        compasActual = nullptr;
-        compasPuesto = false;
-    }
-    else {
-        compasActual = new QGraphicsSvgItem(":/icons/icons/compass_leg.svg");
-        compasPuesto = true;
-        ponerSvg(compasActual, 0.5/escalado);
-        compasActual->setPos(posicionRaton() - compasActual->boundingRect().center());
+void MainWindow::toggleHerramienta(QGraphicsSvgItem* &herr, bool &puesta, const QString &icono, double escala){
+    if (puesta){
+        scene->removeItem(herr);
+        delete herr;
+        herr = nullptr;
+        puesta = false;
+    } else {
+        herr = new QGraphicsSvgItem(icono);
+        ponerSvg(herr, escala/escalado);
+        herr->setPos(posicionRaton() - herr->boundingRect().center());
+        puesta = true;
     }
 }
 
@@ -194,6 +173,37 @@ void MainWindow::cerrarSesion(){
     login->mostrarLogin();
     this->close();
 }
+
+
+// ------------------ RESET ---------------
+void MainWindow::reset(){
+    // Elimina herramientas de la escena
+    if (reglaPuesta){
+        scene->removeItem(reglaActual);
+        delete reglaActual;
+        reglaActual = nullptr;
+        reglaPuesta = false;
+    }
+    if (transportadorPuesto){
+        scene->removeItem(transportadorActual);
+        delete transportadorActual;
+        transportadorActual = nullptr;
+        transportadorPuesto = false;
+    }
+    if (compasPuesto){
+        scene->removeItem(compasActual);
+        delete compasActual;
+        compasActual = nullptr;
+        compasPuesto = false;
+    }
+
+    escalado = 0.2;
+    view->resetTransform();
+    view->scale(escalado, escalado);
+
+    scene->clearSelection();
+}
+
 
 // Para poder hacer zoom con el ratón
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)

@@ -3,13 +3,11 @@
 
 #include <QMainWindow>
 #include <QGraphicsScene>
-#include <QGraphicsScale>
 #include <QGraphicsView>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsSvgItem>
 #include <QWheelEvent>
 #include <QShortcut>
-
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -22,42 +20,39 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private:
+    // ------- UI ---------
     Ui::MainWindow *ui;
-
     QGraphicsScene *scene;
     QGraphicsView *view;
 
     float escalado;
-    void applyZoom(double factor);
 
-
+    // ---- HERRAMIENTAS ----
     QGraphicsSvgItem *reglaActual;
     QGraphicsSvgItem *compasActual;
     QGraphicsSvgItem *transportadorActual;
-    // Para saber si estan puestas o no
+
     bool reglaPuesta;
     bool transportadorPuesto;
     bool compasPuesto;
-    void ponerSvg(QGraphicsSvgItem *svgItem, double escaladaHerramienta);
+
+    // ----- COSAS UTILES ------
+    void applyZoom(double factor);
+    void ponerSvg(QGraphicsSvgItem *svgItem, double escaladoHerramienta);
     void rotarSvg(QGraphicsItem *svgItem, int rotacion);
     void rotarSeleccion(int angulo);
     QPointF posicionRaton();
-    enum HerramientaPendiente {
-        Ninguna,
-        ReglaPendiente,
-        TransportadorPendiente,
-        CompasPendiente
-    };
-
-    HerramientaPendiente herramientaPendiente = Ninguna;
+    void reset();
+    void toggleHerramienta(QGraphicsSvgItem* &herr, bool &puesta, const QString &icono, double escala);
 
 private slots:
     void zoomIn();
     void zoomOut();
+
     void actualizarAcciones();
     void rotarHorario();
     void rotarAntiHorario();
@@ -65,11 +60,13 @@ private slots:
     void regla();
     void transportador();
     void compas();
+
     void abrirPerfil();
     void cerrarSesion();
 
-
 protected:
+    // Para el zoom y la rueda
     bool eventFilter(QObject *obj, QEvent *event) override;
 };
+
 #endif // MAINWINDOW_H
