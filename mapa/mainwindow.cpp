@@ -101,6 +101,24 @@ MainWindow::MainWindow(User *user, QWidget *parent)
         }
     });
 
+    connect(ui->fontSize, &QComboBox::currentTextChanged, this, [=](const QString &size){
+        if (textoActual) {
+            QFont f = textoActual->font();
+            f.setPointSize(size.toInt());
+            textoActual->setFont(f);
+        }
+    });
+
+
+    connect(ui->fontType, &QFontComboBox::currentFontChanged, this, [=](const QFont &font){
+        if (textoActual) {
+            QFont f = textoActual->font();
+            f.setFamily(font.family());
+            textoActual->setFont(f);
+        }
+    });
+
+
     // Esto es para poder hacer shift scroll no quitar
     view->viewport()->installEventFilter(this);
 }
@@ -162,9 +180,20 @@ void MainWindow::actualizarAcciones(){
             ui->sliderGrosor2->setValue(pen.widthF());
             colorLinea = pen.color();
         }
-        else if (texto){
+        else if (texto) {
+            textoActual = texto;
+            ui->panelLapiz->hide();
+            ui->panelTexto->show();
 
+            // Fuente actual
+            QFont font = texto->font();
+            ui->fontType->setCurrentFont(font);
+            ui->fontSize->setCurrentText(QString::number(font.pointSize()));
+
+            // Color actual
+            colorTexto = texto->defaultTextColor();
         }
+
     }
 }
 
@@ -449,6 +478,13 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
 
                 // Crear un item de texto editable
                 QGraphicsTextItem* textoItem = scene->addText("");
+                QFont font;
+                font.setPointSize(ui->fontSize->currentText().toInt());
+                font.setFamily(ui->fontType->currentFont().family());
+
+                textoItem->setFont(font);
+                textoItem->setDefaultTextColor(colorTexto);
+
                 textoItem->setDefaultTextColor(Qt::black); // color por defecto
                 textoItem->setPos(pos);
                 textoItem->setFlag(QGraphicsItem::ItemIsMovable);
