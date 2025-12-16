@@ -41,10 +41,7 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     ui->panelLapiz->raise();
     ui->panelLapiz->hide();
 
-    ui->widget->setParent(view);
-    ui->widget->move(40, 40);
-    ui->widget->raise();
-    ui->widget->hide();
+    connect(ui->pbTogglePreguntas, &QPushButton::clicked,this, &MainWindow::toggleDockPreguntas);
 
     connect(ui->actionZoom_In, &QAction::triggered, this, &MainWindow::zoomIn);
     connect(ui->actionZoom_Out, &QAction::triggered, this, &MainWindow::zoomOut);
@@ -106,6 +103,23 @@ void MainWindow::zoomIn(){
 
 void MainWindow::zoomOut(){
     applyZoom(1.0 / 1.15);
+}
+
+void MainWindow::toggleDockPreguntas()
+{
+    if (dockExpandido) {
+        // Colapsar
+        ui->dockWidget->setMinimumWidth(30);
+        ui->dockWidget->setMaximumWidth(30);
+        ui->pbTogglePreguntas->setText("⮞");
+        dockExpandido = false;
+    } else {
+        // Expandir
+        ui->dockWidget->setMinimumWidth(dockWidthExpandido);
+        ui->dockWidget->setMaximumWidth(dockWidthExpandido);
+        ui->pbTogglePreguntas->setText("⮜");
+        dockExpandido = true;
+    }
 }
 
 void MainWindow::applyZoom(double factor){
@@ -459,10 +473,11 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
 //---------Preguntas----------
 void MainWindow::random_pregunta(){
     Navigation &nav = Navigation::instance();
-    QVector preguntas = nav.problems();
+    QVector<Problem> preguntas = nav.problems();
 
     int i = rand() % preguntas.size();
     const QString &p = preguntas[i].text();
+    const QVector<Answer> &answers = preguntas[i].answers();
     ui->lPreguntas->setWordWrap(true);
     ui->lPreguntas->setText(p);
     ui->widget->show();

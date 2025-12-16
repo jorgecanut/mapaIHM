@@ -38,6 +38,8 @@ private:
     User *m_user;
     QGraphicsScene *scene;
     QGraphicsView *view;
+    bool dockExpandido = true;
+    int dockWidthExpandido = 220;
 
 
 
@@ -76,6 +78,7 @@ private:
     void reset();
     void random_pregunta();
     void toggleHerramienta(QGraphicsSvgItem* &herr, bool &puesta, const QString &icono, double escala);
+    void toggleDockPreguntas();
 
 private slots:
     void zoomIn();
