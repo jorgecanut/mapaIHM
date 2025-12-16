@@ -345,3 +345,31 @@ QDateEdit::drop-down, QComboBox::drop-down {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
+
+/* ------------------------------------------------ */
+/* Preguntas                                        */
+/* ------------------------------------------------ */
+
+
+QWidget#dockWidgetContents {
+    background: #00A9FF;
+    color : #FFFFFF;
+}
+
+QPushButton#pbAnterior
+QPushButton#pbSiguiente
+QPushButton#pbRandom{
+    background-color: #00A9FF;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 25px;
+    font-size: 15px;
+    font-weight: bold;
+    /* Tamaños ajustados para asegurar visibilidad */
+    max-width: 70px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+

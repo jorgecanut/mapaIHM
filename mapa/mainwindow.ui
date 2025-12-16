@@ -456,6 +456,12 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="dockWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <property name="features">
     <set>QDockWidget::DockWidgetFeature::NoDockWidgetFeatures</set>
    </property>
@@ -471,6 +477,9 @@
       <width>240</width>
       <height>16777215</height>
      </size>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
     </property>
     <widget class="QPushButton" name="pbTogglePreguntas">
      <property name="geometry">
