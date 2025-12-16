@@ -319,4 +319,25 @@ void LoginRegister::updateLoginAcceptEnabled()
     ui->pbInicioSesion->setEnabled(allValid);
 }
 
+#include <QKeyEvent>
 
+void LoginRegister::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
+    {
+        int currentPageIndex = ui->stackedWidget->currentIndex();
+
+        if (currentPageIndex == 0) {
+            if (ui->pbInicioSesion->isEnabled()) {
+                emit ui->pbInicioSesion->clicked();
+                return;
+            }
+        } else if (currentPageIndex == 1) {
+            if (ui->pbConfirmar->isEnabled()) {
+                emit ui->pbConfirmar->clicked();
+                return; // Consumir el evento
+            }
+        }
+    }
+    QMainWindow::keyPressEvent(event);
+}

@@ -60,6 +60,7 @@ private:
     void check_register_fields();
     void updateLoginAcceptEnabled();
     void updateRegisterAcceptEnabled();
+    void keyPressEvent(QKeyEvent *event) override;
 };
 
 class ClickableLabel : public QLabel {

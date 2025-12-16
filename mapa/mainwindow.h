@@ -64,6 +64,7 @@ private:
     float grosorLinea;
 
     // ------- TEXTO -------
+    QGraphicsTextItem *textoActual;
     bool textoActivo;
     QColor colorTexto;
     int tamañoTexto;
