@@ -29,6 +29,13 @@ MainWindow::MainWindow(User *user, QWidget *parent)
 {
     ui->setupUi(this);
 
+    QFile file(":/estilos/estilo.qss"); // Ruta al archivo en el recurso
+    if (file.open(QFile::ReadOnly)) {
+        QString styleSheet = QString::fromUtf8(file.readAll());
+        this->setStyleSheet(styleSheet);
+        file.close();
+    }
+
     setWindowTitle("Carta Náutica");
     view->setScene(scene);
     setCentralWidget(view);
@@ -87,6 +94,10 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     });
 
     connect(ui->pbRandom, &QPushButton::clicked, this, [=](){
+        if (listaPreguntas.isEmpty()) {
+            qDebug() << "No hay preguntas cargadas para seleccionar una aleatoria.";
+            return;
+        }
         preguntaActual = QRandomGenerator::global()->bounded(listaPreguntas.size());
         cargarPregunta(preguntaActual);
     });
