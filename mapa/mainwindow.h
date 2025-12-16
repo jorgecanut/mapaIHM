@@ -30,6 +30,7 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(User *user,QWidget *parent = nullptr);
+    void salirModoTexto();
     ~MainWindow();
 
 private:

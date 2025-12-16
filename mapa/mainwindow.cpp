@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "login_register.h"
 #include "perfil.h"
+#include "textitem.h"
 
 MainWindow::MainWindow(User *user, QWidget *parent)
     : QMainWindow(parent)
@@ -23,6 +24,7 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     , grosorLinea(2)
     , textoActual(nullptr)
     , textoActivo(false)
+    , colorTexto(Qt::black)
 
 {
     ui->setupUi(this);
@@ -42,6 +44,11 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     ui->panelLapiz->move(20, 20);
     ui->panelLapiz->raise();
     ui->panelLapiz->hide();
+
+    ui->panelTexto->setParent(view);
+    ui->panelTexto->move(20, 20);
+    ui->panelTexto->raise();
+    ui->panelTexto->hide();
 
 
     //--------Preguntas------------
@@ -192,7 +199,7 @@ void MainWindow::applyZoom(double factor){
     escalado = newScale;
 }
 
-// --------- ROTACION --------------
+// ------- ACTUALIZACION DE MODOS ------------
 void MainWindow::actualizarAcciones(){
     bool hay_seleccion = !scene->selectedItems().isEmpty();
     ui->actionRotar_horario->setEnabled(hay_seleccion);
@@ -201,6 +208,7 @@ void MainWindow::actualizarAcciones(){
     if (gomaActiva) {
         lineaActual = nullptr;
         ui->panelLapiz->hide();
+        ui->panelTexto->hide();
         return;
     }
 
@@ -212,9 +220,11 @@ void MainWindow::actualizarAcciones(){
         if (linea) {
             lineaActual = linea;
             ui->panelLapiz->show();
+            ui->panelTexto->hide();
             QPen pen = linea->pen();
             ui->sliderGrosor2->setValue(pen.widthF());
             colorLinea = pen.color();
+            textoActual = nullptr;
         }
         else if (texto) {
             textoActual = texto;
@@ -228,11 +238,25 @@ void MainWindow::actualizarAcciones(){
 
             // Color actual
             colorTexto = texto->defaultTextColor();
+            lineaActual = nullptr;
         }
-
+        else {
+            // Si es otro tipo de item (regla, compás, etc.)
+            lineaActual = nullptr;
+            textoActual = nullptr;
+            ui->panelLapiz->hide();
+            ui->panelTexto->hide();
+        }
+    } else {
+        // NO HAY SELECCIÓN - ocultar paneles y limpiar referencias
+        lineaActual = nullptr;
+        textoActual = nullptr;
+        ui->panelLapiz->hide();
+        ui->panelTexto->hide();
     }
 }
 
+// --------- ROTACION --------------
 
 void MainWindow::rotarHorario(){ rotarSeleccion(5); }
 void MainWindow::rotarAntiHorario(){ rotarSeleccion(-5); }
@@ -390,6 +414,13 @@ void MainWindow::texto(){
     }
 }
 
+void MainWindow::salirModoTexto(){
+    textoActivo = false;
+    textoActual = nullptr;
+    view->viewport()->unsetCursor();
+    ui->panelTexto->hide();
+}
+
 
 
 // Para poder hacer zoom con el ratón
@@ -512,16 +543,15 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
             if (mouseEvent->button() == Qt::LeftButton) {
                 QPointF pos = view->mapToScene(mouseEvent->pos());
 
-                // Crear un item de texto editable
-                QGraphicsTextItem* textoItem = scene->addText("");
+                EditableTextItem* textoItem = new EditableTextItem(this);
+                scene->addItem(textoItem);
+
                 QFont font;
                 font.setPointSize(ui->fontSize->currentText().toInt());
                 font.setFamily(ui->fontType->currentFont().family());
 
                 textoItem->setFont(font);
                 textoItem->setDefaultTextColor(colorTexto);
-
-                textoItem->setDefaultTextColor(Qt::black); // color por defecto
                 textoItem->setPos(pos);
                 textoItem->setFlag(QGraphicsItem::ItemIsMovable);
                 textoItem->setFlag(QGraphicsItem::ItemIsSelectable);
@@ -529,14 +559,11 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
 
                 // Esto permite escribir directamente en el item
                 textoItem->setTextInteractionFlags(Qt::TextEditorInteraction);
-                textoItem->setFocus(); // pone el foco para escribir inmediatamente
+                textoItem->setFocus();
             }
             return true;
         }
     }
-
-
-
     return QMainWindow::eventFilter(obj, event);
 }
 

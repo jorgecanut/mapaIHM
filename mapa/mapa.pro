@@ -25,6 +25,7 @@ SOURCES += \
     mainwindow.cpp \
     perfil.cpp \
     preguntas.cpp \
+    textitem.cpp \
     utils.cpp
 
 HEADERS += \
@@ -33,6 +34,7 @@ HEADERS += \
     mainwindow.h \
     perfil.h \
     preguntas.h \
+    textitem.h \
     utils.h
 
 FORMS += \
