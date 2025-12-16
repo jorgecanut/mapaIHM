@@ -124,16 +124,6 @@ void MainWindow::applyZoom(double factor){
     }
     view->scale(factor, factor);
     escalado = newScale;
-
-    if (reglaPuesta){
-        reglaActual->setScale(0.3/escalado);
-    }
-    if (transportadorPuesto){
-        transportadorActual->setScale(0.15/escalado);
-    }
-    if (compasPuesto){
-        compasActual->setScale(0.5/escalado);
-    }
 }
 
 // --------- ROTACION --------------
@@ -185,10 +175,10 @@ QPointF MainWindow::posicionRaton(){
 }
 
 void MainWindow::regla() {
-    toggleHerramienta(reglaActual, reglaPuesta, ":/icons/icons/ruler2.svg", 0.3);
+    toggleHerramienta(reglaActual, reglaPuesta, ":/icons/icons/ruler2.svg", 2);
 }
 void MainWindow::transportador() {
-    toggleHerramienta(transportadorActual, transportadorPuesto, ":/icons/icons/transportador.svg",0.15);
+    toggleHerramienta(transportadorActual, transportadorPuesto, ":/icons/icons/transportador.svg",1.5);
 }
 void MainWindow::compas() {
     toggleHerramienta(compasActual, compasPuesto, ":/icons/icons/compass_leg.svg", 0.5);
@@ -207,7 +197,7 @@ void MainWindow::toggleHerramienta(QGraphicsSvgItem* &herr, bool &puesta, const 
         gomaActiva = false;
         textoActivo = false;
         herr = new QGraphicsSvgItem(icono);
-        ponerSvg(herr, escala/escalado);
+        ponerSvg(herr, escala);
         herr->setPos(posicionRaton() - herr->boundingRect().center());
         puesta = true;
     }
