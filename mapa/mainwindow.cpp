@@ -21,7 +21,9 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     , gomaActiva(false)
     , colorLinea(Qt::black)
     , grosorLinea(2)
+    , textoActual(nullptr)
     , textoActivo(false)
+
 {
     ui->setupUi(this);
 
@@ -41,10 +43,10 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     ui->panelLapiz->raise();
     ui->panelLapiz->hide();
 
-    ui->widget->setParent(view);
-    ui->widget->move(40, 40);
-    ui->widget->raise();
-    ui->widget->hide();
+    ui->panelTexto->setParent(view);
+    ui->panelTexto->move(20, 20);
+    ui->panelTexto->raise();
+    ui->panelTexto->hide();
 
     connect(ui->actionZoom_In, &QAction::triggered, this, &MainWindow::zoomIn);
     connect(ui->actionZoom_Out, &QAction::triggered, this, &MainWindow::zoomOut);
@@ -88,6 +90,16 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     });
     connect(ui->actionAleatoria, &QAction::triggered, this, &MainWindow::random_pregunta);
     connect(ui->actionGoma, &QAction::triggered, this, &MainWindow::goma);
+
+    connect(ui->cambiarColor, &QPushButton::clicked, this, [=](){
+        QColor color = QColorDialog::getColor(colorTexto, this);
+        if (color.isValid()){
+            colorTexto = color;
+            if(textoActual){
+
+            }
+        }
+    });
 
     // Esto es para poder hacer shift scroll no quitar
     view->viewport()->installEventFilter(this);
@@ -141,6 +153,7 @@ void MainWindow::actualizarAcciones(){
     if (hay_seleccion) {
         QGraphicsItem* item = scene->selectedItems().first();
         QGraphicsLineItem* linea = dynamic_cast<QGraphicsLineItem*>(item);
+        QGraphicsTextItem* texto = dynamic_cast<QGraphicsTextItem*>(item);
 
         if (linea) {
             lineaActual = linea;
@@ -148,6 +161,9 @@ void MainWindow::actualizarAcciones(){
             QPen pen = linea->pen();
             ui->sliderGrosor2->setValue(pen.widthF());
             colorLinea = pen.color();
+        }
+        else if (texto){
+
         }
     }
 }
@@ -260,6 +276,7 @@ void MainWindow::lapiz()
     gomaActiva = false;
     textoActivo = false;
     if (lapizActivo) {
+        ui->panelTexto->hide();
         ui->panelLapiz->show();
         QPixmap pm(":/icons/icons/pencil.png");
         QCursor cursor(pm.scaled(24,24, Qt::KeepAspectRatio, Qt::SmoothTransformation));
@@ -276,11 +293,13 @@ void MainWindow::goma()
     gomaActiva = !gomaActiva;
     lapizActivo = false;
     textoActivo = false;
-    ui->panelLapiz->hide();
+
     if (gomaActiva) {
         QPixmap pm(":/icons/icons/eraser.png");
         QCursor cursor(pm.scaled(24,24, Qt::KeepAspectRatio, Qt::SmoothTransformation));
         view->viewport()->setCursor(cursor);
+        ui->panelTexto->hide();
+        ui->panelLapiz->hide();
     } else {
         view->viewport()->unsetCursor(); // vuelve al cursor normal
     }
@@ -292,14 +311,17 @@ void MainWindow::texto(){
     textoActivo = !textoActivo;
     lapizActivo = false;
     gomaActiva = false;
-    ui->panelLapiz->hide();
 
     if (textoActivo) {
+        ui->panelLapiz->hide();
+        ui->panelTexto->show();
         QPixmap pm(":/icons/icons/text.png");
         QCursor cursor(pm.scaled(24, 24, Qt::KeepAspectRatio, Qt::SmoothTransformation));
         view->viewport()->setCursor(cursor);
+
     } else {
         view->viewport()->unsetCursor();
+        ui->panelTexto->hide();
     }
 }
 
@@ -448,12 +470,12 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
 
 //---------Preguntas----------
 void MainWindow::random_pregunta(){
-    Navigation &nav = Navigation::instance();
-    QVector preguntas = nav.problems();
+    // Navigation &nav = Navigation::instance();
+    // QVector preguntas = nav.problems();
 
-    int i = rand() % preguntas.size();
-    const QString &p = preguntas[i].text();
-    ui->lPreguntas->setWordWrap(true);
-    ui->lPreguntas->setText(p);
-    ui->widget->show();
+    // int i = rand() % preguntas.size();
+    // const QString &p = preguntas[i].text();
+    // ui->lPreguntas->setWordWrap(true);
+    // ui->lPreguntas->setText(p);
+    // ui->widget->show();
 }
