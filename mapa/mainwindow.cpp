@@ -61,6 +61,7 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     ui->pbSiguiente->setVisible(false);
     ui->pbRandom->setVisible(false);
     ui->pbAnterior->setVisible(false);
+    ui->pbResolverPreguntas->setVisible(false);
 
     Navigation &nav = Navigation::instance();
     listaPreguntas = nav.problems();
@@ -71,14 +72,14 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     }
 
     connect(ui->pbTogglePreguntas, &QPushButton::clicked,this, &MainWindow::toggleDockPreguntas);
-    connect(ui->pbAnterior, &QPushButton::clicked, this, [=](){
+    connect(ui->pbSiguiente, &QPushButton::clicked, this, [=](){
         if(preguntaActual< listaPreguntas.size()-1){
             preguntaActual++;
             cargarPregunta(preguntaActual);
         }
     });
 
-    connect(ui->pbSiguiente, &QPushButton::clicked, this, [=](){
+    connect(ui->pbAnterior, &QPushButton::clicked, this, [=](){
         if(preguntaActual > 0){
             preguntaActual--;
             cargarPregunta(preguntaActual);
@@ -89,6 +90,8 @@ MainWindow::MainWindow(User *user, QWidget *parent)
         preguntaActual = QRandomGenerator::global()->bounded(listaPreguntas.size());
         cargarPregunta(preguntaActual);
     });
+
+    connect(ui->pbResolverPreguntas, &QPushButton::clicked, this, &MainWindow::comprobarRespuestas);
 
     connect(ui->actionZoom_In, &QAction::triggered, this, &MainWindow::zoomIn);
     connect(ui->actionZoom_Out, &QAction::triggered, this, &MainWindow::zoomOut);
@@ -569,8 +572,11 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
 
 //---------Preguntas----------
 void MainWindow::cargarPregunta(int index){
+
     if (listaPreguntas.isEmpty())return;
     if(index<0 || index >= listaPreguntas.size()) return;
+
+    reseteoPreguntas();
 
     const Problem &p = listaPreguntas[index];
 
@@ -587,10 +593,10 @@ void MainWindow::cargarPregunta(int index){
     ui->rb4->setText(a[3].text());
 
     //Guardar si es correcto o no
-    ui->rb1->setProperty("valido", a[0].validity());
-    ui->rb2->setProperty("valido", a[1].validity());
-    ui->rb3->setProperty("valido", a[2].validity());
-    ui->rb4->setProperty("valido", a[3].validity());
+    ui->rb1->setProperty("correcta", a[0].validity());
+    ui->rb2->setProperty("correcta", a[1].validity());
+    ui->rb3->setProperty("correcta", a[2].validity());
+    ui->rb4->setProperty("correcta", a[3].validity());
 
     ui->rb1->setChecked(false);
     ui->rb2->setChecked(false);
@@ -620,6 +626,7 @@ void MainWindow::toggleDockPreguntas()
         ui->pbSiguiente->setVisible(false);
         ui->pbRandom->setVisible(false);
         ui->pbAnterior->setVisible(false);
+        ui->pbResolverPreguntas->setVisible(false);
     } else {
         // Expandir
         ui->dockWidget->setMinimumWidth(dockWidthExpandido);
@@ -635,5 +642,63 @@ void MainWindow::toggleDockPreguntas()
         ui->pbSiguiente->setVisible(true);
         ui->pbRandom->setVisible(true);
         ui->pbAnterior->setVisible(true);
+        ui->pbResolverPreguntas->setVisible(true);
     }
+}
+
+void MainWindow::comprobarRespuestas(){
+    QRadioButton *seleccionado = nullptr;
+
+    if(ui->rb1->isChecked()) seleccionado = ui->rb1;
+    else if(ui->rb2->isChecked()) seleccionado = ui->rb2;
+    else if(ui->rb3->isChecked()) seleccionado = ui->rb3;
+    else if(ui->rb4->isChecked()) seleccionado = ui->rb4;
+
+    if(!seleccionado){
+        QMessageBox::warning(this, "Atención", "Seleccione una respuesta primero");
+        return;
+    }
+    QRadioButton *correctaBtn = nullptr;
+    QRadioButton *btns[4] = {ui->rb1, ui->rb2, ui->rb3, ui->rb4};
+
+    for(auto *btn : btns){
+        if(btn->property("correcta").toBool()){
+             correctaBtn = btn;
+        }
+    }
+
+    bool correcta = seleccionado->property("correcta").toBool();
+
+    if(correcta){
+        seleccionado->setStyleSheet("background-color : green");
+        ui->rb1->setEnabled(false);
+        ui->rb2->setEnabled(false);
+        ui->rb3->setEnabled(false);
+        ui->rb4->setEnabled(false);
+
+    }else{
+        seleccionado->setStyleSheet("background-color : red");
+        if(correctaBtn){
+          seleccionado->setStyleSheet("background-color : green");
+        }
+        ui->rb1->setEnabled(false);
+        ui->rb2->setEnabled(false);
+        ui->rb3->setEnabled(false);
+        ui->rb4->setEnabled(false);
+    }
+    ui->pbResolverPreguntas->setEnabled(false);
+}
+
+void MainWindow::reseteoPreguntas(){
+    ui->rb1->setStyleSheet("");
+    ui->rb2->setStyleSheet("");
+    ui->rb3->setStyleSheet("");
+    ui->rb4->setStyleSheet("");
+
+    ui->rb1->setEnabled(true);
+    ui->rb2->setEnabled(true);
+    ui->rb3->setEnabled(true);
+    ui->rb4->setEnabled(true);
+
+     ui->pbResolverPreguntas->setEnabled(true);
 }

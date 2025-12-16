@@ -46,6 +46,7 @@ private:
     int preguntaActual = 0;
     QVector<Problem> listaPreguntas;
     void cargarPregunta(int index);
+    void reseteoPreguntas();
 
     float escalado;
 
@@ -102,6 +103,9 @@ private slots:
     void lapiz();
     void goma();
     void texto();
+
+    //---------Preguntas------------
+    void comprobarRespuestas();
 
 protected:
     // Para el zoom y la rueda
