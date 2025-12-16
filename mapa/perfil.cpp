@@ -20,6 +20,8 @@ Perfil::Perfil(User *user,QWidget *parent)
         this->setStyleSheet(styleSheet);
         file.close();
     }
+
+    configurarAvatar();
     ui->lErrorCorreo->setVisible(false);
     ui->lErrorContrasea->setVisible(false);
     ui->lErrorFecha->setVisible(false);
@@ -162,7 +164,7 @@ void Perfil::updateUserButton()
             nav.updateUser(u);
             QMessageBox::information(this, "Información", "Información actualizada correctamente");
             MainWindow *ventanaPrincipal = new MainWindow(m_user);
-            ventanaPrincipal->show();
+            ventanaPrincipal->showMaximized();
             this->close();
         }
 
@@ -197,5 +199,42 @@ void Perfil::updateAcceptEnabled()
     ui->pbConfirmarCambios->setEnabled(allValid);
 }
 
+// Archivo perfil.cpp, dentro de Perfil::configurarAvatar()
 
+// Archivo perfil.cpp, dentro de Perfil::configurarAvatar()
 
+// Archivo perfil.cpp, dentro de Perfil::configurarAvatar()
+
+void Perfil::configurarAvatar()
+{
+    if (!ui->lAvatar || !ui->pbCambiarAvatar) return;
+
+    // --- Definiciones de TAMAÑO y POSICIÓN FIJAS (Según XML/Constructor) ---
+    // Avatar: 150x150
+    const int avatarWidth = 150;
+    const int avatarHeight = 150;
+    // Posición del Avatar dentro del contenedor 'avatarOverlayContainer' (Según XML)
+    const int avatarX = 5;
+    const int avatarY = 5;
+
+    const int btnWidth = 40;
+
+    const int offset = 35;
+
+    int newX = avatarX + avatarWidth - offset;
+
+    // newY = (Posición Y inicial del avatar) + (Alto total del avatar) - offset
+    int newY = avatarY + avatarHeight - offset;
+
+    // 3. Mover el botón
+    ui->pbCambiarAvatar->move(newX, newY);
+    ui->pbCambiarAvatar->raise();
+}
+void Perfil::resizeEvent(QResizeEvent *event)
+{
+    // Llama a la implementación base para que la QMainWindow gestione sus layouts
+    QMainWindow::resizeEvent(event);
+
+    // Recalcula la posición del botón de edición
+    configurarAvatar();
+}

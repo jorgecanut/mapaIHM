@@ -177,6 +177,11 @@ QMainWindow, QWidget#LoginRegister, QWidget#Perfil, QWidget#centralwidget, QStac
     background-color: #2D2D30; /* Fondo gris oscuro uniforme */
 }
 
+QLabel#lAvatar {
+
+    border-radius: 50px;
+
+}
 /* ------------------------------------------------ */
 /* ENCABEZADOS Y TÍTULOS */
 /* ------------------------------------------------ */
@@ -266,6 +271,17 @@ QPushButton#pbConfirmarCambios:pressed {
 QPushButton#pbConfirmarCambios:disabled {
     background-color: #505055;
     color: #A0A0A0;
+}
+QPushButton#pbCambiarAvatar {
+    /* Tamaño de botón 40px -> Radio 20px */
+    border-radius: 20px;
+
+    /* Fondo blanco */
+    background-color: white;
+
+    /* Opcional: Sombra para efecto elevado */
+    border: none;
+    padding: 5px;
 }
 /* ------------------------------------------------ */
 /* CHECKBOXES (QCheckBox)                          */

@@ -32,7 +32,8 @@ private:
     bool validAge;
     bool validUsername;
 
-
+    void configurarAvatar();
+    void resizeEvent(QResizeEvent *event) override;
 
     void loadUserData();
 
