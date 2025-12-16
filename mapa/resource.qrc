@@ -19,6 +19,7 @@
         <file>icons/menos.png</file>
         <file>icons/reiniciar.png</file>
         <file>icons/rotar_antihorario.png</file>
+        <file>icons/rueda-de-color.png</file>
     </qresource>
     <qresource prefix="/iconos_usuarios">
         <file>oso.svg</file>
