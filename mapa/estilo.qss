@@ -333,24 +333,115 @@ QDateEdit::drop-down, QComboBox::drop-down {
 
 
 QWidget#dockWidgetContents {
-    background: #00A9FF;
-    color : #FFFFFF;
+    background: #609DBD;
+    color : #3B3D3D;
 }
 
-QPushButton#pbAnterior
-QPushButton#pbSiguiente
-QPushButton#pbRandom{
-    background-color: #00A9FF;
-    color: #FFFFFF;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 25px;
-    font-size: 15px;
+
+QPushButton#pbTogglePreguntas {
+    background: rgba(255,255,255,0.35);
+    border: 1px solid rgba(0,0,0,0.25);
+    border-radius: 6px;
     font-weight: bold;
-    /* Tamaños ajustados para asegurar visibilidad */
-    max-width: 70px;
-    margin-top: 20px;
-    margin-bottom: 10px;
 }
 
+QPushButton#pbTogglePreguntas:hover {
+    background: rgba(255,255,255,0.55);
+}
+
+/* =========================
+   ÍNDICE (Pregunta X / Y)
+   ========================= */
+QLabel#lIndice {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(59,61,61,0.8);
+}
+
+/* =========================
+   TEXTO DE LA PREGUNTA
+   ========================= */
+QLabel#lPregunta {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1f2424;
+}
+
+/* =========================
+   RESPUESTAS (RADIOS)
+   ========================= */
+QRadioButton {
+    padding: 8px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.35);
+    border: 1px solid rgba(0,0,0,0.20);
+    color: #1f2424;
+}
+
+QRadioButton:hover {
+    background: rgba(255,255,255,0.55);
+}
+
+QRadioButton::indicator {
+    width: 14px;
+    height: 14px;
+}
+
+QRadioButton::indicator:unchecked {
+    border: 2px solid rgba(31,36,36,0.6);
+    border-radius: 7px;
+    background: transparent;
+}
+
+QRadioButton::indicator:checked {
+    border: 2px solid #1f2424;
+    border-radius: 7px;
+    background: #1f2424;
+}
+
+/* Respuestas bloqueadas tras comprobar */
+QRadioButton:disabled {
+    color: rgba(31,36,36,0.5);
+    background: rgba(255,255,255,0.25);
+}
+
+/* =========================
+   BOTÓN CONFIRMAR
+   ========================= */
+QPushButton#pbResolverPreguntas {
+    background: #E9F2F6;
+    color: #1f2424;
+    border: 1px solid rgba(0,0,0,0.25);
+    border-radius: 12px;
+    padding: 10px;
+    font-weight: 800;
+}
+
+QPushButton#pbResolverPreguntas:hover {
+    background: #FFFFFF;
+}
+
+QPushButton#pbResolverPreguntas:disabled {
+    background: rgba(233,242,246,0.45);
+    color: rgba(31,36,36,0.5);
+}
+
+/* =========================
+   BOTONES DE NAVEGACIÓN
+   ========================= */
+QPushButton#pbAnterior,
+QPushButton#pbRandom,
+QPushButton#pbSiguiente {
+    background: rgba(255,255,255,0.30);
+    border: 1px solid rgba(0,0,0,0.20);
+    border-radius: 10px;
+    padding: 6px;
+    font-weight: 600;
+}
+
+QPushButton#pbAnterior:hover,
+QPushButton#pbRandom:hover,
+QPushButton#pbSiguiente:hover {
+    background: rgba(255,255,255,0.50);
+}
 
