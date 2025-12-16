@@ -239,7 +239,7 @@ QLineEdit[readOnly="true"] {
 /* ------------------------------------------------ */
 
 /* Estilo unificado para todos los botones principales de acción */
-QPushButton {
+QPushButton#pbConfirmarCambios {
     background-color: #00A9FF;
     color: #FFFFFF;
     border: none;
@@ -254,37 +254,18 @@ QPushButton {
     margin-bottom: 10px;
 }
 
-QPushButton:hover {
+QPushButton#pbConfirmarCambios:hover {
     background-color: #007ACC;
 }
 
-QPushButton:pressed {
+QPushButton#pbConfirmarCambios:pressed {
     background-color: #005A99;
 }
 
 /* Botón deshabilitado */
-QPushButton:disabled {
+QPushButton#pbConfirmarCambios:disabled {
     background-color: #505055;
     color: #A0A0A0;
-}
-
-QPushButton#pbCambiarAvatar{
-    background-color: #00A9FF;
-    color: #FFFFFF;
-    border: none;
-    border-radius: 1px;
-    padding: 10px 25px;
-    font-size: 13px;
-    font-weight: bold;
-    /* Tamaños ajustados para asegurar visibilidad */
-    min-width: 140px;
-    max-height: 50px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-QPushButton:hover#pbCambiarAvatar {
-    background-color: #007ACC;
 }
 /* ------------------------------------------------ */
 /* CHECKBOXES (QCheckBox)                          */

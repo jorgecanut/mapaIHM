@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QString>
 #include <QFileDialog>
+#include <QKeyEvent>
 
 LoginRegister::LoginRegister(QWidget *parent)
     : QMainWindow(parent)
@@ -168,7 +169,7 @@ void LoginRegister::user_contr_correct(){
             MainWindow *ventanaPrincipal = new MainWindow(user);
 
             // 2. Mostrar la ventana principal
-            ventanaPrincipal->show();
+            ventanaPrincipal->showMaximized();
 
             // 3. Cerrar la ventana de Login actual
             this->close();
@@ -220,7 +221,7 @@ void LoginRegister::addUserButton()
             MainWindow *ventanaPrincipal = new MainWindow(user);
 
             // 2. Mostrar la ventana principal
-            ventanaPrincipal->show();
+            ventanaPrincipal->showMaximized();
 
             // 3. Cerrar la ventana de Login actual
             this->close();
@@ -319,7 +320,6 @@ void LoginRegister::updateLoginAcceptEnabled()
     ui->pbInicioSesion->setEnabled(allValid);
 }
 
-#include <QKeyEvent>
 
 void LoginRegister::keyPressEvent(QKeyEvent *event)
 {
