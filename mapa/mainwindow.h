@@ -38,10 +38,13 @@ private:
     User *m_user;
     QGraphicsScene *scene;
     QGraphicsView *view;
-    bool dockExpandido = true;
-    int dockWidthExpandido = 220;
+    bool dockExpandido = false;
+    int dockWidthExpandido = 240;
 
-
+    //------Preguntas-------
+    int preguntaActual = 0;
+    QVector<Problem> listaPreguntas;
+    void cargarPregunta(int index);
 
     float escalado;
 
@@ -77,7 +80,6 @@ private:
     void rotarSeleccion(int angulo);
     QPointF posicionRaton();
     void reset();
-    void random_pregunta();
     void toggleHerramienta(QGraphicsSvgItem* &herr, bool &puesta, const QString &icono, double escala);
     void toggleDockPreguntas();
 

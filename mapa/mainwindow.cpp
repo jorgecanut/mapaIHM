@@ -44,8 +44,44 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     ui->panelLapiz->hide();
 
 
-    connect(ui->pbTogglePreguntas, &QPushButton::clicked,this, &MainWindow::toggleDockPreguntas);
+    //--------Preguntas------------
+    ui->lPregunta->setVisible(false);
+    ui->lIndice->setVisible(false);
+    ui->rb1->setVisible(false);
+    ui->rb2->setVisible(false);
+    ui->rb3->setVisible(false);
+    ui->rb4->setVisible(false);
+    ui->pbSiguiente->setVisible(false);
+    ui->pbRandom->setVisible(false);
+    ui->pbAnterior->setVisible(false);
 
+    Navigation &nav = Navigation::instance();
+    listaPreguntas = nav.problems();
+
+    if (!listaPreguntas.isEmpty()) {
+        preguntaActual = 0;
+        cargarPregunta(preguntaActual);
+    }
+
+    connect(ui->pbTogglePreguntas, &QPushButton::clicked,this, &MainWindow::toggleDockPreguntas);
+    connect(ui->pbAnterior, &QPushButton::clicked, this, [=](){
+        if(preguntaActual< listaPreguntas.size()-1){
+            preguntaActual++;
+            cargarPregunta(preguntaActual);
+        }
+    });
+
+    connect(ui->pbSiguiente, &QPushButton::clicked, this, [=](){
+        if(preguntaActual > 0){
+            preguntaActual--;
+            cargarPregunta(preguntaActual);
+        }
+    });
+
+    connect(ui->pbRandom, &QPushButton::clicked, this, [=](){
+        preguntaActual = QRandomGenerator::global()->bounded(listaPreguntas.size());
+        cargarPregunta(preguntaActual);
+    });
 
     connect(ui->actionZoom_In, &QAction::triggered, this, &MainWindow::zoomIn);
     connect(ui->actionZoom_Out, &QAction::triggered, this, &MainWindow::zoomOut);
@@ -87,7 +123,6 @@ MainWindow::MainWindow(User *user, QWidget *parent)
             }
         }
     });
-    connect(ui->actionAleatoria, &QAction::triggered, this, &MainWindow::random_pregunta);
     connect(ui->actionGoma, &QAction::triggered, this, &MainWindow::goma);
 
     connect(ui->cambiarColor, &QPushButton::clicked, this, [=](){
@@ -137,22 +172,7 @@ void MainWindow::zoomOut(){
     applyZoom(1.0 / 1.15);
 }
 
-void MainWindow::toggleDockPreguntas()
-{
-    if (dockExpandido) {
-        // Colapsar
-        ui->dockWidget->setMinimumWidth(30);
-        ui->dockWidget->setMaximumWidth(30);
-        ui->pbTogglePreguntas->setText("⮞");
-        dockExpandido = false;
-    } else {
-        // Expandir
-        ui->dockWidget->setMinimumWidth(dockWidthExpandido);
-        ui->dockWidget->setMaximumWidth(dockWidthExpandido);
-        ui->pbTogglePreguntas->setText("⮜");
-        dockExpandido = true;
-    }
-}
+
 
 void MainWindow::applyZoom(double factor){
     // factor > 1 acerca, factor < 1 aleja
@@ -521,13 +541,72 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
 }
 
 //---------Preguntas----------
-void MainWindow::random_pregunta(){
-    // Navigation &nav = Navigation::instance();
-    // QVector preguntas = nav.problems();
+void MainWindow::cargarPregunta(int index){
+    if (listaPreguntas.isEmpty())return;
+    if(index<0 || index >= listaPreguntas.size()) return;
 
-    // int i = rand() % preguntas.size();
-    // const QString &p = preguntas[i].text();
-    // ui->lPreguntas->setWordWrap(true);
-    // ui->lPreguntas->setText(p);
-    // ui->widget->show();
+    const Problem &p = listaPreguntas[index];
+
+    ui->lIndice->setText(QString("Pregunta %1 / %2").arg(index+1).arg(listaPreguntas.size()));
+
+    ui->lPregunta->setWordWrap(true);
+    ui->lPregunta->setText(p.text());
+
+    const auto &a = p.answers();
+
+    ui->rb1->setText(a[0].text());
+    ui->rb2->setText(a[1].text());
+    ui->rb3->setText(a[2].text());
+    ui->rb4->setText(a[3].text());
+
+    //Guardar si es correcto o no
+    ui->rb1->setProperty("valido", a[0].validity());
+    ui->rb2->setProperty("valido", a[1].validity());
+    ui->rb3->setProperty("valido", a[2].validity());
+    ui->rb4->setProperty("valido", a[3].validity());
+
+    ui->rb1->setChecked(false);
+    ui->rb2->setChecked(false);
+    ui->rb3->setChecked(false);
+    ui->rb4->setChecked(false);
+
+    ui->rb1->setAutoExclusive(true);
+    ui->rb2->setAutoExclusive(true);
+    ui->rb3->setAutoExclusive(true);
+    ui->rb4->setAutoExclusive(true);
+}
+
+void MainWindow::toggleDockPreguntas()
+{
+    if (dockExpandido) {
+        // Colapsar
+        ui->dockWidget->setMinimumWidth(30);
+        ui->dockWidget->setMaximumWidth(30);
+        ui->pbTogglePreguntas->setText("⮞");
+        dockExpandido = false;
+        ui->lPregunta->setVisible(false);
+        ui->lIndice->setVisible(false);
+        ui->rb1->setVisible(false);
+        ui->rb2->setVisible(false);
+        ui->rb3->setVisible(false);
+        ui->rb4->setVisible(false);
+        ui->pbSiguiente->setVisible(false);
+        ui->pbRandom->setVisible(false);
+        ui->pbAnterior->setVisible(false);
+    } else {
+        // Expandir
+        ui->dockWidget->setMinimumWidth(dockWidthExpandido);
+        ui->dockWidget->setMaximumWidth(dockWidthExpandido);
+        ui->pbTogglePreguntas->setText("⮜");
+        dockExpandido = true;
+        ui->lPregunta->setVisible(true);
+        ui->lIndice->setVisible(true);
+        ui->rb1->setVisible(true);
+        ui->rb2->setVisible(true);
+        ui->rb3->setVisible(true);
+        ui->rb4->setVisible(true);
+        ui->pbSiguiente->setVisible(true);
+        ui->pbRandom->setVisible(true);
+        ui->pbAnterior->setVisible(true);
+    }
 }
