@@ -674,7 +674,8 @@ void MainWindow::comprobarRespuestas(){
 
     for(auto *btn : btns){
         if(btn->property("correcta").toBool()){
-             correctaBtn = btn;
+            correctaBtn = btn;
+            break;
         }
     }
 
@@ -690,7 +691,7 @@ void MainWindow::comprobarRespuestas(){
     }else{
         seleccionado->setStyleSheet("background-color : red");
         if(correctaBtn){
-          seleccionado->setStyleSheet("background-color : green");
+          correctaBtn->setStyleSheet("background-color : green");
         }
         ui->rb1->setEnabled(false);
         ui->rb2->setEnabled(false);
@@ -701,15 +702,30 @@ void MainWindow::comprobarRespuestas(){
 }
 
 void MainWindow::reseteoPreguntas(){
-    ui->rb1->setStyleSheet("");
-    ui->rb2->setStyleSheet("");
-    ui->rb3->setStyleSheet("");
-    ui->rb4->setStyleSheet("");
+    ui->rb1->setStyleSheet(" background-color: #C7DCE8 ");
+    ui->rb2->setStyleSheet(" background-color: #C7DCE8");
+    ui->rb3->setStyleSheet(" background-color: #C7DCE8");
+    ui->rb4->setStyleSheet(" background-color: #C7DCE8");
 
     ui->rb1->setEnabled(true);
     ui->rb2->setEnabled(true);
     ui->rb3->setEnabled(true);
     ui->rb4->setEnabled(true);
+
+    ui->rb1->setAutoExclusive(false);
+    ui->rb2->setAutoExclusive(false);
+    ui->rb3->setAutoExclusive(false);
+    ui->rb4->setAutoExclusive(false);
+
+    ui->rb1->setChecked(false);
+    ui->rb2->setChecked(false);
+    ui->rb3->setChecked(false);
+    ui->rb4->setChecked(false);
+
+    ui->rb1->setAutoExclusive(true);
+    ui->rb2->setAutoExclusive(true);
+    ui->rb3->setAutoExclusive(true);
+    ui->rb4->setAutoExclusive(true);
 
      ui->pbResolverPreguntas->setEnabled(true);
 }

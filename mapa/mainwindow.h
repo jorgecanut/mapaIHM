@@ -40,7 +40,7 @@ private:
     QGraphicsScene *scene;
     QGraphicsView *view;
     bool dockExpandido = false;
-    int dockWidthExpandido = 240;
+    int dockWidthExpandido = 250;
 
     //------Preguntas-------
     int preguntaActual = 0;
