@@ -51,6 +51,20 @@ private:
     float escalado;
 
     // ---- HERRAMIENTAS ----
+    enum class HerramientaActiva {
+        Ninguna,
+        Lapiz,
+        Goma,
+        Texto,
+        Regla,
+        Compas,
+        Transportador
+    };
+
+    HerramientaActiva herramientaActual;
+
+
+    // ---- HERRAMIENTAS ITEM ---------
     QGraphicsSvgItem *reglaActual;
     QGraphicsSvgItem *compasActual;
     QGraphicsSvgItem *transportadorActual;
@@ -62,27 +76,24 @@ private:
     // ----- LINEAS -----
     QPointF inicioLinea;
     QGraphicsLineItem *lineaActual;
-    bool lapizActivo;
-    bool gomaActiva;
 
     QColor colorLinea;
     float grosorLinea;
 
     // ------- TEXTO -------
     QGraphicsTextItem *textoActual;
-    bool textoActivo;
     QColor colorTexto;
     int tamañoTexto;
 
 
     // ----- COSAS UTILES ------
+    void setHerramienta(HerramientaActiva nueva);
     void applyZoom(double factor);
     void ponerSvg(QGraphicsSvgItem *svgItem, double escaladoHerramienta);
     void rotarSvg(QGraphicsItem *svgItem, int rotacion);
     void rotarSeleccion(int angulo);
     QPointF posicionRaton();
     void reset();
-    void toggleHerramienta(QGraphicsSvgItem* &herr, bool &puesta, const QString &icono, double escala);
     void toggleDockPreguntas();
 
 private slots:

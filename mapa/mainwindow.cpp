@@ -11,6 +11,7 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     , scene(new QGraphicsScene(this))
     , view(new QGraphicsView(this))
     , escalado(0.2)
+    , herramientaActual(HerramientaActiva::Ninguna)
     , reglaActual(nullptr)
     , compasActual(nullptr)
     , transportadorActual(nullptr)
@@ -18,12 +19,9 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     , transportadorPuesto(false)
     , compasPuesto(false)
     , lineaActual(nullptr)
-    , lapizActivo(false)
-    , gomaActiva(false)
     , colorLinea(Qt::black)
     , grosorLinea(2)
     , textoActual(nullptr)
-    , textoActivo(false)
     , colorTexto(Qt::black)
 
 {
@@ -219,12 +217,6 @@ void MainWindow::actualizarAcciones(){
     ui->actionRotar_horario->setEnabled(hay_seleccion);
     ui->actionRotar_antihorario->setEnabled(hay_seleccion);
 
-    if (gomaActiva) {
-        lineaActual = nullptr;
-        ui->panelLapiz->hide();
-        ui->panelTexto->hide();
-        return;
-    }
 
     if (hay_seleccion) {
         QGraphicsItem* item = scene->selectedItems().first();
@@ -294,31 +286,106 @@ QPointF MainWindow::posicionRaton(){
 }
 
 void MainWindow::regla() {
-    toggleHerramienta(reglaActual, reglaPuesta, ":/icons/icons/ruler2.svg", 2);
+    setHerramienta(
+        herramientaActual == HerramientaActiva::Regla
+            ? HerramientaActiva::Ninguna
+            : HerramientaActiva::Regla
+        );
 }
 void MainWindow::transportador() {
-    toggleHerramienta(transportadorActual, transportadorPuesto, ":/icons/icons/transportador.svg",1.5);
+    setHerramienta(
+        herramientaActual == HerramientaActiva::Transportador
+            ? HerramientaActiva::Ninguna
+            : HerramientaActiva::Transportador
+        );
 }
 void MainWindow::compas() {
-    toggleHerramienta(compasActual, compasPuesto, ":/icons/icons/compass_leg.svg", 0.5);
+    setHerramienta(
+        herramientaActual == HerramientaActiva::Compas
+            ? HerramientaActiva::Ninguna
+            : HerramientaActiva::Compas
+        );
 }
 
+// ---------- DIBUJAR -------------
+void MainWindow::lapiz() {
+    setHerramienta(
+        herramientaActual == HerramientaActiva::Lapiz
+            ? HerramientaActiva::Ninguna
+            : HerramientaActiva::Lapiz
+        );
+}
 
-void MainWindow::toggleHerramienta(QGraphicsSvgItem* &herr, bool &puesta, const QString &icono, double escala){
-    if (puesta){
-        scene->removeItem(herr);
-        delete herr;
-        herr = nullptr;
-        puesta = false;
-    } else {
-        lapizActivo = false;
-        ui->panelLapiz->hide();
-        gomaActiva = false;
-        textoActivo = false;
-        herr = new QGraphicsSvgItem(icono);
-        ponerSvg(herr, escala);
-        herr->setPos(posicionRaton() - herr->boundingRect().center());
-        puesta = true;
+void MainWindow::goma(){
+    setHerramienta(
+        herramientaActual == HerramientaActiva::Goma
+            ? HerramientaActiva::Ninguna
+            : HerramientaActiva::Goma
+        );
+}
+
+void MainWindow::texto(){
+    setHerramienta(
+        herramientaActual == HerramientaActiva::Texto
+            ? HerramientaActiva::Ninguna
+            : HerramientaActiva::Texto
+        );
+}
+
+void MainWindow::setHerramienta(HerramientaActiva nueva)
+{
+    ui->panelLapiz->hide();
+    ui->panelTexto->hide();
+    view->viewport()->unsetCursor();
+
+    herramientaActual = nueva;
+
+    switch (nueva) {
+    case HerramientaActiva::Lapiz:
+        ui->panelLapiz->show();
+        view->viewport()->setCursor(QCursor(QPixmap(":/icons/icons/pencil.png").scaled(24,24)));
+        break;
+
+    case HerramientaActiva::Goma:
+        view->viewport()->setCursor(QCursor(QPixmap(":/icons/icons/eraser.png").scaled(24,24)));
+        break;
+
+    case HerramientaActiva::Texto:
+        ui->panelTexto->show();
+        view->viewport()->setCursor(QCursor(QPixmap(":/icons/icons/text.png").scaled(24,24)));
+        break;
+
+    case HerramientaActiva::Regla:
+        reglaPuesta = true;
+        reglaActual = new QGraphicsSvgItem(":/icons/icons/ruler2.svg");
+        ponerSvg(reglaActual, 2);
+        //reglaActual->setPos(posicionRaton() - reglaActual->boundingRect().center());
+        reglaActual->setPos(width()/2, height()/2);
+        view->viewport()->setCursor(QCursor(QPixmap(":/icons/icons/cursor_ruler.png").scaled(24,24)));
+        break;
+
+    case HerramientaActiva::Compas:
+        compasPuesto = true;
+        compasActual = new QGraphicsSvgItem(":/icons/icons/compass_leg.svg");
+        ponerSvg(compasActual, 2);
+        //compasActual->setPos(posicionRaton() - compasActual->boundingRect().center());
+        compasActual->setPos(width()/2, height()/2);
+        view->viewport()->setCursor(QCursor(QPixmap(":/icons/icons/compas-de-dibujo.png").scaled(24,24)));
+        break;
+
+    case HerramientaActiva::Transportador:
+        transportadorPuesto = true;
+        transportadorActual = new QGraphicsSvgItem(":/icons/icons/transportador.svg");
+        ponerSvg(transportadorActual, 1.5);
+        //transportadorActual->setPos(posicionRaton() - transportadorActual->boundingRect().center());
+        transportadorActual->setPos(width()/2, height()/2);
+        view->viewport()->setCursor(QCursor(QPixmap(":/icons/icons/angulo.png").scaled(24,24)));
+        break;
+
+    case HerramientaActiva::Ninguna:
+        view->viewport()->unsetCursor();
+        break;
+
     }
 }
 
@@ -372,64 +439,8 @@ void MainWindow::reset(){
     view->scale(escalado, escalado);
 }
 
-// ---------- DIBUJAR -------------
-void MainWindow::lapiz()
-{
-    lapizActivo = !lapizActivo;
-    gomaActiva = false;
-    textoActivo = false;
-    if (lapizActivo) {
-        ui->panelTexto->hide();
-        ui->panelLapiz->show();
-        QPixmap pm(":/icons/icons/pencil.png");
-        QCursor cursor(pm.scaled(24,24, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-        view->viewport()->setCursor(cursor);
-    } else {
-        ui->panelLapiz->hide();
-        view->viewport()->unsetCursor();
-    }
-}
-
-// -------- BORRAR -------------
-void MainWindow::goma()
-{
-    gomaActiva = !gomaActiva;
-    lapizActivo = false;
-    textoActivo = false;
-
-    if (gomaActiva) {
-        QPixmap pm(":/icons/icons/eraser.png");
-        QCursor cursor(pm.scaled(24,24, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-        view->viewport()->setCursor(cursor);
-        ui->panelTexto->hide();
-        ui->panelLapiz->hide();
-    } else {
-        view->viewport()->unsetCursor(); // vuelve al cursor normal
-    }
-}
-
-// ----- TEXTO -------
-
-void MainWindow::texto(){
-    textoActivo = !textoActivo;
-    lapizActivo = false;
-    gomaActiva = false;
-
-    if (textoActivo) {
-        ui->panelLapiz->hide();
-        ui->panelTexto->show();
-        QPixmap pm(":/icons/icons/text.png");
-        QCursor cursor(pm.scaled(24, 24, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-        view->viewport()->setCursor(cursor);
-
-    } else {
-        view->viewport()->unsetCursor();
-        ui->panelTexto->hide();
-    }
-}
 
 void MainWindow::salirModoTexto(){
-    textoActivo = false;
     textoActual = nullptr;
     view->viewport()->unsetCursor();
     ui->panelTexto->hide();
@@ -455,7 +466,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
     }
 
     // LINEAS
-    if (obj == view->viewport() && lapizActivo){
+    if (obj == view->viewport() && (herramientaActual == HerramientaActiva::Lapiz)){
         if (event->type() == QEvent::MouseButtonPress) {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
 
@@ -521,7 +532,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
     }
 
     // GOMA
-    if (obj == view->viewport() && gomaActiva) {
+    if (obj == view->viewport() && (herramientaActual == HerramientaActiva::Goma)) {
 
         if (event->type() == QEvent::MouseButtonPress) {
             QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
@@ -551,7 +562,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
     }
 
     // TEXTO
-    if (obj == view->viewport() && textoActivo) {
+    if (obj == view->viewport() && (herramientaActual == HerramientaActiva::Texto)) {
         if (event->type() == QEvent::MouseButtonPress) {
             QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
             if (mouseEvent->button() == Qt::LeftButton) {
@@ -702,7 +713,7 @@ void MainWindow::comprobarRespuestas(){
 }
 
 void MainWindow::reseteoPreguntas(){
-    ui->rb1->setStyleSheet(" background-color: #C7DCE8 ");
+    ui->rb1->setStyleSheet(" background-color: #C7DCE8");
     ui->rb2->setStyleSheet(" background-color: #C7DCE8");
     ui->rb3->setStyleSheet(" background-color: #C7DCE8");
     ui->rb4->setStyleSheet(" background-color: #C7DCE8");

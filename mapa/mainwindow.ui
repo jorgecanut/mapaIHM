@@ -410,7 +410,7 @@
      <x>0</x>
      <y>0</y>
      <width>718</width>
-     <height>25</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHerramientas">
@@ -681,6 +681,34 @@
      </layout>
     </widget>
    </widget>
+  </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionLapiz"/>
+   <addaction name="actionGoma"/>
+   <addaction name="actionTexto"/>
+   <addaction name="separator"/>
+   <addaction name="actionRegla"/>
+   <addaction name="actionCompas"/>
+   <addaction name="actionTransportador"/>
+   <addaction name="separator"/>
+   <addaction name="actionRotar_horario"/>
+   <addaction name="actionRotar_antihorario"/>
+   <addaction name="separator"/>
+   <addaction name="actionZoom_In"/>
+   <addaction name="actionZoom_Out"/>
+   <addaction name="separator"/>
+   <addaction name="actionResetear"/>
+   <addaction name="separator"/>
+   <addaction name="actionAleatoria"/>
   </widget>
   <action name="actionRegla">
    <property name="checkable">
