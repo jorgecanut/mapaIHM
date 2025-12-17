@@ -69,9 +69,9 @@ private:
     QGraphicsSvgItem *compasActual;
     QGraphicsSvgItem *transportadorActual;
 
-    bool reglaPuesta;
-    bool transportadorPuesto;
-    bool compasPuesto;
+    bool reglaActiva;
+    bool compasActivo;
+    bool transportadorActivo;
 
     // ----- LINEAS -----
     QPointF inicioLinea;

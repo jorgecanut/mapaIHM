@@ -15,9 +15,9 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     , reglaActual(nullptr)
     , compasActual(nullptr)
     , transportadorActual(nullptr)
-    , reglaPuesta(false)
-    , transportadorPuesto(false)
-    , compasPuesto(false)
+    , reglaActiva(false)
+    , compasActivo(false)
+    , transportadorActivo(false)
     , lineaActual(nullptr)
     , colorLinea(Qt::black)
     , grosorLinea(2)
@@ -46,12 +46,12 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     view->setDragMode(QGraphicsView::ScrollHandDrag);
 
     ui->panelLapiz->setParent(view);
-    ui->panelLapiz->move(20, 20);
+    ui->panelLapiz->move(20, 0);
     ui->panelLapiz->raise();
     ui->panelLapiz->hide();
 
     ui->panelTexto->setParent(view);
-    ui->panelTexto->move(20, 20);
+    ui->panelTexto->move(20, 0);
     ui->panelTexto->raise();
     ui->panelTexto->hide();
 
@@ -286,28 +286,15 @@ QPointF MainWindow::posicionRaton(){
 }
 
 void MainWindow::regla() {
-    setHerramienta(
-        herramientaActual == HerramientaActiva::Regla
-            ? HerramientaActiva::Ninguna
-            : HerramientaActiva::Regla
-        );
+    setHerramienta(HerramientaActiva::Regla);
 }
 void MainWindow::transportador() {
-    setHerramienta(
-        herramientaActual == HerramientaActiva::Transportador
-            ? HerramientaActiva::Ninguna
-            : HerramientaActiva::Transportador
-        );
+    setHerramienta(HerramientaActiva::Transportador);
 }
 void MainWindow::compas() {
-    setHerramienta(
-        herramientaActual == HerramientaActiva::Compas
-            ? HerramientaActiva::Ninguna
-            : HerramientaActiva::Compas
-        );
+    setHerramienta(HerramientaActiva::Compas);
 }
 
-// ---------- DIBUJAR -------------
 void MainWindow::lapiz() {
     setHerramienta(
         herramientaActual == HerramientaActiva::Lapiz
@@ -339,7 +326,6 @@ void MainWindow::setHerramienta(HerramientaActiva nueva)
     view->viewport()->unsetCursor();
 
     herramientaActual = nueva;
-
     switch (nueva) {
     case HerramientaActiva::Lapiz:
         ui->panelLapiz->show();
@@ -356,36 +342,62 @@ void MainWindow::setHerramienta(HerramientaActiva nueva)
         break;
 
     case HerramientaActiva::Regla:
-        reglaPuesta = true;
-        reglaActual = new QGraphicsSvgItem(":/icons/icons/ruler2.svg");
-        ponerSvg(reglaActual, 2);
-        //reglaActual->setPos(posicionRaton() - reglaActual->boundingRect().center());
-        reglaActual->setPos(width()/2, height()/2);
-        view->viewport()->setCursor(QCursor(QPixmap(":/icons/icons/cursor_ruler.png").scaled(24,24)));
+        if (!reglaActiva){
+            reglaActual = new QGraphicsSvgItem(":/icons/icons/ruler2.svg");
+            ponerSvg(reglaActual, 2);
+            reglaActual->setPos(scene->sceneRect().center() - reglaActual->boundingRect().center());
+            view->viewport()->setCursor(QCursor(QPixmap(":/icons/icons/cursor_ruler.png").scaled(24,24)));
+            reglaActiva = true;
+        }
+        else{
+            scene->removeItem(reglaActual);
+            delete reglaActual;
+            reglaActual = nullptr;
+            herramientaActual = HerramientaActiva::Ninguna;
+            view->viewport()->unsetCursor();
+            reglaActiva = false;
+        }
         break;
 
     case HerramientaActiva::Compas:
-        compasPuesto = true;
-        compasActual = new QGraphicsSvgItem(":/icons/icons/compass_leg.svg");
-        ponerSvg(compasActual, 2);
-        //compasActual->setPos(posicionRaton() - compasActual->boundingRect().center());
-        compasActual->setPos(width()/2, height()/2);
-        view->viewport()->setCursor(QCursor(QPixmap(":/icons/icons/compas-de-dibujo.png").scaled(24,24)));
+        if(!compasActivo){
+            compasActual = new QGraphicsSvgItem(":/icons/icons/compass_leg.svg");
+            ponerSvg(compasActual, 2);
+            compasActual->setPos(scene->sceneRect().center() - compasActual->boundingRect().center());
+            view->viewport()->setCursor(QCursor(QPixmap(":/icons/icons/compas-de-dibujo.png").scaled(24,24)));
+            compasActivo = true;
+        }
+        else{
+            scene->removeItem(compasActual);
+            delete compasActual;
+            compasActual = nullptr;
+            herramientaActual = HerramientaActiva::Ninguna;
+            view->viewport()->unsetCursor();
+            compasActivo = false;
+        }
         break;
 
     case HerramientaActiva::Transportador:
-        transportadorPuesto = true;
-        transportadorActual = new QGraphicsSvgItem(":/icons/icons/transportador.svg");
-        ponerSvg(transportadorActual, 1.5);
-        //transportadorActual->setPos(posicionRaton() - transportadorActual->boundingRect().center());
-        transportadorActual->setPos(width()/2, height()/2);
-        view->viewport()->setCursor(QCursor(QPixmap(":/icons/icons/angulo.png").scaled(24,24)));
+        if(!transportadorActivo){
+            transportadorActual = new QGraphicsSvgItem(":/icons/icons/transportador.svg");
+            ponerSvg(transportadorActual, 1.5);
+            transportadorActual->setPos(scene->sceneRect().center() - transportadorActual->boundingRect().center());
+            view->viewport()->setCursor(QCursor(QPixmap(":/icons/icons/angulo.png").scaled(24,24)));
+            transportadorActivo = true;
+        }
+        else{
+            scene->removeItem(transportadorActual);
+            delete transportadorActual;
+            transportadorActual = nullptr;
+            herramientaActual = HerramientaActiva::Ninguna;
+            view->viewport()->unsetCursor();
+            transportadorActivo = false;
+        }
         break;
 
     case HerramientaActiva::Ninguna:
         view->viewport()->unsetCursor();
         break;
-
     }
 }
 
@@ -420,15 +432,16 @@ void MainWindow::cerrarSesion(){
 // ------------------ RESET ---------------
 void MainWindow::reset(){
     scene->clear();
+    herramientaActual = HerramientaActiva::Ninguna;
 
     reglaActual = nullptr;
     transportadorActual = nullptr;
     compasActual = nullptr;
     lineaActual = nullptr;
+    textoActual = nullptr;
 
-    reglaPuesta = false;
-    transportadorPuesto = false;
-    compasPuesto = false;
+    ui->panelLapiz->hide();
+    ui->panelTexto->hide();
 
     QPixmap pm(":/icons/icons/carta_nautica.jpg");
     QGraphicsPixmapItem *item = scene->addPixmap(pm);
@@ -437,6 +450,7 @@ void MainWindow::reset(){
     escalado = 0.2;
     view->resetTransform();
     view->scale(escalado, escalado);
+    view->viewport()->unsetCursor();
 }
 
 
