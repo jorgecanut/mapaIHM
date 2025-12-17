@@ -43,7 +43,11 @@ private:
     int dockWidthExpandido = 250;
 
     //------Preguntas-------
+    Session sesion;
     int preguntaActual = 0;
+    int aciertos = 0;
+    int fallos = 0;
+    QSet<int> preguntasRespondidas;
     QVector<Problem> listaPreguntas;
     void cargarPregunta(int index);
     void reseteoPreguntas();

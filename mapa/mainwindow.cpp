@@ -422,6 +422,10 @@ void MainWindow::abrirPerfil(){
 }
 
 void MainWindow::cerrarSesion(){
+    sesion= Session(QDateTime::currentDateTime(), aciertos, fallos);
+    Navigation::instance().addSession(m_user->nickName(), sesion);
+    aciertos = 0;
+    fallos = 0;
     LoginRegister *login = new LoginRegister();
     login->show();
     login->mostrarLogin();
@@ -684,6 +688,7 @@ void MainWindow::toggleDockPreguntas()
 
 void MainWindow::comprobarRespuestas(){
     QRadioButton *seleccionado = nullptr;
+    preguntasRespondidas.insert(preguntaActual);
 
     if(ui->rb1->isChecked()) seleccionado = ui->rb1;
     else if(ui->rb2->isChecked()) seleccionado = ui->rb2;
@@ -708,6 +713,7 @@ void MainWindow::comprobarRespuestas(){
 
     if(correcta){
         seleccionado->setStyleSheet("background-color : green");
+        aciertos++;
         ui->rb1->setEnabled(false);
         ui->rb2->setEnabled(false);
         ui->rb3->setEnabled(false);
@@ -715,6 +721,7 @@ void MainWindow::comprobarRespuestas(){
 
     }else{
         seleccionado->setStyleSheet("background-color : red");
+        fallos++;
         if(correctaBtn){
           correctaBtn->setStyleSheet("background-color : green");
         }
@@ -727,30 +734,38 @@ void MainWindow::comprobarRespuestas(){
 }
 
 void MainWindow::reseteoPreguntas(){
-    ui->rb1->setStyleSheet(" background-color: #C7DCE8");
-    ui->rb2->setStyleSheet(" background-color: #C7DCE8");
-    ui->rb3->setStyleSheet(" background-color: #C7DCE8");
-    ui->rb4->setStyleSheet(" background-color: #C7DCE8");
+    bool respondida = preguntasRespondidas.contains(preguntaActual);
 
-    ui->rb1->setEnabled(true);
-    ui->rb2->setEnabled(true);
-    ui->rb3->setEnabled(true);
-    ui->rb4->setEnabled(true);
+    if(!respondida){
+        ui->rb1->setStyleSheet(" background-color: #C7DCE8");
+        ui->rb2->setStyleSheet(" background-color: #C7DCE8");
+        ui->rb3->setStyleSheet(" background-color: #C7DCE8");
+        ui->rb4->setStyleSheet(" background-color: #C7DCE8");
 
-    ui->rb1->setAutoExclusive(false);
-    ui->rb2->setAutoExclusive(false);
-    ui->rb3->setAutoExclusive(false);
-    ui->rb4->setAutoExclusive(false);
+        ui->rb1->setEnabled(true);
+        ui->rb2->setEnabled(true);
+        ui->rb3->setEnabled(true);
+        ui->rb4->setEnabled(true);
 
-    ui->rb1->setChecked(false);
-    ui->rb2->setChecked(false);
-    ui->rb3->setChecked(false);
-    ui->rb4->setChecked(false);
+        ui->rb1->setAutoExclusive(false);
+        ui->rb2->setAutoExclusive(false);
+        ui->rb3->setAutoExclusive(false);
+        ui->rb4->setAutoExclusive(false);
 
-    ui->rb1->setAutoExclusive(true);
-    ui->rb2->setAutoExclusive(true);
-    ui->rb3->setAutoExclusive(true);
-    ui->rb4->setAutoExclusive(true);
+        ui->rb1->setChecked(false);
+        ui->rb2->setChecked(false);
+        ui->rb3->setChecked(false);
+        ui->rb4->setChecked(false);
 
-     ui->pbResolverPreguntas->setEnabled(true);
+        ui->rb1->setAutoExclusive(true);
+        ui->rb2->setAutoExclusive(true);
+        ui->rb3->setAutoExclusive(true);
+        ui->rb4->setAutoExclusive(true);
+
+        ui->pbResolverPreguntas->setEnabled(true);
+    }else{
+
+    }
+
+
 }
