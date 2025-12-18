@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>Perfil</class>
- <widget class="QMainWindow" name="Perfil">
+ <widget class="QDialog" name="Perfil">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -10,518 +10,382 @@
     <height>650</height>
    </rect>
   </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
-  </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Perfil de Usuario</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>0</width>
-     <height>550</height>
-    </size>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayout_Main">
-    <item>
-     <spacer name="verticalSpacer_Top">
-      <property name="orientation">
-       <enum>Qt::Orientation::Vertical</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Policy::Expanding</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_AvatarBlock">
-      <item>
-       <spacer name="horizontalSpacer_LeftCenter">
-        <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
+  <layout class="QVBoxLayout" name="verticalLayout_Main">
+   <item>
+    <spacer name="verticalSpacer_Top">
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_AvatarBlock">
+     <item>
+      <spacer name="horizontalSpacer_LeftCenter">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QWidget" name="avatarOverlayContainer" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>160</width>
+         <height>160</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>160</width>
+         <height>160</height>
+        </size>
+       </property>
+       <widget class="QLabel" name="lAvatar">
+        <property name="geometry">
+         <rect>
+          <x>5</x>
+          <y>5</y>
+          <width>150</width>
+          <height>150</height>
+         </rect>
         </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Policy::Expanding</enum>
+        <property name="pixmap">
+         <pixmap resource="resource.qrc">:/iconos_usuarios/arana.svg</pixmap>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QWidget" name="avatarOverlayContainer">
-        <property name="minimumSize">
-         <size>
-          <width>160</width>
-          <height>160</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>160</width>
-          <height>160</height>
-         </size>
-        </property>
-        <widget class="QLabel" name="lAvatar">
-         <property name="geometry">
-          <rect>
-           <x>5</x>
-           <y>5</y>
-           <width>150</width>
-           <height>150</height>
-          </rect>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>150</width>
-           <height>150</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>150</width>
-           <height>150</height>
-          </size>
-         </property>
-         <property name="layoutDirection">
-          <enum>Qt::LayoutDirection::LeftToRight</enum>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="resource.qrc">:/iconos_usuarios/arana.svg</pixmap>
-         </property>
-         <property name="scaledContents">
-          <bool>true</bool>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignCenter</set>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="pbCambiarAvatar">
-         <property name="geometry">
-          <rect>
-           <x>120</x>
-           <y>120</y>
-           <width>40</width>
-           <height>40</height>
-          </rect>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>40</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>40</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset resource="resource.qrc">
-           <normaloff>:/icons/icons/ataque.png</normaloff>:/icons/icons/ataque.png</iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>24</width>
-           <height>24</height>
-          </size>
-         </property>
-        </widget>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_RightCenter">
-        <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Policy::Expanding</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <widget class="QLabel" name="label_2">
-      <property name="text">
-       <string>Nombre de usuario</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLineEdit" name="leNombreUsuario">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>300</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>300</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <spacer name="verticalSpacer_2">
-      <property name="orientation">
-       <enum>Qt::Orientation::Vertical</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Policy::Expanding</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item>
-     <widget class="QLabel" name="label_3">
-      <property name="text">
-       <string>Contraseña</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="QLineEdit" name="leContrasea">
-        <property name="minimumSize">
-         <size>
-          <width>300</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>300</width>
-          <height>30</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="lErrorContrasea">
-        <property name="styleSheet">
-         <string notr="true">color:red</string>
-        </property>
-        <property name="text">
-         <string>La contraseña debe incluir caracteres especiales y numéricos</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Policy::Expanding</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <widget class="QCheckBox" name="cMostrarContrasea">
-      <property name="text">
-       <string>Mostrar Contraseña</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <spacer name="verticalSpacer_3">
-      <property name="orientation">
-       <enum>Qt::Orientation::Vertical</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Policy::Expanding</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item>
-     <widget class="QLabel" name="label_4">
-      <property name="text">
-       <string>Correo electrónico</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
-      <item>
-       <widget class="QLineEdit" name="leCorreo">
-        <property name="minimumSize">
-         <size>
-          <width>400</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>400</width>
-          <height>30</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="lErrorCorreo">
-        <property name="enabled">
+        <property name="scaledContents">
          <bool>true</bool>
         </property>
-        <property name="styleSheet">
-         <string notr="true">color:red</string>
-        </property>
-        <property name="text">
-         <string>El correo introducido no es correcto</string>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
         </property>
        </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
+       <widget class="QPushButton" name="pbCambiarAvatar">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>120</y>
           <width>40</width>
-          <height>20</height>
-         </size>
+          <height>40</height>
+         </rect>
         </property>
-       </spacer>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <spacer name="verticalSpacer_4">
-      <property name="orientation">
-       <enum>Qt::Orientation::Vertical</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Policy::Expanding</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item>
-     <widget class="QLabel" name="label_5">
-      <property name="text">
-       <string>Fecha de nacimiento</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_4">
-      <item>
-       <widget class="QDateEdit" name="daFechaNacimiento">
-        <property name="maximumSize">
+        <property name="icon">
+         <iconset resource="resource.qrc">
+          <normaloff>:/icons/icons/ataque.png</normaloff>:/icons/icons/ataque.png</iconset>
+        </property>
+        <property name="iconSize">
          <size>
-          <width>120</width>
-          <height>16777215</height>
+          <width>24</width>
+          <height>24</height>
          </size>
-        </property>
-        <property name="displayFormat">
-         <string>d/M/yyyy</string>
         </property>
        </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="lErrorFecha">
-        <property name="styleSheet">
-         <string notr="true">color : red</string>
-        </property>
-        <property name="text">
-         <string>Debes ser mayor a 16 años.</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_4_Date">
-        <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Policy::Expanding</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <spacer name="verticalSpacer_5">
-      <property name="orientation">
-       <enum>Qt::Orientation::Vertical</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Policy::Expanding</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_6">
-      <item>
-       <spacer name="horizontalSpacer_BtnConfirmar_Left">
-        <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Policy::Expanding</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pbConfirmarCambios">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>250</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>CONFIRMAR CAMBIOS</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_BtnConfirmar_Right">
-        <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Policy::Expanding</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <spacer name="verticalSpacer_Bottom">
-      <property name="orientation">
-       <enum>Qt::Orientation::Vertical</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Policy::Expanding</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>37</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_RightCenter">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Nombre de usuario</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="leNombreUsuario">
+     <property name="maximumSize">
+      <size>
+       <width>300</width>
+       <height>30</height>
+      </size>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Contraseña</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLineEdit" name="leContrasea">
+       <property name="maximumSize">
+        <size>
+         <width>300</width>
+         <height>30</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="lErrorContrasea">
+       <property name="styleSheet">
+        <string notr="true">color:red</string>
+       </property>
+       <property name="text">
+        <string>La contraseña debe incluir caracteres especiales y numéricos</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="cMostrarContrasea">
+     <property name="text">
+      <string>Mostrar Contraseña</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_3">
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Correo electrónico</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QLineEdit" name="leCorreo">
+       <property name="maximumSize">
+        <size>
+         <width>400</width>
+         <height>30</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="lErrorCorreo">
+       <property name="styleSheet">
+        <string notr="true">color:red</string>
+       </property>
+       <property name="text">
+        <string>El correo introducido no es correcto</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_4">
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>Fecha de nacimiento</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QDateEdit" name="daFechaNacimiento">
+       <property name="maximumSize">
+        <size>
+         <width>120</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="displayFormat">
+        <string>d/M/yyyy</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="lErrorFecha">
+       <property name="styleSheet">
+        <string notr="true">color : red</string>
+       </property>
+       <property name="text">
+        <string>Debes ser mayor a 16 años.</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_4_Date">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_5">
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_6">
+     <item>
+      <spacer name="horizontalSpacer_BtnConfirmar_Left">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pbConfirmarCambios">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>250</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>CONFIRMAR CAMBIOS</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_BtnConfirmar_Right">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_Bottom">
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
  </widget>
  <resources>
   <include location="resource.qrc"/>

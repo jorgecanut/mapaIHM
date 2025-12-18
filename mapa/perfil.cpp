@@ -4,7 +4,7 @@
 #include "mainwindow.h"
 
 Perfil::Perfil(User *user,QWidget *parent)
-    : QMainWindow(parent)
+    : QDialog(parent)
     , ui(new Ui::Perfil)
     , m_user(user)
     , validEmail(true)
@@ -162,10 +162,10 @@ void Perfil::updateUserButton()
                    ui->lAvatar->pixmap().toImage(),
                    ui->daFechaNacimiento->date());
             nav.updateUser(u);
+            *m_user = u;
             QMessageBox::information(this, "Información", "Información actualizada correctamente");
-            MainWindow *ventanaPrincipal = new MainWindow(m_user);
-            ventanaPrincipal->showMaximized();
-            this->close();
+
+            this->accept();
         }
 
     } catch (const NavDAOException &ex) {
@@ -233,7 +233,7 @@ void Perfil::configurarAvatar()
 void Perfil::resizeEvent(QResizeEvent *event)
 {
     // Llama a la implementación base para que la QMainWindow gestione sus layouts
-    QMainWindow::resizeEvent(event);
+    QDialog::resizeEvent(event);
 
     // Recalcula la posición del botón de edición
     configurarAvatar();

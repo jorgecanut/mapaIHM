@@ -15,7 +15,7 @@ class Perfil;
 }
 QT_END_NAMESPACE
 
-class Perfil : public QMainWindow
+class Perfil : public QDialog
 {
     Q_OBJECT
 

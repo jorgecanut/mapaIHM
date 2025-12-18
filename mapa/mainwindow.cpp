@@ -35,7 +35,7 @@ MainWindow::MainWindow(User *user, QWidget *parent)
 
     // 3. Insertarlo en la toolbar JUSTO ANTES de "Mi Perfil"
     // Esto enviará a "Mi Perfil" y a "Cerrar Sesión" al extremo derecho.
-    ui->toolBar->insertWidget(ui->actionMi_Perfil, spacer);
+    ui->toolBar->insertWidget(ui->actionEstadisticas, spacer);
 
     QFile file(":/estilos/estilo.qss"); // Ruta al archivo en el recurso
     if (file.open(QFile::ReadOnly)) {
@@ -241,52 +241,43 @@ void MainWindow::applyZoom(double factor){
 
 // ------- ACTUALIZACION DE MODOS ------------
 void MainWindow::actualizarAcciones(){
-    bool hay_seleccion = !scene->selectedItems().isEmpty();
-    ui->actionRotar_horario->setEnabled(hay_seleccion);
-    ui->actionRotar_antihorario->setEnabled(hay_seleccion);
+    // Obtenemos la lista una sola vez para que sea estable
+    QList<QGraphicsItem*> seleccion = scene->selectedItems();
 
-
-    if (hay_seleccion) {
-        QGraphicsItem* item = scene->selectedItems().first();
-        QGraphicsLineItem* linea = dynamic_cast<QGraphicsLineItem*>(item);
-        QGraphicsTextItem* texto = dynamic_cast<QGraphicsTextItem*>(item);
-
-        if (linea) {
-            lineaActual = linea;
-            ui->panelLapiz->show();
-            ui->panelTexto->hide();
-            QPen pen = linea->pen();
-            ui->sliderGrosor2->setValue(pen.widthF());
-            colorLinea = pen.color();
-            textoActual = nullptr;
-        }
-        else if (texto) {
-            textoActual = texto;
-            ui->panelLapiz->hide();
-            ui->panelTexto->show();
-
-            // Fuente actual
-            QFont font = texto->font();
-            ui->fontType->setCurrentFont(font);
-            ui->fontSize->setCurrentText(QString::number(font.pointSize()));
-
-            // Color actual
-            colorTexto = texto->defaultTextColor();
-            lineaActual = nullptr;
-        }
-        else {
-            // Si es otro tipo de item (regla, compás, etc.)
-            lineaActual = nullptr;
-            textoActual = nullptr;
-            ui->panelLapiz->hide();
-            ui->panelTexto->hide();
-        }
-    } else {
-        // NO HAY SELECCIÓN - ocultar paneles y limpiar referencias
+    if (seleccion.isEmpty()) {
         lineaActual = nullptr;
         textoActual = nullptr;
         ui->panelLapiz->hide();
         ui->panelTexto->hide();
+        ui->actionRotar_horario->setEnabled(false);
+        ui->actionRotar_antihorario->setEnabled(false);
+        return; // Salimos temprano si no hay nada
+    }
+
+    // Ahora es seguro usar seleccion.first()
+    ui->actionRotar_horario->setEnabled(true);
+    ui->actionRotar_antihorario->setEnabled(true);
+
+    QGraphicsItem* item = seleccion.first();
+
+    // Usamos qgraphicsitem_cast que es más seguro y rápido que dynamic_cast en Qt
+    QGraphicsLineItem* linea = qgraphicsitem_cast<QGraphicsLineItem*>(item);
+    QGraphicsTextItem* texto = qgraphicsitem_cast<QGraphicsTextItem*>(item);
+
+    if (linea) {
+        lineaActual = linea;
+        ui->panelLapiz->show();
+        ui->panelTexto->hide();
+        ui->sliderGrosor2->setValue(linea->pen().width());
+        colorLinea = linea->pen().color();
+    }
+    else if (texto) {
+        textoActual = texto;
+        ui->panelLapiz->hide();
+        ui->panelTexto->show();
+        ui->fontType->setCurrentFont(texto->font());
+        ui->fontSize->setCurrentText(QString::number(texto->font().pointSize()));
+        colorTexto = texto->defaultTextColor();
     }
 }
 
@@ -446,9 +437,12 @@ void MainWindow::ponerSvg(QGraphicsSvgItem *svgItem, double escaladoHerramienta)
 
 // -------------------- PERFIL / SESIÓN --------------------
 void MainWindow::abrirPerfil(){
-    Perfil *perfil = new Perfil(m_user);
-    perfil->show();
-    this->close();
+    Perfil ventanaPerfil(m_user, this);
+    if (ventanaPerfil.exec() == QDialog::Accepted) {
+        // Opcional: Si el usuario cambió su avatar o nombre,
+        // podrías refrescar algún label de la MainWindow aquí.
+        qDebug() << "Cambios guardados y volviendo al mapa...";
+    }
 }
 
 void MainWindow::cerrarSesion(){
@@ -640,8 +634,15 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
     return QMainWindow::eventFilter(obj, event);
 }
 
-void MainWindow::estadisticas(){
-    stats *Stats = new stats(m_user, &sesion);
+void MainWindow::estadisticas() {
+    // Si m_user es nulo por algún error previo, evitamos el crash aquí
+    if (!m_user) {
+        QMessageBox::critical(this, "Error", "No hay un usuario cargado.");
+        return;
+    }
+
+    stats *Stats = new stats(m_user, &sesion, this);
+    Stats->setAttribute(Qt::WA_DeleteOnClose);
     Stats->show();
 }
 

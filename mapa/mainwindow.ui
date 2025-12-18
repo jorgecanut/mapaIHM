@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>718</width>
+    <width>787</width>
     <height>727</height>
    </rect>
   </property>
@@ -402,8 +402,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>718</width>
-     <height>21</height>
+     <width>787</width>
+     <height>37</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHerramientas">
@@ -702,10 +702,10 @@
    <addaction name="separator"/>
    <addaction name="actionResetear"/>
    <addaction name="separator"/>
-   <addaction name="actionMi_Perfil"/>
-   <addaction name="actionCerrar_Sesion"/>
-   <addaction name="separator"/>
    <addaction name="actionEstadisticas"/>
+   <addaction name="actionMi_Perfil"/>
+   <addaction name="separator"/>
+   <addaction name="actionCerrar_Sesion"/>
   </widget>
   <action name="actionRegla">
    <property name="checkable">
@@ -891,13 +891,15 @@
    </property>
    <property name="text">
     <string>Mover Regla</string>
+   </property>
+  </action>
   <action name="actionEstadisticas">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/icons/icons/usuario2.png</normaloff>:/icons/icons/usuario2.png</iconset>
+     <normaloff>:/icons/icons/grafico-de-barras.png</normaloff>:/icons/icons/grafico-de-barras.png</iconset>
    </property>
    <property name="text">
     <string>Estadisticas</string>
