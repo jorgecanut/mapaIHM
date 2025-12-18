@@ -3,6 +3,7 @@
 #include "login_register.h"
 #include "perfil.h"
 #include "textitem.h"
+#include <stats.h>
 
 MainWindow::MainWindow(User *user, QWidget *parent)
     : QMainWindow(parent)
@@ -79,6 +80,21 @@ MainWindow::MainWindow(User *user, QWidget *parent)
 
     Navigation &nav = Navigation::instance();
     listaPreguntas = nav.problems();
+    estadosPreguntas.clear();
+    estadosPreguntas.resize(listaPreguntas.size());
+    preguntasRespondidas.clear();
+
+    for(int i = 0; i < listaPreguntas.size(); i++){
+        const auto &ans = listaPreguntas[i].answers();
+        int idxCorrecta = -1;
+        for(int j = 0; j < ans.size(); j++){
+            if(ans[j].validity()){
+                idxCorrecta = j;
+                break;
+            }
+        }
+        estadosPreguntas[i].correcta = idxCorrecta;
+    }
 
     if (!listaPreguntas.isEmpty()) {
         preguntaActual = 0;
@@ -132,6 +148,7 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     connect(ui->actionCerrar_Sesion, &QAction::triggered,this,&MainWindow::cerrarSesion);
     connect(ui->actionResetear, &QAction::triggered, this, &MainWindow::reset);
     connect(ui->actionTexto, &QAction::triggered, this, &MainWindow::texto);
+    connect(ui->actionEstadisticas, &QAction::triggered, this, &MainWindow::estadisticas);
 
     connect(ui->sliderGrosor2, &QSlider::valueChanged, this, [=](int value){
         grosorLinea = value;
@@ -623,13 +640,18 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
     return QMainWindow::eventFilter(obj, event);
 }
 
+void MainWindow::estadisticas(){
+    stats *Stats = new stats(m_user, &sesion);
+    Stats->show();
+}
+
 //---------Preguntas----------
 void MainWindow::cargarPregunta(int index){
 
     if (listaPreguntas.isEmpty())return;
-    if(index<0 || index >= listaPreguntas.size()) return;
+    if(index < 0 || index >= listaPreguntas.size()) return;
 
-    reseteoPreguntas();
+
 
     const Problem &p = listaPreguntas[index];
 
@@ -639,19 +661,17 @@ void MainWindow::cargarPregunta(int index){
     ui->lPregunta->setText(p.text());
 
     const auto &a = p.answers();
+    if(a.size() < 4) return;
 
-    ui->rb1->setText(a[0].text());
-    ui->rb2->setText(a[1].text());
-    ui->rb3->setText(a[2].text());
-    ui->rb4->setText(a[3].text());
+    QRadioButton *btns[4] {ui->rb1, ui->rb2, ui->rb3,  ui->rb4};
 
-    //Guardar si es correcto o no
-    ui->rb1->setProperty("correcta", a[0].validity());
-    ui->rb2->setProperty("correcta", a[1].validity());
-    ui->rb3->setProperty("correcta", a[2].validity());
-    ui->rb4->setProperty("correcta", a[3].validity());
+    for(int i = 0; i < 4; i++){
+        btns[i]->setText(a[i].text());
+        btns[i]->setProperty("correcta", a[i].validity());
+    }
 
-    ui->rb1->setChecked(false);
+    aplicarEstadoPregunta(index);
+    /*ui->rb1->setChecked(false);
     ui->rb2->setChecked(false);
     ui->rb3->setChecked(false);
     ui->rb4->setChecked(false);
@@ -659,7 +679,7 @@ void MainWindow::cargarPregunta(int index){
     ui->rb1->setAutoExclusive(true);
     ui->rb2->setAutoExclusive(true);
     ui->rb3->setAutoExclusive(true);
-    ui->rb4->setAutoExclusive(true);
+    ui->rb4->setAutoExclusive(true);*/
 }
 
 void MainWindow::toggleDockPreguntas()
@@ -700,88 +720,106 @@ void MainWindow::toggleDockPreguntas()
 }
 
 void MainWindow::comprobarRespuestas(){
-    QRadioButton *seleccionado = nullptr;
-    preguntasRespondidas.insert(preguntaActual);
+    if(preguntaActual < 0 || preguntaActual >= listaPreguntas.size()) return;
 
-    if(ui->rb1->isChecked()) seleccionado = ui->rb1;
-    else if(ui->rb2->isChecked()) seleccionado = ui->rb2;
-    else if(ui->rb3->isChecked()) seleccionado = ui->rb3;
-    else if(ui->rb4->isChecked()) seleccionado = ui->rb4;
-
-    if(!seleccionado){
-        QMessageBox::warning(this, "Atención", "Seleccione una respuesta primero");
+    if(preguntaActual < estadosPreguntas.size() && estadosPreguntas[preguntaActual].respondida){
+        aplicarEstadoPregunta(preguntaActual);
         return;
     }
-    QRadioButton *correctaBtn = nullptr;
-    QRadioButton *btns[4] = {ui->rb1, ui->rb2, ui->rb3, ui->rb4};
 
-    for(auto *btn : btns){
-        if(btn->property("correcta").toBool()){
-            correctaBtn = btn;
+    QRadioButton *btns[4] {ui->rb1, ui->rb2, ui->rb3,  ui->rb4};
+
+    int indexSeleccion = -1;
+
+    for(int i = 0; i < 4; i++){
+        if(btns[i]->isChecked()){
+            indexSeleccion = i;
             break;
         }
     }
 
-    bool correcta = seleccionado->property("correcta").toBool();
-
-    if(correcta){
-        seleccionado->setStyleSheet("background-color : green");
-        aciertos++;
-        ui->rb1->setEnabled(false);
-        ui->rb2->setEnabled(false);
-        ui->rb3->setEnabled(false);
-        ui->rb4->setEnabled(false);
-
-    }else{
-        seleccionado->setStyleSheet("background-color : red");
-        fallos++;
-        if(correctaBtn){
-          correctaBtn->setStyleSheet("background-color : green");
-        }
-        ui->rb1->setEnabled(false);
-        ui->rb2->setEnabled(false);
-        ui->rb3->setEnabled(false);
-        ui->rb4->setEnabled(false);
+    if(indexSeleccion == -1){
+        QMessageBox::warning(this, "Atención", "Seleccione una respuesta primero");
+        return;
     }
+
+    int indexCorrecta = -1;
+
+    for(int i = 0; i < 4; i++){
+        if(btns[i]->property("correcta").toBool()){
+            indexCorrecta = i;
+            break;
+        }
+    }
+
+    const bool acierto = btns[indexSeleccion]->property("correcta").toBool();
+
+    if(estadosPreguntas.size() != listaPreguntas.size()){
+        estadosPreguntas.resize(listaPreguntas.size());
+    }
+
+    auto &st = estadosPreguntas[preguntaActual];
+
+    st.respondida = true;
+    st.seleccion = indexSeleccion;
+    st.correcta = indexCorrecta;
+    st.acierto = acierto;
+
+    preguntasRespondidas.insert(preguntaActual);
+
+    if(acierto){
+        aciertos++;
+    }else{
+        fallos++;
+    }
+
+    aplicarEstadoPregunta(preguntaActual);
+}
+
+
+void MainWindow::aplicarEstadoPregunta(int index){
+    if(index < 0 || index >= listaPreguntas.size()) return;
+
+    const QString estiloNormal = "background-color : #C7DCE8";
+    const QString estiloCorrecta = "background-color : green";
+    const QString estiloFallada = "background-color : red";
+
+    QRadioButton *btns[4] = { ui->rb1, ui->rb2, ui->rb3, ui->rb4 };
+
+    for(int i = 0; i < 4; i++){
+        btns[i]->setStyleSheet(estiloNormal);
+        btns[i]->setEnabled(true);
+
+        btns[i]->setAutoExclusive(false);
+        btns[i]->setChecked(false);
+        btns[i]->setAutoExclusive(true);
+    }
+
+    ui->pbResolverPreguntas->setEnabled(true);
+
+    if(index >= estadosPreguntas.size()) return;
+
+    const auto &st = estadosPreguntas[index];
+
+    if(!st.respondida) return;
+
+    if(st.seleccion >= 0 && st.seleccion < 4){
+        btns[st.seleccion]->setChecked(true);
+        btns[st.seleccion]->setStyleSheet(st.acierto ? estiloCorrecta : estiloFallada);
+    }
+
+    if(!st.acierto && st.correcta >= 0 && st.correcta < 4){
+        btns[st.correcta]->setStyleSheet(estiloCorrecta);
+    }
+
+    for(int i = 0; i < 4; i++){
+        btns[i]->setEnabled(false);
+    }
+
     ui->pbResolverPreguntas->setEnabled(false);
 }
 
-void MainWindow::reseteoPreguntas(){
-    bool respondida = preguntasRespondidas.contains(preguntaActual);
 
-    if(!respondida){
-        ui->rb1->setStyleSheet(" background-color: #C7DCE8");
-        ui->rb2->setStyleSheet(" background-color: #C7DCE8");
-        ui->rb3->setStyleSheet(" background-color: #C7DCE8");
-        ui->rb4->setStyleSheet(" background-color: #C7DCE8");
-
-        ui->rb1->setEnabled(true);
-        ui->rb2->setEnabled(true);
-        ui->rb3->setEnabled(true);
-        ui->rb4->setEnabled(true);
-
-        ui->rb1->setAutoExclusive(false);
-        ui->rb2->setAutoExclusive(false);
-        ui->rb3->setAutoExclusive(false);
-        ui->rb4->setAutoExclusive(false);
-
-        ui->rb1->setChecked(false);
-        ui->rb2->setChecked(false);
-        ui->rb3->setChecked(false);
-        ui->rb4->setChecked(false);
-
-        ui->rb1->setAutoExclusive(true);
-        ui->rb2->setAutoExclusive(true);
-        ui->rb3->setAutoExclusive(true);
-        ui->rb4->setAutoExclusive(true);
-
-        ui->pbResolverPreguntas->setEnabled(true);
-    }else{
-
-    }
-
-
-}
 void MainWindow::moverRegla() {
     if (!reglaActual || !reglaActiva) return;
 

@@ -403,7 +403,7 @@
      <x>0</x>
      <y>0</y>
      <width>718</width>
-     <height>37</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHerramientas">
@@ -705,6 +705,7 @@
    <addaction name="actionMi_Perfil"/>
    <addaction name="actionCerrar_Sesion"/>
    <addaction name="separator"/>
+   <addaction name="actionEstadisticas"/>
   </widget>
   <action name="actionRegla">
    <property name="checkable">
@@ -890,6 +891,22 @@
    </property>
    <property name="text">
     <string>Mover Regla</string>
+  <action name="actionEstadisticas">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/icons/usuario2.png</normaloff>:/icons/icons/usuario2.png</iconset>
+   </property>
+   <property name="text">
+    <string>Estadisticas</string>
+   </property>
+   <property name="shortcut">
+    <string>E</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::TextHeuristicRole</enum>
    </property>
   </action>
  </widget>
