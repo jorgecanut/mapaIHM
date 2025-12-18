@@ -159,6 +159,7 @@ void LoginRegister::checkUserName(){
     }
 }
 
+
 void LoginRegister::user_contr_correct(){
     Navigation &nav = Navigation::instance();
     User *user = nav.authenticate(

@@ -27,6 +27,15 @@ MainWindow::MainWindow(User *user, QWidget *parent)
 {
     ui->setupUi(this);
 
+    QWidget *spacer = new QWidget(this);
+
+    // 2. Configurarlo para que se expanda y empuje lo que tenga a su derecha
+    spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+    // 3. Insertarlo en la toolbar JUSTO ANTES de "Mi Perfil"
+    // Esto enviará a "Mi Perfil" y a "Cerrar Sesión" al extremo derecho.
+    ui->toolBar->insertWidget(ui->actionMi_Perfil, spacer);
+
     QFile file(":/estilos/estilo.qss"); // Ruta al archivo en el recurso
     if (file.open(QFile::ReadOnly)) {
         QString styleSheet = QString::fromUtf8(file.readAll());

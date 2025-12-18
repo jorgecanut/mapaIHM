@@ -481,3 +481,12 @@ QPushButton#pbAvatarElegir {
     border: none;
     padding: 5px;
 }
+QToolBar QToolButton:hover {
+    background-color: rgba(220, 234, 242, 0.5);
+}
+QToolBar {
+    background-color: #F8FBFE; /* Un azul casi blanco, muy profesional */
+    border-bottom: 1px solid #DCEAF2; /* Una línea fina debajo para separar */
+    spacing: 10px; /* Espacio entre los iconos */
+    padding: 5px;
+}
