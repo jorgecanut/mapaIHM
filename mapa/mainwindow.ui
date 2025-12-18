@@ -403,7 +403,7 @@
      <x>0</x>
      <y>0</y>
      <width>718</width>
-     <height>37</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHerramientas">
@@ -440,7 +440,6 @@
     <property name="title">
      <string>Cuestiones</string>
     </property>
-    <addaction name="actionAleatoria"/>
    </widget>
    <addaction name="menuMapa"/>
    <addaction name="menuHerramientas"/>
@@ -701,7 +700,7 @@
    <addaction name="separator"/>
    <addaction name="actionResetear"/>
    <addaction name="separator"/>
-   <addaction name="actionAleatoria"/>
+   <addaction name="actionEstadisticas"/>
   </widget>
   <action name="actionRegla">
    <property name="checkable">
@@ -844,18 +843,6 @@
     <string>Ctrl+Shift+C</string>
    </property>
   </action>
-  <action name="actionAleatoria">
-   <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/icons/icons/aleatorio.png</normaloff>:/icons/icons/aleatorio.png</iconset>
-   </property>
-   <property name="text">
-    <string>&amp;Aleatoria</string>
-   </property>
-   <property name="shortcut">
-    <string>A</string>
-   </property>
-  </action>
   <action name="actionGoma">
    <property name="icon">
     <iconset resource="resource.qrc">
@@ -890,6 +877,24 @@
    </property>
    <property name="shortcut">
     <string>L</string>
+   </property>
+  </action>
+  <action name="actionEstadisticas">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/icons/usuario2.png</normaloff>:/icons/icons/usuario2.png</iconset>
+   </property>
+   <property name="text">
+    <string>Estadisticas</string>
+   </property>
+   <property name="shortcut">
+    <string>E</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::TextHeuristicRole</enum>
    </property>
   </action>
  </widget>

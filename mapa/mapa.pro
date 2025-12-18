@@ -24,7 +24,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     perfil.cpp \
-    preguntas.cpp \
+    stats.cpp \
     textitem.cpp \
     utils.cpp
 
@@ -33,7 +33,7 @@ HEADERS += \
     login_register.h \
     mainwindow.h \
     perfil.h \
-    preguntas.h \
+    stats.h \
     textitem.h \
     utils.h
 
@@ -41,7 +41,7 @@ FORMS += \
     login_register.ui \
     mainwindow.ui \
     perfil.ui \
-    preguntas.ui
+    stats.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
