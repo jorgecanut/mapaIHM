@@ -43,14 +43,23 @@ private:
     int dockWidthExpandido = 250;
 
     //------Preguntas-------
+    struct EstadoPregunta{
+        bool respondida = false;
+        int seleccion = -1;
+        int correcta = -1;
+        bool acierto = false;
+    };
+
     Session sesion;
     int preguntaActual = 0;
     int aciertos = 0;
     int fallos = 0;
     QSet<int> preguntasRespondidas;
+    QVector<EstadoPregunta> estadosPreguntas;
     QVector<Problem> listaPreguntas;
     void cargarPregunta(int index);
-    void reseteoPreguntas();
+    void aplicarEstadoPregunta(int index);
+
 
     float escalado;
 
