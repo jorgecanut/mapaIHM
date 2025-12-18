@@ -3,6 +3,7 @@
 #include "login_register.h"
 #include "perfil.h"
 #include "textitem.h"
+#include <stats.h>
 
 MainWindow::MainWindow(User *user, QWidget *parent)
     : QMainWindow(parent)
@@ -145,6 +146,7 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     connect(ui->actionCerrar_Sesion, &QAction::triggered,this,&MainWindow::cerrarSesion);
     connect(ui->actionResetear, &QAction::triggered, this, &MainWindow::reset);
     connect(ui->actionTexto, &QAction::triggered, this, &MainWindow::texto);
+    connect(ui->actionEstadisticas, &QAction::triggered, this, &MainWindow::estadisticas);
 
     connect(ui->sliderGrosor2, &QSlider::valueChanged, this, [=](int value){
         grosorLinea = value;
@@ -632,6 +634,11 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
         }
     }
     return QMainWindow::eventFilter(obj, event);
+}
+
+void MainWindow::estadisticas(){
+    stats *Stats = new stats(m_user, &sesion);
+    Stats->show();
 }
 
 //---------Preguntas----------

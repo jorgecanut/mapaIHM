@@ -18,6 +18,7 @@
 
 #include <navigation.h>
 
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -128,6 +129,7 @@ private slots:
     void goma();
     void texto();
 
+    void estadisticas();
     //---------Preguntas------------
     void comprobarRespuestas();
 
