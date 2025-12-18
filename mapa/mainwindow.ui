@@ -420,6 +420,7 @@
     <addaction name="separator"/>
     <addaction name="actionRotar_horario"/>
     <addaction name="actionRotar_antihorario"/>
+    <addaction name="actionMover_Regla"/>
    </widget>
    <widget class="QMenu" name="menuMapa">
     <property name="title">
@@ -694,6 +695,7 @@
    <addaction name="separator"/>
    <addaction name="actionRotar_horario"/>
    <addaction name="actionRotar_antihorario"/>
+   <addaction name="actionMover_Regla"/>
    <addaction name="separator"/>
    <addaction name="actionZoom_In"/>
    <addaction name="actionZoom_Out"/>
@@ -879,6 +881,15 @@
    </property>
    <property name="shortcut">
     <string>L</string>
+   </property>
+  </action>
+  <action name="actionMover_Regla">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/icons/mover.png</normaloff>:/icons/icons/mover.png</iconset>
+   </property>
+   <property name="text">
+    <string>Mover Regla</string>
    </property>
   </action>
  </widget>

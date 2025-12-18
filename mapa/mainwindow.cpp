@@ -113,8 +113,10 @@ MainWindow::MainWindow(User *user, QWidget *parent)
 
     connect(ui->actionZoom_In, &QAction::triggered, this, &MainWindow::zoomIn);
     connect(ui->actionZoom_Out, &QAction::triggered, this, &MainWindow::zoomOut);
+    connect(ui->actionMover_Regla, &QAction::triggered, this, &MainWindow::moverRegla);
 
     // Desactivadas hasta que se selecciona algo
+    ui->actionMover_Regla->setEnabled(false);
     ui->actionRotar_horario->setEnabled(false);
     ui->actionRotar_antihorario->setEnabled(false);
     connect(ui->actionRotar_horario, &QAction::triggered, this, &MainWindow::rotarHorario);
@@ -357,6 +359,7 @@ void MainWindow::setHerramienta(HerramientaActiva nueva)
             reglaActual->setPos(scene->sceneRect().center() - reglaActual->boundingRect().center());
             view->viewport()->setCursor(QCursor(QPixmap(":/icons/icons/cursor_ruler.png").scaled(24,24)));
             reglaActiva = true;
+            ui->actionMover_Regla->setEnabled(true);
         }
         else{
             scene->removeItem(reglaActual);
@@ -365,6 +368,7 @@ void MainWindow::setHerramienta(HerramientaActiva nueva)
             herramientaActual = HerramientaActiva::Ninguna;
             view->viewport()->unsetCursor();
             reglaActiva = false;
+            ui->actionMover_Regla->setEnabled(false);
         }
         break;
 
@@ -777,4 +781,30 @@ void MainWindow::reseteoPreguntas(){
     }
 
 
+}
+void MainWindow::moverRegla() {
+    if (!reglaActual || !reglaActiva) return;
+
+    // --- VALORES A AJUSTAR (Prueba hasta que cuadre con tu mapa) ---
+    const QPointF posicionMapa(8200, 3800); // Cambia estos números (X, Y)
+    const qreal anguloVertical = -90.0;       // Cambia esto (0, 90, 180, etc.)
+    // --------------------------------------------------------------
+
+    if (!reglaApartada) {
+        // 1. Guardar estado actual (Posición y Rotación)
+        posicionOriginalRegla = reglaActual->pos();
+        rotacionOriginalRegla = reglaActual->rotation();
+
+        // 2. Mover y "poner de pie"
+        reglaActual->setRotation(anguloVertical);
+        reglaActual->setPos(posicionMapa);
+
+        reglaApartada = true;
+    } else {
+        // 3. Volver a como estaba antes
+        reglaActual->setRotation(rotacionOriginalRegla);
+        reglaActual->setPos(posicionOriginalRegla);
+
+        reglaApartada = false;
+    }
 }

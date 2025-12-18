@@ -73,13 +73,17 @@ private:
     QGraphicsSvgItem *compasActual;
     QGraphicsSvgItem *transportadorActual;
 
+    qreal rotacionOriginalRegla;
     bool reglaActiva;
     bool compasActivo;
     bool transportadorActivo;
+    bool reglaApartada = false;
+
 
     // ----- LINEAS -----
     QPointF inicioLinea;
     QGraphicsLineItem *lineaActual;
+    QPointF posicionOriginalRegla;
 
     QColor colorLinea;
     float grosorLinea;
@@ -99,6 +103,7 @@ private:
     QPointF posicionRaton();
     void reset();
     void toggleDockPreguntas();
+    void moverRegla();
 
 private slots:
     void zoomIn();

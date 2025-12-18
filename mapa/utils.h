@@ -9,5 +9,6 @@ public:
     static bool checkEmail(const QString &email);
     static bool checkPassword(const QString &password);
     static bool checkRepPassword(const QString &repPassword, const QString &password);
+    static bool checkUsuario(const QString &usuario);
 };
 #endif // UTILS_H

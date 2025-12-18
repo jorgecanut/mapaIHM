@@ -30,7 +30,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page">
        <property name="sizePolicy">
@@ -559,12 +559,12 @@
               <rect>
                <x>5</x>
                <y>5</y>
-               <width>128</width>
+               <width>120</width>
                <height>128</height>
               </rect>
              </property>
              <property name="pixmap">
-              <pixmap resource="resource.qrc">:/iconos_usuarios/batman.svg</pixmap>
+              <pixmap resource="resource.qrc">:/iconos_usuarios/zombie.svg</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>

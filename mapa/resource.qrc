@@ -23,6 +23,7 @@
         <file>icons/ataque.png</file>
         <file>icons/cerrar-sesion.png</file>
         <file>icons/usuario2.png</file>
+        <file>icons/mover.png</file>
     </qresource>
     <qresource prefix="/iconos_usuarios">
         <file>oso.svg</file>
