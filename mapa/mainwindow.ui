@@ -440,7 +440,6 @@
     <property name="title">
      <string>Cuestiones</string>
     </property>
-    <addaction name="actionAleatoria"/>
    </widget>
    <addaction name="menuMapa"/>
    <addaction name="menuHerramientas"/>
@@ -701,7 +700,9 @@
    <addaction name="separator"/>
    <addaction name="actionResetear"/>
    <addaction name="separator"/>
-   <addaction name="actionAleatoria"/>
+   <addaction name="actionMi_Perfil"/>
+   <addaction name="actionCerrar_Sesion"/>
+   <addaction name="separator"/>
   </widget>
   <action name="actionRegla">
    <property name="checkable">
@@ -842,18 +843,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+C</string>
-   </property>
-  </action>
-  <action name="actionAleatoria">
-   <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/icons/icons/aleatorio.png</normaloff>:/icons/icons/aleatorio.png</iconset>
-   </property>
-   <property name="text">
-    <string>&amp;Aleatoria</string>
-   </property>
-   <property name="shortcut">
-    <string>A</string>
    </property>
   </action>
   <action name="actionGoma">

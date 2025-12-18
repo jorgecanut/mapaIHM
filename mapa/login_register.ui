@@ -30,7 +30,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page">
        <property name="sizePolicy">
@@ -153,7 +153,7 @@
            <widget class="QLineEdit" name="leUsuario_IS">
             <property name="maximumSize">
              <size>
-              <width>300</width>
+              <width>200</width>
               <height>16777215</height>
              </size>
             </property>
@@ -273,7 +273,7 @@
            <widget class="QLineEdit" name="leContrasea_IS">
             <property name="maximumSize">
              <size>
-              <width>300</width>
+              <width>200</width>
               <height>16777215</height>
              </size>
             </property>
