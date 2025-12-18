@@ -1,7 +1,6 @@
 #include "perfil.h"
 #include "ui_perfil.h"
 #include "utils.h"
-#include "mainwindow.h"
 
 Perfil::Perfil(User *user,QWidget *parent)
     : QDialog(parent)
@@ -216,8 +215,6 @@ void Perfil::configurarAvatar()
     // Posición del Avatar dentro del contenedor 'avatarOverlayContainer' (Según XML)
     const int avatarX = 5;
     const int avatarY = 5;
-
-    const int btnWidth = 40;
 
     const int offset = 35;
 

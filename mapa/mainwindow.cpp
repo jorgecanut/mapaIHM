@@ -250,14 +250,12 @@ void MainWindow::actualizarAcciones(){
         textoActual = nullptr;
         ui->panelLapiz->hide();
         ui->panelTexto->hide();
-        ui->actionRotar_horario->setEnabled(false);
-        ui->actionRotar_antihorario->setEnabled(false);
+        ui->actionRotar->setEnabled(false);
         return; // Salimos temprano si no hay nada
     }
 
     // Ahora es seguro usar seleccion.first()
-    ui->actionRotar_horario->setEnabled(true);
-    ui->actionRotar_antihorario->setEnabled(true);
+    ui->actionRotar->setEnabled(true);
 
     QGraphicsItem* item = seleccion.first();
 

@@ -402,7 +402,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>718</width>
+     <width>787</width>
      <height>20</height>
     </rect>
    </property>
@@ -883,9 +883,6 @@
    </property>
   </action>
   <action name="actionEstadisticas">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
    <property name="icon">
     <iconset resource="resource.qrc">
      <normaloff>:/icons/icons/grafico-de-barras.png</normaloff>:/icons/icons/grafico-de-barras.png</iconset>
