@@ -403,7 +403,7 @@
      <x>0</x>
      <y>0</y>
      <width>718</width>
-     <height>37</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHerramientas">
@@ -418,8 +418,7 @@
     <addaction name="actionCompas"/>
     <addaction name="actionTransportador"/>
     <addaction name="separator"/>
-    <addaction name="actionRotar_horario"/>
-    <addaction name="actionRotar_antihorario"/>
+    <addaction name="actionRotar"/>
    </widget>
    <widget class="QMenu" name="menuMapa">
     <property name="title">
@@ -692,8 +691,7 @@
    <addaction name="actionCompas"/>
    <addaction name="actionTransportador"/>
    <addaction name="separator"/>
-   <addaction name="actionRotar_horario"/>
-   <addaction name="actionRotar_antihorario"/>
+   <addaction name="actionRotar"/>
    <addaction name="separator"/>
    <addaction name="actionZoom_In"/>
    <addaction name="actionZoom_Out"/>
@@ -749,28 +747,19 @@
     <string>T</string>
    </property>
   </action>
-  <action name="actionRotar_horario">
+  <action name="actionRotar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="resource.qrc">
      <normaloff>:/icons/icons/rotar_horario.png</normaloff>:/icons/icons/rotar_horario.png</iconset>
    </property>
    <property name="text">
-    <string>Rotar horario</string>
+    <string>Rotar</string>
    </property>
    <property name="shortcut">
-    <string>Shift+Right</string>
-   </property>
-  </action>
-  <action name="actionRotar_antihorario">
-   <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/icons/icons/rotar_antihorario.png</normaloff>:/icons/icons/rotar_antihorario.png</iconset>
-   </property>
-   <property name="text">
-    <string>Rotar antihorario</string>
-   </property>
-   <property name="shortcut">
-    <string>Shift+Left</string>
+    <string>Z</string>
    </property>
   </action>
   <action name="actionZoom_In">

@@ -23,6 +23,8 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     , grosorLinea(2)
     , textoActual(nullptr)
     , colorTexto(Qt::black)
+    , rotacionActiva(false)
+    , pivotPoint(nullptr)
 
 {
     ui->setupUi(this);
@@ -115,10 +117,8 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     connect(ui->actionZoom_Out, &QAction::triggered, this, &MainWindow::zoomOut);
 
     // Desactivadas hasta que se selecciona algo
-    ui->actionRotar_horario->setEnabled(false);
-    ui->actionRotar_antihorario->setEnabled(false);
-    connect(ui->actionRotar_horario, &QAction::triggered, this, &MainWindow::rotarHorario);
-    connect(ui->actionRotar_antihorario, &QAction::triggered, this, &MainWindow::rotarAntiHorario);
+    ui->actionRotar->setEnabled(false);
+    connect(ui->actionRotar, &QAction::triggered, this, &MainWindow::rotacion);
 
     connect(scene, &QGraphicsScene::selectionChanged, this, &MainWindow::actualizarAcciones);
 
@@ -223,8 +223,7 @@ void MainWindow::applyZoom(double factor){
 // ------- ACTUALIZACION DE MODOS ------------
 void MainWindow::actualizarAcciones(){
     bool hay_seleccion = !scene->selectedItems().isEmpty();
-    ui->actionRotar_horario->setEnabled(hay_seleccion);
-    ui->actionRotar_antihorario->setEnabled(hay_seleccion);
+    ui->actionRotar->setEnabled(hay_seleccion);
 
 
     if (hay_seleccion) {
@@ -272,19 +271,94 @@ void MainWindow::actualizarAcciones(){
 }
 
 // --------- ROTACION --------------
+void MainWindow::rotarSeleccion(int angulo)
+{
+    auto items = scene->selectedItems();
+    if (items.isEmpty()) return;
 
-void MainWindow::rotarHorario(){ rotarSeleccion(5); }
-void MainWindow::rotarAntiHorario(){ rotarSeleccion(-5); }
+    QGraphicsItem* item = items.first();
 
-void MainWindow::rotarSeleccion(int angulo){
-    QList<QGraphicsItem*> items = scene->selectedItems();
-    if (!items.isEmpty()){
-        QGraphicsItem *item = items.first();
-        item->setTransformOriginPoint(item->boundingRect().center());
+    if(item == pivotPoint) return;
+
+    if(pivotPoint && pivotPoint->isVisible()) {
+        QPointF pivotScenePos = pivotPoint->pos();
+        QPointF itemPos = item->pos();
+        QRectF rect = item->boundingRect();
+        QPointF centerLocal = rect.center();
+        QPointF centerScene = item->mapToScene(centerLocal);
+        QPointF vec = centerScene - pivotScenePos;
+        qreal rad = qDegreesToRadians((qreal)angulo);
+        qreal cosA = qCos(rad);
+        qreal sinA = qSin(rad);
+
+        QPointF vecRotado(
+            vec.x() * cosA - vec.y() * sinA,
+            vec.x() * sinA + vec.y() * cosA
+            );
+
+        QPointF newCenterScene = pivotScenePos + vecRotado;
+        QPointF desplazamiento = newCenterScene - centerScene;
+        item->setPos(itemPos + desplazamiento);
+        item->setRotation(item->rotation() + angulo);
+    } else {
         item->setRotation(item->rotation() + angulo);
     }
 }
 
+void MainWindow::rotacion(){
+    rotacionActiva = !rotacionActiva;
+
+    auto items = scene->selectedItems();
+    if(rotacionActiva){
+        ui->actionRotar->setChecked(true);
+        for(QGraphicsItem* item : std::as_const(items)){
+            if(item != pivotPoint){
+                item->setFlag(QGraphicsItem::ItemIsMovable, false);
+            }
+        }
+
+        QPointF centroInicial;
+        auto items = scene->selectedItems();
+
+        if(!items.isEmpty() && items.first() != pivotPoint){
+            QGraphicsItem* item = items.first();
+            centroInicial = item->mapToScene(item->boundingRect().center());
+        } else {
+            centroInicial = view->mapToScene(view->viewport()->rect().center());
+        }
+
+        if(!pivotPoint){
+            pivotPoint = scene->addEllipse(-10, -10, 20, 20,
+                                           QPen(Qt::red, 2),
+                                           QBrush(QColor(255, 0, 0, 150)));
+            pivotPoint->setZValue(10000);
+            pivotPoint->setFlag(QGraphicsItem::ItemIsMovable, true);
+            pivotPoint->setFlag(QGraphicsItem::ItemIsSelectable, false);
+            pivotPoint->setFlag(QGraphicsItem::ItemIgnoresTransformations, true);
+        }
+
+        pivotPoint->setPos(centroInicial);
+        pivotPoint->show();
+
+    } else {
+        ui->actionRotar->setText("Rotar");
+        ui->actionRotar->setChecked(false);
+
+        for(QGraphicsItem* item : std::as_const(items)){
+            if(item != pivotPoint){
+                if(dynamic_cast<QGraphicsLineItem*>(item) ||
+                    dynamic_cast<QGraphicsEllipseItem*>(item) ||
+                    dynamic_cast<QGraphicsTextItem*>(item) ||
+                    dynamic_cast<QGraphicsSvgItem*>(item)){
+                    item->setFlag(QGraphicsItem::ItemIsMovable, true);
+                }
+            }
+        }
+        if(pivotPoint){
+            pivotPoint->hide();
+        }
+    }
+}
 
 // ------- HERRAMIENTAS -------------
 QPointF MainWindow::posicionRaton(){
@@ -355,7 +429,6 @@ void MainWindow::setHerramienta(HerramientaActiva nueva)
             reglaActual = new QGraphicsSvgItem(":/icons/icons/ruler2.svg");
             ponerSvg(reglaActual, 2);
             reglaActual->setPos(scene->sceneRect().center() - reglaActual->boundingRect().center());
-            view->viewport()->setCursor(QCursor(QPixmap(":/icons/icons/cursor_ruler.png").scaled(24,24)));
             reglaActiva = true;
         }
         else{
@@ -373,7 +446,6 @@ void MainWindow::setHerramienta(HerramientaActiva nueva)
             compasActual = new QGraphicsSvgItem(":/icons/icons/compass_leg.svg");
             ponerSvg(compasActual, 2);
             compasActual->setPos(scene->sceneRect().center() - compasActual->boundingRect().center());
-            view->viewport()->setCursor(QCursor(QPixmap(":/icons/icons/compas-de-dibujo.png").scaled(24,24)));
             compasActivo = true;
         }
         else{
@@ -391,7 +463,6 @@ void MainWindow::setHerramienta(HerramientaActiva nueva)
             transportadorActual = new QGraphicsSvgItem(":/icons/icons/transportador.svg");
             ponerSvg(transportadorActual, 1.5);
             transportadorActual->setPos(scene->sceneRect().center() - transportadorActual->boundingRect().center());
-            view->viewport()->setCursor(QCursor(QPixmap(":/icons/icons/angulo.png").scaled(24,24)));
             transportadorActivo = true;
         }
         else{
@@ -473,22 +544,30 @@ void MainWindow::salirModoTexto(){
     ui->panelTexto->hide();
 }
 
-
-
 // Para poder hacer zoom con el ratón
 bool MainWindow::eventFilter(QObject *obj, QEvent *event){
-    // ZOOM
+    // ZOOM y ROTACION
     if (obj == view->viewport() && event->type() == QEvent::Wheel) {
         QWheelEvent *wheelEvent = static_cast<QWheelEvent*>(event);
 
+        // CTRL + Scroll = Zoom
         if (wheelEvent->modifiers() & Qt::CTRL) {
             double factor = 1.15;
             if (wheelEvent->angleDelta().y() > 0)
                 applyZoom(factor);
             else
                 applyZoom(1.0 / factor);
-
             return true;
+        }
+        // Shift + Scroll = Rotación
+        else if((wheelEvent->modifiers() & Qt::ShiftModifier) && rotacionActiva){
+            int delta = wheelEvent->angleDelta().y();
+            int angulo = (delta > 0) ? 5 : -5;
+            auto items = scene->selectedItems();
+            if(!items.isEmpty()){
+                rotarSeleccion(angulo);
+                return true;
+            }
         }
     }
 
@@ -504,16 +583,13 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
             return true;
         }
 
-
         else if (event->type() == QEvent::MouseMove) {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
             QPointF posActual = view->mapToScene(mouseEvent->pos());
 
             if (mouseEvent->buttons() & Qt::LeftButton) {
                 if (!lineaActual) {
-                    lineaActual = new QGraphicsLineItem(
-                        QLineF(inicioLinea, posActual)
-                        );
+                    lineaActual = new QGraphicsLineItem(QLineF(inicioLinea, posActual));
 
                     QPen pen(colorLinea, grosorLinea);
                     lineaActual->setPen(pen);
@@ -524,9 +600,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
 
                     scene->addItem(lineaActual);
                 } else {
-                    lineaActual->setLine(
-                        QLineF(inicioLinea, posActual)
-                        );
+                    lineaActual->setLine(QLineF(inicioLinea, posActual));
                 }
             }
             return true;
@@ -560,7 +634,6 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
 
     // GOMA
     if (obj == view->viewport() && (herramientaActual == HerramientaActiva::Goma)) {
-
         if (event->type() == QEvent::MouseButtonPress) {
             QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
             if (mouseEvent->button() == Qt::LeftButton) {
@@ -569,6 +642,9 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
                 QList<QGraphicsItem*> items = scene->items(pos);
 
                 for (QGraphicsItem* item : std::as_const(items)) {
+                    // No borrar el pivote
+                    if(item == pivotPoint) continue;
+
                     if (auto linea = dynamic_cast<QGraphicsLineItem*>(item)) {
                         if (linea == lineaActual)
                             lineaActual = nullptr;
@@ -582,7 +658,6 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
                         break;
                     }
                 }
-
             }
             return true;
         }
@@ -609,13 +684,13 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
                 textoItem->setFlag(QGraphicsItem::ItemIsSelectable);
                 textoItem->setFlag(QGraphicsItem::ItemIsFocusable);
 
-                // Esto permite escribir directamente en el item
                 textoItem->setTextInteractionFlags(Qt::TextEditorInteraction);
                 textoItem->setFocus();
             }
             return true;
         }
     }
+
     return QMainWindow::eventFilter(obj, event);
 }
 

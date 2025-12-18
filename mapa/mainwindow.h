@@ -90,6 +90,10 @@ private:
     int tamañoTexto;
 
 
+    // ------- ROTACION ------
+    bool rotacionActiva = false;
+    QGraphicsEllipseItem* pivotPoint = nullptr;
+
     // ----- COSAS UTILES ------
     void setHerramienta(HerramientaActiva nueva);
     void applyZoom(double factor);
@@ -105,8 +109,7 @@ private slots:
     void zoomOut();
 
     void actualizarAcciones();
-    void rotarHorario();
-    void rotarAntiHorario();
+    void rotacion();
 
     void regla();
     void transportador();
