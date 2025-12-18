@@ -470,4 +470,14 @@ QPushButton#pbRandom:hover,
 QPushButton#pbSiguiente:hover {
     background-color: #DCEAF2;
 }
+QPushButton#pbAvatarElegir {
+    /* Tamaño de botón 40px -> Radio 20px */
+    border-radius: 20px;
 
+    /* Fondo blanco */
+    background-color: white;
+
+    /* Opcional: Sombra para efecto elevado */
+    border: none;
+    padding: 5px;
+}

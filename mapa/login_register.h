@@ -61,6 +61,8 @@ private:
     void updateLoginAcceptEnabled();
     void updateRegisterAcceptEnabled();
     void keyPressEvent(QKeyEvent *event) override;
+    void configurarAvatar();
+    void resizeEvent(QResizeEvent *event) override;
 };
 
 class ClickableLabel : public QLabel {

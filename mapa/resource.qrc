@@ -21,6 +21,8 @@
         <file>icons/rotar_antihorario.png</file>
         <file>icons/rueda-de-color.png</file>
         <file>icons/ataque.png</file>
+        <file>icons/cerrar-sesion.png</file>
+        <file>icons/usuario2.png</file>
     </qresource>
     <qresource prefix="/iconos_usuarios">
         <file>oso.svg</file>

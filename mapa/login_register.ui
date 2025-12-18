@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>794</width>
-    <height>602</height>
+    <width>706</width>
+    <height>704</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -30,7 +30,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page">
        <property name="sizePolicy">
@@ -44,9 +44,6 @@
          <width>0</width>
          <height>0</height>
         </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true"/>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_Page1">
         <property name="spacing">
@@ -395,13 +392,7 @@
           <item>
            <widget class="ClickableLabel" name="label_10">
             <property name="styleSheet">
-             <string notr="true">ClickableLabel {
-    color: #0066cc;
-}
-ClickableLabel:hover {
-    color: #004999;
-}
-</string>
+             <string notr="true">ClickableLabel { color: #0066cc; } ClickableLabel:hover { color: #004999; }</string>
             </property>
             <property name="text">
              <string>¿No tienes cuenta todavía?</string>
@@ -511,9 +502,6 @@ ClickableLabel:hover {
        </layout>
       </widget>
       <widget class="QWidget" name="page_2">
-       <property name="styleSheet">
-        <string notr="true"/>
-       </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
          <widget class="QLabel" name="label_7">
@@ -527,7 +515,6 @@ ClickableLabel:hover {
            <font>
             <pointsize>20</pointsize>
             <bold>true</bold>
-            <underline>false</underline>
            </font>
           </property>
           <property name="text">
@@ -539,12 +526,91 @@ ClickableLabel:hover {
          </widget>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0">
+         <layout class="QHBoxLayout" name="horizontalLayout_AvatarCentradoReg">
+          <item>
+           <spacer name="h_spacer_avatar_left">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QWidget" name="avatarOverlayContainer" native="true">
+            <property name="minimumSize">
+             <size>
+              <width>140</width>
+              <height>140</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>140</width>
+              <height>140</height>
+             </size>
+            </property>
+            <widget class="QLabel" name="lAvatar">
+             <property name="geometry">
+              <rect>
+               <x>5</x>
+               <y>5</y>
+               <width>128</width>
+               <height>128</height>
+              </rect>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="resource.qrc">:/iconos_usuarios/batman.svg</pixmap>
+             </property>
+             <property name="scaledContents">
+              <bool>true</bool>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="pbAvatarElegir">
+             <property name="geometry">
+              <rect>
+               <x>95</x>
+               <y>95</y>
+               <width>40</width>
+               <height>40</height>
+              </rect>
+             </property>
+             <property name="icon">
+              <iconset resource="resource.qrc">
+               <normaloff>:/icons/icons/ataque.png</normaloff>:/icons/icons/ataque.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>24</width>
+               <height>24</height>
+              </size>
+             </property>
+            </widget>
+           </widget>
+          </item>
+          <item>
+           <spacer name="h_spacer_avatar_right">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout">
           <property name="spacing">
            <number>5</number>
-          </property>
-          <property name="sizeConstraint">
-           <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
           </property>
           <property name="leftMargin">
            <number>12</number>
@@ -585,21 +651,15 @@ ClickableLabel:hover {
            <layout class="QHBoxLayout" name="horizontalLayout_10">
             <item>
              <widget class="QLineEdit" name="leUsuario">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
               <property name="minimumSize">
                <size>
-                <width>300</width>
+                <width>250</width>
                 <height>0</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>300</width>
+                <width>250</width>
                 <height>16777215</height>
                </size>
               </property>
@@ -660,12 +720,6 @@ ClickableLabel:hover {
            <layout class="QHBoxLayout" name="horizontalLayout_5">
             <item>
              <widget class="QLineEdit" name="leEmail">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
               <property name="minimumSize">
                <size>
                 <width>400</width>
@@ -743,12 +797,6 @@ ClickableLabel:hover {
            <layout class="QHBoxLayout" name="horizontalLayout_6">
             <item>
              <widget class="QLineEdit" name="leContrasea">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
               <property name="minimumSize">
                <size>
                 <width>300</width>
@@ -824,7 +872,7 @@ ClickableLabel:hover {
                <string notr="true">color:red</string>
               </property>
               <property name="text">
-               <string>La contraseña debe incluir caracteres especiales y numéricos</string>
+               <string>La contraseña debe incluir caracteres especiales...</string>
               </property>
              </widget>
             </item>
@@ -846,9 +894,6 @@ ClickableLabel:hover {
              <widget class="QCheckBox" name="checkContraseaRegister">
               <property name="text">
                <string>Mostrar contraseña</string>
-              </property>
-              <property name="autoExclusive">
-               <bool>false</bool>
               </property>
              </widget>
             </item>
@@ -936,141 +981,11 @@ ClickableLabel:hover {
            </spacer>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <layout class="QHBoxLayout" name="horizontalLayout_PieReg">
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout_4">
-              <item>
-               <widget class="QLabel" name="label">
-                <property name="text">
-                 <string>Avatar</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignmentFlag::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_AvatarCentrado">
-                <item>
-                 <spacer name="horizontalSpacer_AvatarLeft">
-                  <property name="orientation">
-                   <enum>Qt::Orientation::Horizontal</enum>
-                  </property>
-                  <property name="sizeType">
-                   <enum>QSizePolicy::Policy::Expanding</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item>
-                 <widget class="QLabel" name="lAvatar">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>99</width>
-                    <height>99</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>99</width>
-                    <height>99</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="scaledContents">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <spacer name="horizontalSpacer_AvatarRight">
-                  <property name="orientation">
-                   <enum>Qt::Orientation::Horizontal</enum>
-                  </property>
-                  <property name="sizeType">
-                   <enum>QSizePolicy::Policy::Expanding</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_12">
-                <item>
-                 <spacer name="horizontalSpacer_7">
-                  <property name="orientation">
-                   <enum>Qt::Orientation::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="pbAvatarElegir">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>100</width>
-                    <height>50</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Elegir Avatar</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <spacer name="horizontalSpacer_8">
-                  <property name="orientation">
-                   <enum>Qt::Orientation::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_18">
+             <spacer name="h_spacer_pie_left">
               <property name="orientation">
                <enum>Qt::Orientation::Horizontal</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Policy::Expanding</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -1081,30 +996,11 @@ ClickableLabel:hover {
              </spacer>
             </item>
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout_5">
-              <item>
-               <spacer name="verticalSpacer_3">
-                <property name="orientation">
-                 <enum>Qt::Orientation::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
+             <layout class="QVBoxLayout" name="verticalLayout_Buttons">
               <item>
                <widget class="ClickableLabel" name="label_3">
                 <property name="styleSheet">
-                 <string notr="true">ClickableLabel {
-    color: #0066cc;
-}
-ClickableLabel:hover {
-    color: #004999;
-}
-</string>
+                 <string notr="true">ClickableLabel { color: #0066cc; } ClickableLabel:hover { color: #004999; }</string>
                 </property>
                 <property name="text">
                  <string>¿Ya tienes cuenta?</string>
@@ -1119,28 +1015,11 @@ ClickableLabel:hover {
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
                 <property name="minimumSize">
                  <size>
                   <width>110</width>
                   <height>50</height>
                  </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>200</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
                 </property>
                 <property name="text">
                  <string>CONFIRMAR</string>
@@ -1184,8 +1063,8 @@ ClickableLabel:hover {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>794</width>
-     <height>20</height>
+     <width>706</width>
+     <height>37</height>
     </rect>
    </property>
   </widget>
@@ -1198,6 +1077,8 @@ ClickableLabel:hover {
    <header location="global">login_register.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="resource.qrc"/>
+ </resources>
  <connections/>
 </ui>

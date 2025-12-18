@@ -24,7 +24,7 @@ LoginRegister::LoginRegister(QWidget *parent)
         this->setStyleSheet(styleSheet);
         file.close();
     }
-
+    configurarAvatar();
     ui->lErrorEmail->setVisible(false);
     ui->lErrorPassword->setVisible(false);
     ui->lErrorRepPassword->setVisible(false);
@@ -340,4 +340,33 @@ void LoginRegister::keyPressEvent(QKeyEvent *event)
         }
     }
     QMainWindow::keyPressEvent(event);
+}
+void LoginRegister::configurarAvatar()
+{
+    if (!ui->lAvatar || !ui->pbAvatarElegir) return;
+
+    // Según el XML que me pasaste, el avatar mide 128x128
+    const int avatarSize = 128;
+    const int avatarX = 5;
+    const int avatarY = 5;
+
+    // AL SUBIR EL OFFSET, EL BOTÓN SE METE HACIA EL CENTRO
+    // Prueba con 45 para que esté bien encima de la imagen
+    const int offset = 45;
+
+    // Calculamos la posición
+    int newX = avatarX + avatarSize - offset;
+    int newY = avatarY + avatarSize - offset;
+
+    // Mover y asegurar que esté al frente
+    ui->pbAvatarElegir->move(newX, newY);
+    ui->pbAvatarElegir->raise();
+}
+void LoginRegister::resizeEvent(QResizeEvent *event)
+{
+    // Llama a la implementación base para que la QMainWindow gestione sus layouts
+    QMainWindow::resizeEvent(event);
+
+    // Recalcula la posición del botón de edición
+    configurarAvatar();
 }

@@ -403,7 +403,7 @@
      <x>0</x>
      <y>0</y>
      <width>718</width>
-     <height>20</height>
+     <height>37</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHerramientas">
@@ -498,7 +498,7 @@
       <rect>
        <x>10</x>
        <y>30</y>
-       <width>228</width>
+       <width>243</width>
        <height>581</height>
       </rect>
      </property>
@@ -832,7 +832,7 @@
   <action name="actionCerrar_Sesion">
    <property name="icon">
     <iconset resource="resource.qrc">
-     <normaloff>:/icons/icons/bloquear.png</normaloff>:/icons/icons/bloquear.png</iconset>
+     <normaloff>:/icons/icons/cerrar-sesion.png</normaloff>:/icons/icons/cerrar-sesion.png</iconset>
    </property>
    <property name="text">
     <string>Cerrar Sesion</string>
