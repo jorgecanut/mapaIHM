@@ -3,6 +3,7 @@
 #include "login_register.h"
 #include "perfil.h"
 #include "textitem.h"
+#include <stats.h>
 
 MainWindow::MainWindow(User *user, QWidget *parent)
     : QMainWindow(parent)
@@ -36,7 +37,7 @@ MainWindow::MainWindow(User *user, QWidget *parent)
 
     // 3. Insertarlo en la toolbar JUSTO ANTES de "Mi Perfil"
     // Esto enviará a "Mi Perfil" y a "Cerrar Sesión" al extremo derecho.
-    ui->toolBar->insertWidget(ui->actionMi_Perfil, spacer);
+    ui->toolBar->insertWidget(ui->actionEstadisticas, spacer);
 
     QFile file(":/estilos/estilo.qss"); // Ruta al archivo en el recurso
     if (file.open(QFile::ReadOnly)) {
@@ -81,6 +82,21 @@ MainWindow::MainWindow(User *user, QWidget *parent)
 
     Navigation &nav = Navigation::instance();
     listaPreguntas = nav.problems();
+    estadosPreguntas.clear();
+    estadosPreguntas.resize(listaPreguntas.size());
+    preguntasRespondidas.clear();
+
+    for(int i = 0; i < listaPreguntas.size(); i++){
+        const auto &ans = listaPreguntas[i].answers();
+        int idxCorrecta = -1;
+        for(int j = 0; j < ans.size(); j++){
+            if(ans[j].validity()){
+                idxCorrecta = j;
+                break;
+            }
+        }
+        estadosPreguntas[i].correcta = idxCorrecta;
+    }
 
     if (!listaPreguntas.isEmpty()) {
         preguntaActual = 0;
@@ -115,6 +131,7 @@ MainWindow::MainWindow(User *user, QWidget *parent)
 
     connect(ui->actionZoom_In, &QAction::triggered, this, &MainWindow::zoomIn);
     connect(ui->actionZoom_Out, &QAction::triggered, this, &MainWindow::zoomOut);
+    connect(ui->actionMover_Regla, &QAction::triggered, this, &MainWindow::moverRegla);
 
     // Desactivadas hasta que se selecciona algo
     ui->actionRotar->setEnabled(false);
@@ -130,6 +147,7 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     connect(ui->actionCerrar_Sesion, &QAction::triggered,this,&MainWindow::cerrarSesion);
     connect(ui->actionResetear, &QAction::triggered, this, &MainWindow::reset);
     connect(ui->actionTexto, &QAction::triggered, this, &MainWindow::texto);
+    connect(ui->actionEstadisticas, &QAction::triggered, this, &MainWindow::estadisticas);
 
     connect(ui->sliderGrosor2, &QSlider::valueChanged, this, [=](int value){
         grosorLinea = value;
@@ -224,49 +242,43 @@ void MainWindow::applyZoom(double factor){
 void MainWindow::actualizarAcciones(){
     bool hay_seleccion = !scene->selectedItems().isEmpty();
     ui->actionRotar->setEnabled(hay_seleccion);
+    // Obtenemos la lista una sola vez para que sea estable
+    QList<QGraphicsItem*> seleccion = scene->selectedItems();
 
-
-    if (hay_seleccion) {
-        QGraphicsItem* item = scene->selectedItems().first();
-        QGraphicsLineItem* linea = dynamic_cast<QGraphicsLineItem*>(item);
-        QGraphicsTextItem* texto = dynamic_cast<QGraphicsTextItem*>(item);
-
-        if (linea) {
-            lineaActual = linea;
-            ui->panelLapiz->show();
-            ui->panelTexto->hide();
-            QPen pen = linea->pen();
-            ui->sliderGrosor2->setValue(pen.widthF());
-            colorLinea = pen.color();
-            textoActual = nullptr;
-        }
-        else if (texto) {
-            textoActual = texto;
-            ui->panelLapiz->hide();
-            ui->panelTexto->show();
-
-            // Fuente actual
-            QFont font = texto->font();
-            ui->fontType->setCurrentFont(font);
-            ui->fontSize->setCurrentText(QString::number(font.pointSize()));
-
-            // Color actual
-            colorTexto = texto->defaultTextColor();
-            lineaActual = nullptr;
-        }
-        else {
-            // Si es otro tipo de item (regla, compás, etc.)
-            lineaActual = nullptr;
-            textoActual = nullptr;
-            ui->panelLapiz->hide();
-            ui->panelTexto->hide();
-        }
-    } else {
-        // NO HAY SELECCIÓN - ocultar paneles y limpiar referencias
+    if (seleccion.isEmpty()) {
         lineaActual = nullptr;
         textoActual = nullptr;
         ui->panelLapiz->hide();
         ui->panelTexto->hide();
+        ui->actionRotar_horario->setEnabled(false);
+        ui->actionRotar_antihorario->setEnabled(false);
+        return; // Salimos temprano si no hay nada
+    }
+
+    // Ahora es seguro usar seleccion.first()
+    ui->actionRotar_horario->setEnabled(true);
+    ui->actionRotar_antihorario->setEnabled(true);
+
+    QGraphicsItem* item = seleccion.first();
+
+    // Usamos qgraphicsitem_cast que es más seguro y rápido que dynamic_cast en Qt
+    QGraphicsLineItem* linea = qgraphicsitem_cast<QGraphicsLineItem*>(item);
+    QGraphicsTextItem* texto = qgraphicsitem_cast<QGraphicsTextItem*>(item);
+
+    if (linea) {
+        lineaActual = linea;
+        ui->panelLapiz->show();
+        ui->panelTexto->hide();
+        ui->sliderGrosor2->setValue(linea->pen().width());
+        colorLinea = linea->pen().color();
+    }
+    else if (texto) {
+        textoActual = texto;
+        ui->panelLapiz->hide();
+        ui->panelTexto->show();
+        ui->fontType->setCurrentFont(texto->font());
+        ui->fontSize->setCurrentText(QString::number(texto->font().pointSize()));
+        colorTexto = texto->defaultTextColor();
     }
 }
 
@@ -430,6 +442,7 @@ void MainWindow::setHerramienta(HerramientaActiva nueva)
             ponerSvg(reglaActual, 2);
             reglaActual->setPos(scene->sceneRect().center() - reglaActual->boundingRect().center());
             reglaActiva = true;
+            ui->actionMover_Regla->setEnabled(true);
         }
         else{
             scene->removeItem(reglaActual);
@@ -438,6 +451,7 @@ void MainWindow::setHerramienta(HerramientaActiva nueva)
             herramientaActual = HerramientaActiva::Ninguna;
             view->viewport()->unsetCursor();
             reglaActiva = false;
+            ui->actionMover_Regla->setEnabled(false);
         }
         break;
 
@@ -496,9 +510,12 @@ void MainWindow::ponerSvg(QGraphicsSvgItem *svgItem, double escaladoHerramienta)
 
 // -------------------- PERFIL / SESIÓN --------------------
 void MainWindow::abrirPerfil(){
-    Perfil *perfil = new Perfil(m_user);
-    perfil->show();
-    this->close();
+    Perfil ventanaPerfil(m_user, this);
+    if (ventanaPerfil.exec() == QDialog::Accepted) {
+        // Opcional: Si el usuario cambió su avatar o nombre,
+        // podrías refrescar algún label de la MainWindow aquí.
+        qDebug() << "Cambios guardados y volviendo al mapa...";
+    }
 }
 
 void MainWindow::cerrarSesion(){
@@ -694,13 +711,25 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
     return QMainWindow::eventFilter(obj, event);
 }
 
+void MainWindow::estadisticas() {
+    // Si m_user es nulo por algún error previo, evitamos el crash aquí
+    if (!m_user) {
+        QMessageBox::critical(this, "Error", "No hay un usuario cargado.");
+        return;
+    }
+
+    stats *Stats = new stats(m_user, &sesion, this);
+    Stats->setAttribute(Qt::WA_DeleteOnClose);
+    Stats->show();
+}
+
 //---------Preguntas----------
 void MainWindow::cargarPregunta(int index){
 
     if (listaPreguntas.isEmpty())return;
-    if(index<0 || index >= listaPreguntas.size()) return;
+    if(index < 0 || index >= listaPreguntas.size()) return;
 
-    reseteoPreguntas();
+
 
     const Problem &p = listaPreguntas[index];
 
@@ -710,19 +739,17 @@ void MainWindow::cargarPregunta(int index){
     ui->lPregunta->setText(p.text());
 
     const auto &a = p.answers();
+    if(a.size() < 4) return;
 
-    ui->rb1->setText(a[0].text());
-    ui->rb2->setText(a[1].text());
-    ui->rb3->setText(a[2].text());
-    ui->rb4->setText(a[3].text());
+    QRadioButton *btns[4] {ui->rb1, ui->rb2, ui->rb3,  ui->rb4};
 
-    //Guardar si es correcto o no
-    ui->rb1->setProperty("correcta", a[0].validity());
-    ui->rb2->setProperty("correcta", a[1].validity());
-    ui->rb3->setProperty("correcta", a[2].validity());
-    ui->rb4->setProperty("correcta", a[3].validity());
+    for(int i = 0; i < 4; i++){
+        btns[i]->setText(a[i].text());
+        btns[i]->setProperty("correcta", a[i].validity());
+    }
 
-    ui->rb1->setChecked(false);
+    aplicarEstadoPregunta(index);
+    /*ui->rb1->setChecked(false);
     ui->rb2->setChecked(false);
     ui->rb3->setChecked(false);
     ui->rb4->setChecked(false);
@@ -730,7 +757,7 @@ void MainWindow::cargarPregunta(int index){
     ui->rb1->setAutoExclusive(true);
     ui->rb2->setAutoExclusive(true);
     ui->rb3->setAutoExclusive(true);
-    ui->rb4->setAutoExclusive(true);
+    ui->rb4->setAutoExclusive(true);*/
 }
 
 void MainWindow::toggleDockPreguntas()
@@ -771,85 +798,129 @@ void MainWindow::toggleDockPreguntas()
 }
 
 void MainWindow::comprobarRespuestas(){
-    QRadioButton *seleccionado = nullptr;
-    preguntasRespondidas.insert(preguntaActual);
+    if(preguntaActual < 0 || preguntaActual >= listaPreguntas.size()) return;
 
-    if(ui->rb1->isChecked()) seleccionado = ui->rb1;
-    else if(ui->rb2->isChecked()) seleccionado = ui->rb2;
-    else if(ui->rb3->isChecked()) seleccionado = ui->rb3;
-    else if(ui->rb4->isChecked()) seleccionado = ui->rb4;
-
-    if(!seleccionado){
-        QMessageBox::warning(this, "Atención", "Seleccione una respuesta primero");
+    if(preguntaActual < estadosPreguntas.size() && estadosPreguntas[preguntaActual].respondida){
+        aplicarEstadoPregunta(preguntaActual);
         return;
     }
-    QRadioButton *correctaBtn = nullptr;
-    QRadioButton *btns[4] = {ui->rb1, ui->rb2, ui->rb3, ui->rb4};
 
-    for(auto *btn : btns){
-        if(btn->property("correcta").toBool()){
-            correctaBtn = btn;
+    QRadioButton *btns[4] {ui->rb1, ui->rb2, ui->rb3,  ui->rb4};
+
+    int indexSeleccion = -1;
+
+    for(int i = 0; i < 4; i++){
+        if(btns[i]->isChecked()){
+            indexSeleccion = i;
             break;
         }
     }
 
-    bool correcta = seleccionado->property("correcta").toBool();
-
-    if(correcta){
-        seleccionado->setStyleSheet("background-color : green");
-        aciertos++;
-        ui->rb1->setEnabled(false);
-        ui->rb2->setEnabled(false);
-        ui->rb3->setEnabled(false);
-        ui->rb4->setEnabled(false);
-
-    }else{
-        seleccionado->setStyleSheet("background-color : red");
-        fallos++;
-        if(correctaBtn){
-          correctaBtn->setStyleSheet("background-color : green");
-        }
-        ui->rb1->setEnabled(false);
-        ui->rb2->setEnabled(false);
-        ui->rb3->setEnabled(false);
-        ui->rb4->setEnabled(false);
+    if(indexSeleccion == -1){
+        QMessageBox::warning(this, "Atención", "Seleccione una respuesta primero");
+        return;
     }
+
+    int indexCorrecta = -1;
+
+    for(int i = 0; i < 4; i++){
+        if(btns[i]->property("correcta").toBool()){
+            indexCorrecta = i;
+            break;
+        }
+    }
+
+    const bool acierto = btns[indexSeleccion]->property("correcta").toBool();
+
+    if(estadosPreguntas.size() != listaPreguntas.size()){
+        estadosPreguntas.resize(listaPreguntas.size());
+    }
+
+    auto &st = estadosPreguntas[preguntaActual];
+
+    st.respondida = true;
+    st.seleccion = indexSeleccion;
+    st.correcta = indexCorrecta;
+    st.acierto = acierto;
+
+    preguntasRespondidas.insert(preguntaActual);
+
+    if(acierto){
+        aciertos++;
+    }else{
+        fallos++;
+    }
+
+    aplicarEstadoPregunta(preguntaActual);
+}
+
+
+void MainWindow::aplicarEstadoPregunta(int index){
+    if(index < 0 || index >= listaPreguntas.size()) return;
+
+    const QString estiloNormal = "background-color : #C7DCE8";
+    const QString estiloCorrecta = "background-color : green";
+    const QString estiloFallada = "background-color : red";
+
+    QRadioButton *btns[4] = { ui->rb1, ui->rb2, ui->rb3, ui->rb4 };
+
+    for(int i = 0; i < 4; i++){
+        btns[i]->setStyleSheet(estiloNormal);
+        btns[i]->setEnabled(true);
+
+        btns[i]->setAutoExclusive(false);
+        btns[i]->setChecked(false);
+        btns[i]->setAutoExclusive(true);
+    }
+
+    ui->pbResolverPreguntas->setEnabled(true);
+
+    if(index >= estadosPreguntas.size()) return;
+
+    const auto &st = estadosPreguntas[index];
+
+    if(!st.respondida) return;
+
+    if(st.seleccion >= 0 && st.seleccion < 4){
+        btns[st.seleccion]->setChecked(true);
+        btns[st.seleccion]->setStyleSheet(st.acierto ? estiloCorrecta : estiloFallada);
+    }
+
+    if(!st.acierto && st.correcta >= 0 && st.correcta < 4){
+        btns[st.correcta]->setStyleSheet(estiloCorrecta);
+    }
+
+    for(int i = 0; i < 4; i++){
+        btns[i]->setEnabled(false);
+    }
+
     ui->pbResolverPreguntas->setEnabled(false);
 }
 
-void MainWindow::reseteoPreguntas(){
-    bool respondida = preguntasRespondidas.contains(preguntaActual);
 
-    if(!respondida){
-        ui->rb1->setStyleSheet(" background-color: #C7DCE8");
-        ui->rb2->setStyleSheet(" background-color: #C7DCE8");
-        ui->rb3->setStyleSheet(" background-color: #C7DCE8");
-        ui->rb4->setStyleSheet(" background-color: #C7DCE8");
+void MainWindow::moverRegla() {
+    if (!reglaActual || !reglaActiva) return;
 
-        ui->rb1->setEnabled(true);
-        ui->rb2->setEnabled(true);
-        ui->rb3->setEnabled(true);
-        ui->rb4->setEnabled(true);
+    // --- VALORES A AJUSTAR (Prueba hasta que cuadre con tu mapa) ---
+    const QPointF posicionMapa(8200, 3800); // Cambia estos números (X, Y)
+    const qreal anguloVertical = -90.0;       // Cambia esto (0, 90, 180, etc.)
+    // --------------------------------------------------------------
 
-        ui->rb1->setAutoExclusive(false);
-        ui->rb2->setAutoExclusive(false);
-        ui->rb3->setAutoExclusive(false);
-        ui->rb4->setAutoExclusive(false);
+    if (!reglaApartada) {
+        // 1. Guardar estado actual (Posición y Rotación)
+        posicionOriginalRegla = reglaActual->pos();
+        rotacionOriginalRegla = reglaActual->rotation();
 
-        ui->rb1->setChecked(false);
-        ui->rb2->setChecked(false);
-        ui->rb3->setChecked(false);
-        ui->rb4->setChecked(false);
+        // 2. Mover y "poner de pie"
+        reglaActual->setRotation(anguloVertical);
+        reglaActual->setPos(posicionMapa);
 
-        ui->rb1->setAutoExclusive(true);
-        ui->rb2->setAutoExclusive(true);
-        ui->rb3->setAutoExclusive(true);
-        ui->rb4->setAutoExclusive(true);
+        reglaApartada = true;
+    } else {
+        // 3. Volver a como estaba antes
+        reglaActual->setRotation(rotacionOriginalRegla);
+        reglaActual->setPos(posicionOriginalRegla);
 
-        ui->pbResolverPreguntas->setEnabled(true);
-    }else{
-
+        reglaApartada = false;
     }
-
-
 }

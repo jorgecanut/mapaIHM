@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>718</width>
+    <width>787</width>
     <height>727</height>
    </rect>
   </property>
@@ -419,6 +419,7 @@
     <addaction name="actionTransportador"/>
     <addaction name="separator"/>
     <addaction name="actionRotar"/>
+    <addaction name="actionMover_Regla"/>
    </widget>
    <widget class="QMenu" name="menuMapa">
     <property name="title">
@@ -692,15 +693,17 @@
    <addaction name="actionTransportador"/>
    <addaction name="separator"/>
    <addaction name="actionRotar"/>
+   <addaction name="actionMover_Regla"/>
    <addaction name="separator"/>
    <addaction name="actionZoom_In"/>
    <addaction name="actionZoom_Out"/>
    <addaction name="separator"/>
    <addaction name="actionResetear"/>
    <addaction name="separator"/>
+   <addaction name="actionEstadisticas"/>
    <addaction name="actionMi_Perfil"/>
-   <addaction name="actionCerrar_Sesion"/>
    <addaction name="separator"/>
+   <addaction name="actionCerrar_Sesion"/>
   </widget>
   <action name="actionRegla">
    <property name="checkable">
@@ -868,6 +871,33 @@
    </property>
    <property name="shortcut">
     <string>L</string>
+   </property>
+  </action>
+  <action name="actionMover_Regla">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/icons/mover.png</normaloff>:/icons/icons/mover.png</iconset>
+   </property>
+   <property name="text">
+    <string>Mover Regla</string>
+   </property>
+  </action>
+  <action name="actionEstadisticas">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/icons/grafico-de-barras.png</normaloff>:/icons/icons/grafico-de-barras.png</iconset>
+   </property>
+   <property name="text">
+    <string>Estadisticas</string>
+   </property>
+   <property name="shortcut">
+    <string>E</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::TextHeuristicRole</enum>
    </property>
   </action>
  </widget>

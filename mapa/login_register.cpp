@@ -14,6 +14,7 @@ LoginRegister::LoginRegister(QWidget *parent)
     , validPassword(false)
     , validRepPassword(false)
     , validUsername(false)
+
 {
     ui->setupUi(this);
 
@@ -147,13 +148,28 @@ void LoginRegister::checkEqualPassword(){
     }
 }
 
-void LoginRegister::checkUserName(){
+void LoginRegister::checkUserName() {
     Navigation &nav = Navigation::instance();
-    if(!nav.findUser(ui->leUsuario->text())){
+    QString nombreUsuario = ui->leUsuario->text();
+
+    // 1. Primero comprobamos si el formato es correcto (6-15 caracteres, etc.)
+    bool formatoValido = Utils::checkUsuario(nombreUsuario);
+
+    if (!formatoValido) {
+        validUsername = false;
+        ui->lErrorNombreUsuario->setText("Usuario inválido (6-15 caracteres, sin espacios)");
+        ui->lErrorNombreUsuario->setVisible(true);
+        ui->leUsuario->setFocus();
+        return; // Salimos de la función si el formato ya está mal
+    }
+
+    // 2. Si el formato es correcto, comprobamos si ya existe en el sistema
+    if (!nav.findUser(nombreUsuario)) {
         validUsername = true;
         ui->lErrorNombreUsuario->setVisible(false);
-    }else{
+    } else {
         validUsername = false;
+        ui->lErrorNombreUsuario->setText("El nombre de usuario ya está en uso");
         ui->lErrorNombreUsuario->setVisible(true);
         ui->leUsuario->setFocus();
     }

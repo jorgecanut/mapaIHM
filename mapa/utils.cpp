@@ -35,3 +35,32 @@ bool Utils::checkRepPassword(const QString &repPassword, const QString &password
     }
     return true;
 }
+bool Utils::checkUsuario(const QString &usuario)
+{
+    // 1. Validar longitud entre 6 y 15
+    if (usuario.length() < 6 || usuario.length() > 15) {
+        return false;
+    }
+
+    // 2. Recorrer cada carácter para verificar las reglas
+    for (const QChar &c : usuario) {
+
+        // Verificar si es espacio (No permitido)
+        if (c.isSpace()) {
+            return false;
+        }
+
+        // Verificar si es un carácter permitido:
+        // Letra, número, guion '-' o subguion '_'
+        bool isLetterOrDigit = c.isLetterOrNumber();
+        bool isSpecialAllowed = (c == '-' || c == '_');
+
+        if (!isLetterOrDigit && !isSpecialAllowed) {
+            // Si no es ninguno de los anteriores, es un carácter inválido
+            return false;
+        }
+    }
+
+    // Si pasó todas las pruebas anteriores
+    return true;
+}
