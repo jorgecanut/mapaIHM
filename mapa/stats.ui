@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>456</width>
+    <height>371</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,26 +18,50 @@
     <item>
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>TextLabel</string>
+       <string>Estadísticas</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QCalendarWidget" name="Calendar"/>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Fecha inicio</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDateEdit" name="deFechaInicio"/>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Fecha Final</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDateEdit" name="deFechaFinal"/>
+      </item>
+     </layout>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QLabel" name="lAciertos">
         <property name="text">
-         <string>TextLabel</string>
+         <string>Aciertos:</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="lFallos">
         <property name="text">
-         <string>TextLabel</string>
+         <string>Fallos:</string>
         </property>
        </widget>
       </item>
@@ -50,7 +74,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>456</width>
      <height>21</height>
     </rect>
    </property>
