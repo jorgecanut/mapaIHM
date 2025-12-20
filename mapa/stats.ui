@@ -52,16 +52,11 @@
     <item>
      <widget class="QTableWidget" name="tableWidget">
       <property name="columnCount">
-       <number>5</number>
+       <number>4</number>
       </property>
       <column>
        <property name="text">
         <string>Fecha</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Sesiones</string>
        </property>
       </column>
       <column>

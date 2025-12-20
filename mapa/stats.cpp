@@ -37,43 +37,30 @@ stats::~stats()
 void stats::refrescarRango(const QDate &inicio, const QDate &fin){
     if(!m_user) return;
 
-    QMap<QDate, statsDia> porDia;
+    ui->tableWidget->setRowCount(0);
 
-    int totalHits = 0;
-    int totalFaults = 0;
+    const auto &hist = m_user->sessions();
 
-    for(const Session &s : m_user->sessions()){
-        const QDate d = s.timeStamp().date();
+    int row = 0;
+    for(const Session &s : hist){
+        QDate d = s.timeStamp().date();
+        if(d < inicio || d > fin) continue;
 
-        if(d < inicio) continue;
-        if(d > fin) continue;
+        int hits = s.hits();
+        int faults = s.faults();
+        int total = hits + faults;
+        double percentage = (total == 0) ? 0.0 : (100.0 * hits /total);
 
-        auto &st = porDia[d];
-        st.sesiones++;
-        st.hits += s.hits();
-        st.faults += s.faults();
+        if(total != 0){
+        ui->tableWidget->insertRow(row);
 
-        totalHits += s.hits();
-        totalFaults += s.faults();
-    }
+        ui->tableWidget->setItem(row, 0, new QTableWidgetItem(s.timeStamp().toString("dd/MM/yyyy HH:mm")));
+        ui->tableWidget->setItem(row, 1, new QTableWidgetItem(QString::number(hits)));
+        ui->tableWidget->setItem(row, 2, new QTableWidgetItem(QString::number(faults)));
+        ui->tableWidget->setItem(row, 3, new QTableWidgetItem(QString::number(percentage, 'f', 1) + " %"));
 
-    QList<QDate> fechas = porDia.keys();
-    std::sort(fechas.begin(), fechas.end(), std::greater<QDate>());
-
-    ui->tableWidget->setRowCount(fechas.size());
-
-    for(int row = 0; row < fechas.size(); row++){
-        const QDate d = fechas[row];
-        const statsDia &st = porDia[d];
-
-        int total = st.hits + st.faults;
-        double pct = (total == 0) ? 0.0 : (100 * st.hits / total);
-
-        ui->tableWidget->setItem(row, 0, new QTableWidgetItem(d.toString("dd/MM/yyyy")));
-        ui->tableWidget->setItem(row, 1, new QTableWidgetItem(QString::number(st.sesiones)));
-        ui->tableWidget->setItem(row, 2, new QTableWidgetItem(QString::number(st.hits)));
-        ui->tableWidget->setItem(row, 3, new QTableWidgetItem(QString::number(st.faults)));
-        ui->tableWidget->setItem(row, 4, new QTableWidgetItem(QString::number(pct, 'f', 1) +"%"));
+        row++;
+        }
     }
 }
 
