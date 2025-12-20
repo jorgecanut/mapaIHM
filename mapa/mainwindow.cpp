@@ -717,7 +717,6 @@ void MainWindow::estadisticas() {
     }
 
     stats *Stats = new stats(m_user, &sesion, this);
-    Stats->setAttribute(Qt::WA_DeleteOnClose);
     Stats->show();
 }
 

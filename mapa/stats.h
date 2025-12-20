@@ -21,7 +21,14 @@ private:
     User *m_user;
     Session *m_sesion;
 
-    //void mostrarStats();
+    struct statsDia{
+        int sesiones = 0;
+        int hits = 0;
+        int faults = 0;
+    };
+
+    void refrescarRango(const QDate &inicio, const QDate &fin);
+    void ajustarRango(); // fin siempre >= inicio
 };
 
 #endif // STATS_H

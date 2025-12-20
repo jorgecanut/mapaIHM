@@ -50,22 +50,36 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QLabel" name="lAciertos">
-        <property name="text">
-         <string>Aciertos:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="lFallos">
-        <property name="text">
-         <string>Fallos:</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <widget class="QTableWidget" name="tableWidget">
+      <property name="columnCount">
+       <number>5</number>
+      </property>
+      <column>
+       <property name="text">
+        <string>Fecha</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Sesiones</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Aciertos</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Fallos</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>% Acierto</string>
+       </property>
+      </column>
+     </widget>
     </item>
    </layout>
   </widget>
