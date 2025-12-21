@@ -29,6 +29,8 @@ private:
 
     void refrescarRango(const QDate &inicio, const QDate &fin);
     void ajustarRango(); // fin siempre >= inicio
+private slots:
+    void on_btnVolver_clicked();
 };
 
 #endif // STATS_H

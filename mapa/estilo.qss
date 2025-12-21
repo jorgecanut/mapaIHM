@@ -490,3 +490,112 @@ QToolBar {
     spacing: 10px; /* Espacio entre los iconos */
     padding: 5px;
 }
+/* ------------------------------------------------ */
+/* VENTANA DE ESTADÍSTICAS (stats)                  */
+/* ------------------------------------------------ */
+
+/* Título principal: "Estadísticas" */
+QLabel#label_titulo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #00A9FF; /* Azul de acento */
+    padding-top: 10px;
+    padding-bottom: 15px;
+}
+
+/* Etiquetas de fecha (Actualizado a tus nuevos IDs) */
+QLabel#labelInicio, QLabel#labelFinal {
+    font-weight: bold;
+    color: #F5F5F5; /* Blanco para legibilidad */
+    font-size: 13px;
+    margin-right: 5px;
+}
+
+/* El contenedor del selector de fecha */
+QDateEdit {
+    background-color: #3C3C3F;
+    border: 1px solid #505055;
+    border-radius: 5px;
+    padding-left: 5px;
+    color: #F0F0F0;
+}
+
+/* El botón de la derecha */
+QDateEdit::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 30px; /* Un poco más ancho para que luzca el icono */
+    border-left: 1px solid #505055;
+    background-color: #454548;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+/* AQUÍ AÑADES TU ICONO */
+QDateEdit::down-arrow {
+    image: url(:/icons/icons/calendario.png); /* Ruta a tu recurso o archivo */
+    width: 16px;  /* Ajusta el tamaño según tu imagen */
+    height: 16px;
+}
+
+/* Efecto hover para que el usuario sepa que puede clicar */
+QDateEdit::drop-down:hover {
+    background-color: #00A9FF;
+}
+/* ------------------------------------------------ */
+/* BOTÓN VOLVER (btnVolver)                         */
+/* ------------------------------------------------ */
+
+QPushButton#btnVolver {
+    background-color: #454548; /* Gris un poco más claro que el fondo */
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 25px;
+    font-size: 14px;
+    font-weight: bold;
+    min-width: 120px;
+    min-height: 35px;
+    margin-top: 10px;
+}
+
+/* Al pasar el ratón, se vuelve azul como tus botones principales */
+QPushButton#btnVolver:hover {
+    background-color: #00A9FF;
+}
+
+QPushButton#btnVolver:pressed {
+    background-color: #005A99;
+}
+
+/* ------------------------------------------------ */
+/* TABLA DE RESULTADOS                              */
+/* ------------------------------------------------ */
+
+QTableWidget {
+    background-color: #252526;
+    border: 1px solid #3F3F46;
+    gridline-color: #333333;
+    border-radius: 8px;
+    alternate-background-color: #2D2D30; /* Filas alternas para mejor lectura */
+}
+
+QHeaderView::section {
+    background-color: #333337;
+    color: #00A9FF;
+    font-weight: bold;
+    padding: 8px;
+    border: none;
+    border-bottom: 2px solid #00A9FF; /* Línea azul bajo el encabezado */
+}
+
+QTableWidget::item {
+    padding: 10px;
+}
+
+/* Estilo para cuando seleccionas una fila */
+QTableWidget::item:selected {
+    background-color: rgba(0, 169, 255, 0.2); /* Fondo azul transparente */
+    color: #FFFFFF;
+    border: 1px solid #00A9FF;
+}

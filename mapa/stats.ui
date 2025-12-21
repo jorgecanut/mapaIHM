@@ -6,17 +6,38 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>456</width>
-    <height>371</height>
+    <width>500</width>
+    <height>500</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Estadísticas de Usuario</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_main">
+    <property name="spacing">
+     <number>15</number>
+    </property>
+    <property name="leftMargin">
+     <number>20</number>
+    </property>
+    <property name="topMargin">
+     <number>20</number>
+    </property>
+    <property name="rightMargin">
+     <number>20</number>
+    </property>
+    <property name="bottomMargin">
+     <number>20</number>
+    </property>
     <item>
-     <widget class="QLabel" name="label">
+     <widget class="QLabel" name="label_titulo">
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
       <property name="text">
        <string>Estadísticas</string>
       </property>
@@ -26,11 +47,11 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <layout class="QHBoxLayout" name="horizontalLayout_fechas">
       <item>
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="labelInicio">
         <property name="text">
-         <string>Fecha inicio</string>
+         <string>Fecha inicio:</string>
         </property>
        </widget>
       </item>
@@ -38,9 +59,22 @@
        <widget class="QDateEdit" name="deFechaInicio"/>
       </item>
       <item>
-       <widget class="QLabel" name="label_3">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="labelFinal">
         <property name="text">
-         <string>Fecha Final</string>
+         <string>Fecha Final:</string>
         </property>
        </widget>
       </item>
@@ -54,6 +88,9 @@
       <property name="columnCount">
        <number>4</number>
       </property>
+      <attribute name="horizontalHeaderStretchLastSection">
+       <bool>true</bool>
+      </attribute>
       <column>
        <property name="text">
         <string>Fecha</string>
@@ -76,6 +113,36 @@
       </column>
      </widget>
     </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_boton">
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnVolver">
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>35</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Volver</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -83,8 +150,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>456</width>
-     <height>21</height>
+     <width>500</width>
+     <height>37</height>
     </rect>
    </property>
   </widget>

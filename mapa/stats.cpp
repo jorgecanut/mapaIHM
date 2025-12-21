@@ -9,12 +9,16 @@ stats::stats(User *user,Session *sesion, QWidget *parent)
 {
     ui->setupUi(this);
 
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     QDate hoy = QDate::currentDate();
     ui->deFechaInicio->setCalendarPopup(true);
     ui->deFechaFinal->setCalendarPopup(true);
 
     ui->deFechaInicio->setDate(hoy.addDays(-7));
     ui->deFechaFinal->setDate(hoy);
+
+    connect(ui->btnVolver, &QPushButton::clicked, this, &stats::on_btnVolver_clicked);
+
 
     connect(ui->deFechaInicio, &QDateEdit::dateChanged, this, [this](const QDate&){
         ajustarRango();
@@ -71,4 +75,13 @@ void stats::ajustarRango(){
     if(fin < ini){
         ui->deFechaFinal->setDate(ini);
     }
+}
+void stats::on_btnVolver_clicked()
+{
+
+    if(parentWidget()){
+        parentWidget()->show();
+    }
+
+    this->close(); // Cierra la ventana actual
 }
