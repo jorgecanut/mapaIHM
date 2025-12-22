@@ -19,7 +19,7 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     , transportadorActivo(false)
     , lineaActual(nullptr)
     , colorLinea(Qt::black)
-    , grosorLinea(2)
+    , grosorLinea(25)
     , textoActual(nullptr)
     , colorTexto(Qt::black)
     , rotacionActiva(false)
@@ -61,6 +61,8 @@ MainWindow::MainWindow(User *user, QWidget *parent)
 
     view->scale(escalado, escalado);
     view->setDragMode(QGraphicsView::ScrollHandDrag);
+
+    ui->actionRat_n->setChecked(true);
 
     ui->panelLapiz->setParent(view);
     ui->panelLapiz->move(0, 0);
@@ -156,24 +158,43 @@ MainWindow::MainWindow(User *user, QWidget *parent)
 
     connect(ui->sliderGrosor2, &QSlider::valueChanged, this, [=](int value){
         grosorLinea = value;
-        if(lineaActual){
+
+        // Actualizar el label con el valor actual
+        ui->ltamanolinea->setText(QString::number(value));
+
+        if (lineaActual) {
             QPen pen = lineaActual->pen();
             pen.setWidth(value);
             lineaActual->setPen(pen);
         }
+
+        if (arcoActual) {
+            QPen pen = arcoActual->pen();
+            pen.setWidth(value);
+            arcoActual->setPen(pen);
+        }
     });
+
 
     connect(ui->botonColor2, &QPushButton::clicked, this, [=](){
         QColor color = QColorDialog::getColor(colorLinea, this);
-        if (color.isValid()) {
-            colorLinea = color;
-            if(lineaActual){
-                QPen pen = lineaActual->pen();
-                pen.setColor(color);
-                lineaActual->setPen(pen);
-            }
+        if (!color.isValid()) return;
+
+        colorLinea = color;
+
+        if (lineaActual) {
+            QPen pen = lineaActual->pen();
+            pen.setColor(color);
+            lineaActual->setPen(pen);
+        }
+
+        if (arcoActual) {
+            QPen pen = arcoActual->pen();
+            pen.setColor(color);
+            arcoActual->setPen(pen);
         }
     });
+
     connect(ui->actionGoma, &QAction::triggered, this, &MainWindow::goma);
 
     connect(ui->cambiarColor, &QPushButton::clicked, this, [=](){
@@ -203,6 +224,9 @@ MainWindow::MainWindow(User *user, QWidget *parent)
         }
     });
 
+    connect(ui->actionRat_n, &QAction::triggered, this, [=](){
+        setHerramienta(HerramientaActiva::Ninguna);
+    });
 
     // Esto es para poder hacer shift scroll no quitar
     view->viewport()->installEventFilter(this);
@@ -253,6 +277,7 @@ void MainWindow::actualizarAcciones(){
     if (seleccion.isEmpty()) {
         lineaActual = nullptr;
         textoActual = nullptr;
+        arcoActual = nullptr;
         ui->panelLapiz->hide();
         ui->panelTexto->hide();
         ui->actionRotar->setEnabled(false);
@@ -275,6 +300,7 @@ void MainWindow::actualizarAcciones(){
         ui->panelLapiz->show();
         ui->panelTexto->hide();
         ui->sliderGrosor2->setValue(linea->pen().width());
+        ui->ltamanolinea->setText(QString::number(linea->pen().width()));
         colorLinea = linea->pen().color();
     }
     else if (texto) {
@@ -290,6 +316,7 @@ void MainWindow::actualizarAcciones(){
             ui->panelLapiz->show();
             ui->panelTexto->hide();
             ui->sliderGrosor2->setValue(elipse->pen().width());
+            ui->ltamanolinea->setText(QString::number(linea->pen().width()));
             colorLinea = elipse->pen().color();
         }
     }
@@ -447,19 +474,28 @@ void MainWindow::setHerramienta(HerramientaActiva nueva)
     ui->panelTexto->hide();
     view->viewport()->unsetCursor();
 
+    ui->actionRat_n->setChecked(false);
+    ui->actionLapiz->setChecked(false);
+    ui->actionGoma->setChecked(false);
+    ui->actionTexto->setChecked(false);
+    ui->actionCompas->setChecked(false);
+
     herramientaActual = nueva;
     switch (nueva) {
     case HerramientaActiva::Lapiz:
         ui->panelLapiz->show();
+        ui->actionLapiz->setChecked(true);
         view->viewport()->setCursor(QCursor(QPixmap(":/icons/icons/pencil.png").scaled(24,24)));
         break;
 
     case HerramientaActiva::Goma:
+        ui->actionGoma->setChecked(true);
         view->viewport()->setCursor(QCursor(QPixmap(":/icons/icons/eraser.png").scaled(24,24)));
         break;
 
     case HerramientaActiva::Texto:
         ui->panelTexto->show();
+        ui->actionTexto->setChecked(true);
         view->viewport()->setCursor(QCursor(QPixmap(":/icons/icons/text.png").scaled(24,24)));
         break;
 
@@ -483,41 +519,11 @@ void MainWindow::setHerramienta(HerramientaActiva nueva)
         break;
 
     case HerramientaActiva::Compas:
-    {
-        // Reset completo del compás
-        if (circuloGuia) {
-            scene->removeItem(circuloGuia);
-            delete circuloGuia;
-            circuloGuia = nullptr;
-        }
-
-        if (arcoActual) {
-            scene->removeItem(arcoActual);
-            delete arcoActual;
-            arcoActual = nullptr;
-        }
-
-        if (puntoMarcaCentro) {
-            scene->removeItem(puntoMarcaCentro);
-            delete puntoMarcaCentro;
-            puntoMarcaCentro = nullptr;
-        }
-
-        if (svgCompas) {
-            scene->removeItem(svgCompas);
-            delete svgCompas;
-            svgCompas = nullptr;
-        }
-
-        centroDefinido = false;
-        radioDefinido = false;
-        radioCompas = 0;
-
-        herramientaActual = HerramientaActiva::Compas;
+        ui->panelLapiz->show();
+        ui->actionCompas->setChecked(true);
         view->viewport()->setCursor(
             QCursor(QPixmap(":/icons/icons/compas-de-dibujo.png").scaled(24,24)));
         break;
-    }
 
     case HerramientaActiva::Transportador:
         if(!transportadorActivo){
@@ -538,6 +544,7 @@ void MainWindow::setHerramienta(HerramientaActiva nueva)
 
     case HerramientaActiva::Ninguna:
         view->viewport()->unsetCursor();
+        ui->actionRat_n->setChecked(true);
         break;
     }
 }
@@ -775,7 +782,6 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
 
     // COMPAS
     if (obj == view->viewport() && herramientaActual == HerramientaActiva::Compas) {
-
         // FASE 1: Definir centro (primer click)
         if (!centroDefinido) {
             if (event->type() == QEvent::MouseButtonPress) {
@@ -786,18 +792,23 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
                     // Crear marca visual del centro (punto rojo)
                     puntoMarcaCentro = new QGraphicsEllipseItem(-5, -5, 10, 10);
                     puntoMarcaCentro->setBrush(QBrush(Qt::red));
-                    puntoMarcaCentro->setPen(QPen(Qt::darkRed, 2));
+                    puntoMarcaCentro->setPen(QPen(Qt::darkRed, 30));
                     puntoMarcaCentro->setZValue(1001);
                     puntoMarcaCentro->setPos(centroCompas);
                     scene->addItem(puntoMarcaCentro);
 
                     centroDefinido = true;
+
+                    view->viewport()->setCursor(
+                        QCursor(QPixmap(":/icons/icons/compas-de-dibujo.png").scaled(24,24)));
+
                     return true;
                 }
             }
         }
-        // FASE 2: Definir radio (segundo click)
-        else if (!radioDefinido) {
+        // FASE 2 y 3: Arrastrar para definir radio y dibujar
+        else if (centroDefinido) {
+            // Iniciar arrastre (mousedown)
             if (event->type() == QEvent::MouseButtonPress) {
                 QMouseEvent *e = static_cast<QMouseEvent*>(event);
                 if (e->button() == Qt::LeftButton) {
@@ -808,23 +819,19 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
                     QLineF lineaInicial(centroCompas, puntoRadio);
                     anguloInicioCompas = lineaInicial.angle();
                     anguloAcumulado = 0;
-
-                    // Crear SVG del compás en el centro
-                    svgCompas = new QGraphicsSvgItem(":/icons/icons/compass_leg.svg");
-                    svgCompas->setScale(0.5);
-                    svgCompas->setPos(centroCompas.x() - svgCompas->boundingRect().width()/4,
-                                      centroCompas.y() - svgCompas->boundingRect().height()/4);
-                    svgCompas->setZValue(1002);
-                    scene->addItem(svgCompas);
+                    anguloAnteriorCompas = anguloInicioCompas;
 
                     radioDefinido = true;
+
+                    view->viewport()->setCursor(
+                        QCursor(QPixmap(":/icons/icons/compas-de-dibujo.png").scaled(24,24)));
+
                     return true;
                 }
             }
-        }
-        // FASE 3: Dibujar círculo siguiendo el ratón
-        else {
-            if (event->type() == QEvent::MouseMove) {
+
+            // Dibujar mientras arrastra (mousemove)
+            else if (event->type() == QEvent::MouseMove && radioDefinido) {
                 QMouseEvent *e = static_cast<QMouseEvent*>(event);
                 QPointF posRaton = view->mapToScene(e->pos());
 
@@ -867,20 +874,20 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
                     arcoActual->setFlag(QGraphicsItem::ItemIsSelectable);
                     arcoActual->setZValue(999);
                     scene->addItem(arcoActual);
-
-                    // Inicializar ángulo anterior
-                    anguloAnteriorCompas = anguloInicioCompas;
                 }
 
                 arcoActual->setPath(path);
+
+                view->viewport()->setCursor(
+                    QCursor(QPixmap(":/icons/icons/compas-de-dibujo.png").scaled(24,24)));
+
                 return true;
             }
 
-            // FASE 4: Finalizar (tercer click)
-            if (event->type() == QEvent::MouseButtonPress) {
+            // FINALIZAR al soltar el ratón (mouseup)
+            else if (event->type() == QEvent::MouseButtonRelease && radioDefinido) {
                 QMouseEvent *e = static_cast<QMouseEvent*>(event);
                 if (e->button() == Qt::LeftButton) {
-
                     // Limpiar elementos de ayuda visual
                     if (puntoMarcaCentro) {
                         scene->removeItem(puntoMarcaCentro);
@@ -894,16 +901,14 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
                         svgCompas = nullptr;
                     }
 
-                    // Desactivar herramienta
-                    herramientaActual = HerramientaActiva::Ninguna;
-                    view->viewport()->unsetCursor();
-                    ui->actionCompas->setChecked(false);
-
-                    // Resetear estado
+                    // Resetear estado para poder dibujar un nuevo círculo
                     centroDefinido = false;
                     radioDefinido = false;
                     arcoActual = nullptr;
                     anguloAcumulado = 0;
+
+                    view->viewport()->setCursor(
+                        QCursor(QPixmap(":/icons/icons/compas-de-dibujo.png").scaled(24,24)));
 
                     return true;
                 }

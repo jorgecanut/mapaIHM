@@ -26,6 +26,7 @@
         <file>icons/mover.png</file>
         <file>icons/grafico-de-barras.png</file>
         <file>icons/calendario.png</file>
+        <file>icons/cursor.png</file>
     </qresource>
     <qresource prefix="/iconos_usuarios">
         <file>oso.svg</file>

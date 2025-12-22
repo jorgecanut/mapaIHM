@@ -66,7 +66,7 @@
         <number>5</number>
        </property>
        <property name="sliderPosition">
-        <number>10</number>
+        <number>25</number>
        </property>
        <property name="orientation">
         <enum>Qt::Orientation::Horizontal</enum>
@@ -83,7 +83,7 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>35</width>
+         <width>15</width>
          <height>20</height>
         </size>
        </property>
@@ -174,12 +174,12 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>20</width>
+         <width>25</width>
          <height>0</height>
         </size>
        </property>
        <property name="text">
-        <string>8</string>
+        <string>25</string>
        </property>
       </widget>
      </item>
@@ -187,6 +187,9 @@
       <spacer name="verticalSpacer_3">
        <property name="orientation">
         <enum>Qt::Orientation::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Policy::Fixed</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -276,7 +279,7 @@
        <property name="minimumSize">
         <size>
          <width>75</width>
-         <height>0</height>
+         <height>30</height>
         </size>
        </property>
        <property name="text">
@@ -295,7 +298,7 @@
        <property name="minimumSize">
         <size>
          <width>100</width>
-         <height>0</height>
+         <height>20</height>
         </size>
        </property>
       </widget>
@@ -334,7 +337,7 @@
        <property name="minimumSize">
         <size>
          <width>100</width>
-         <height>0</height>
+         <height>20</height>
         </size>
        </property>
        <property name="currentText">
@@ -445,10 +448,13 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
+     <item row="4" column="7">
       <spacer name="verticalSpacer_2">
        <property name="orientation">
         <enum>Qt::Orientation::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Policy::Fixed</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -500,14 +506,8 @@
     <addaction name="actionMi_Perfil"/>
     <addaction name="actionCerrar_Sesion"/>
    </widget>
-   <widget class="QMenu" name="menuCuestiones">
-    <property name="title">
-     <string>Cuestiones</string>
-    </property>
-   </widget>
    <addaction name="menuMapa"/>
    <addaction name="menuHerramientas"/>
-   <addaction name="menuCuestiones"/>
    <addaction name="menuPerfil"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -748,6 +748,8 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionRat_n"/>
+   <addaction name="separator"/>
    <addaction name="actionLapiz"/>
    <addaction name="actionGoma"/>
    <addaction name="actionCompas"/>
@@ -785,6 +787,9 @@
    </property>
   </action>
   <action name="actionCompas">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="resource.qrc">
      <normaloff>:/icons/icons/compas-de-dibujo.png</normaloff>:/icons/icons/compas-de-dibujo.png</iconset>
@@ -899,6 +904,9 @@
    </property>
   </action>
   <action name="actionGoma">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="resource.qrc">
      <normaloff>:/icons/icons/eraser.png</normaloff>:/icons/icons/eraser.png</iconset>
@@ -911,6 +919,9 @@
    </property>
   </action>
   <action name="actionTexto">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="resource.qrc">
      <normaloff>:/icons/icons/text.png</normaloff>:/icons/icons/text.png</iconset>
@@ -923,6 +934,9 @@
    </property>
   </action>
   <action name="actionLapiz">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="resource.qrc">
      <normaloff>:/icons/icons/pencil.png</normaloff>:/icons/icons/pencil.png</iconset>
@@ -956,6 +970,21 @@
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::TextHeuristicRole</enum>
+   </property>
+  </action>
+  <action name="actionRat_n">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/icons/cursor.png</normaloff>:/icons/icons/cursor.png</iconset>
+   </property>
+   <property name="text">
+    <string>Ratón</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
  </widget>

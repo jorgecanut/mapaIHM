@@ -615,7 +615,7 @@ QWidget#panelTexto {
 }
 
 /* Labels */
-QLabel#lcolor, QLabel#lGrosor, QLabel#label_3, QLabel#label_4, QLabel#label_5 {
+QLabel#lcolor, QLabel#lGrosor, QLabel#label_3, QLabel#label_4, QLabel#label_5,  QLabel#ltamanolinea {
     color: #333333;
     font-size: 12pt;
     background-color: transparent;
