@@ -30,6 +30,7 @@ public:
 private slots:
     void onEmailEditingFinished();
     void addUserButton();
+    void checkAge();
 
 private:
     Ui::LoginRegister *ui;
@@ -58,6 +59,7 @@ private:
     void cambiarPag2();
     void check_login_fields();
     void check_register_fields();
+    bool validAge;
     void updateLoginAcceptEnabled();
     void updateRegisterAcceptEnabled();
     void keyPressEvent(QKeyEvent *event) override;

@@ -14,6 +14,7 @@ LoginRegister::LoginRegister(QWidget *parent)
     , validPassword(false)
     , validRepPassword(false)
     , validUsername(false)
+    , validAge(false)
 
 {
     ui->setupUi(this);
@@ -32,10 +33,11 @@ LoginRegister::LoginRegister(QWidget *parent)
     ui->lErrorNombreUsuario->setVisible(false);
     ui->lErrorUsuario_IS->setVisible(false);
     ui->lErrorContrasea_IS->setVisible(false);
+    ui->lErrorFecha->setVisible(false);
 
-    // Conecta el click de label_3 para cambiar de página
     connect(ui->label_3, &ClickableLabel::clicked, this,&LoginRegister::cambiarPag2);
     connect(ui->label_10, &ClickableLabel::clicked, this, &LoginRegister::cambiarPag1);
+    connect(ui->dateEdit, &QDateEdit::dateChanged, this, &LoginRegister::checkAge);
 
     connect(ui->checkBox_2, &QCheckBox::toggled, this, [this](bool checked) {
         if (checked) {
@@ -322,7 +324,7 @@ void LoginRegister::check_register_fields()
 void LoginRegister::updateRegisterAcceptEnabled()
 {
     // Criterio de validación estricto: TODOS deben ser válidos Y no vacíos.
-    bool allValid = validEmail && validPassword && validUsername && validRepPassword &&
+    bool allValid = validEmail && validPassword && validUsername && validRepPassword && validAge &&
                     !ui->leUsuario->text().isEmpty() &&
                     !ui->leEmail->text().isEmpty() &&
                     !ui->leContrasea->text().isEmpty() &&
@@ -386,4 +388,23 @@ void LoginRegister::resizeEvent(QResizeEvent *event)
 
     // Recalcula la posición del botón de edición
     configurarAvatar();
+}
+void LoginRegister::checkAge()
+{
+    const QDate today_date = QDate::currentDate();
+    const QDate date = ui->dateEdit->date();
+
+    // Comprobar si es mayor de 16 años
+    if (date.addYears(16) > today_date) {
+        validAge = false;
+        ui->lErrorFecha->setVisible(true);
+        // No ponemos setFocus() aquí porque se dispararía cada vez que el usuario
+        // intenta cambiar el día/mes, lo cual es molesto.
+    } else {
+        validAge = true;
+        ui->lErrorFecha->setVisible(false);
+    }
+
+    // Actualizar el botón de confirmar
+    updateRegisterAcceptEnabled();
 }

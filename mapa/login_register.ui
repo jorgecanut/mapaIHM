@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>752</width>
-    <height>660</height>
+    <width>784</width>
+    <height>702</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -982,23 +982,50 @@
            </widget>
           </item>
           <item>
-           <widget class="QDateEdit" name="dateEdit">
-            <property name="minimumSize">
-             <size>
-              <width>200</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>120</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="displayFormat">
-             <string>dd/MM/yyyy</string>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QDateEdit" name="dateEdit">
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>120</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="displayFormat">
+               <string>dd/MM/yyyy</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lErrorFecha">
+              <property name="styleSheet">
+               <string notr="true">color:red</string>
+              </property>
+              <property name="text">
+               <string>Debes ser mayor de 16 años</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_15">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
           </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_PieReg">
@@ -1109,8 +1136,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>752</width>
-     <height>20</height>
+     <width>784</width>
+     <height>37</height>
     </rect>
    </property>
   </widget>
