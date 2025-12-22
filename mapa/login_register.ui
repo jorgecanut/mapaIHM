@@ -576,8 +576,11 @@
                <height>128</height>
               </rect>
              </property>
+             <property name="textFormat">
+              <enum>Qt::TextFormat::AutoText</enum>
+             </property>
              <property name="pixmap">
-              <pixmap resource="resource.qrc">:/iconos_usuarios/zombie.svg</pixmap>
+              <pixmap resource="resource.qrc">:/iconos_usuarios/batman.svg</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -1137,7 +1140,7 @@
      <x>0</x>
      <y>0</y>
      <width>784</width>
-     <height>37</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

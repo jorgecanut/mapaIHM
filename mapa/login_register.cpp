@@ -26,6 +26,8 @@ LoginRegister::LoginRegister(QWidget *parent)
         this->setStyleSheet(styleSheet);
         file.close();
     }
+
+
     configurarAvatar();
     ui->lErrorEmail->setVisible(false);
     ui->lErrorPassword->setVisible(false);
@@ -154,7 +156,7 @@ void LoginRegister::checkUserName() {
     Navigation &nav = Navigation::instance();
     QString nombreUsuario = ui->leUsuario->text();
 
-    // 1. Primero comprobamos si el formato es correcto (6-15 caracteres, etc.)
+    //Comprobamos si el formato es correcto (6-15 caracteres, etc.)
     bool formatoValido = Utils::checkUsuario(nombreUsuario);
 
     if (!formatoValido) {
@@ -165,7 +167,7 @@ void LoginRegister::checkUserName() {
         return; // Salimos de la función si el formato ya está mal
     }
 
-    // 2. Si el formato es correcto, comprobamos si ya existe en el sistema
+    //Formato correcto, comprobamos si ya existe en el sistema
     if (!nav.findUser(nombreUsuario)) {
         validUsername = true;
         ui->lErrorNombreUsuario->setVisible(false);
@@ -187,10 +189,8 @@ void LoginRegister::user_contr_correct(){
     if(user){
             MainWindow *ventanaPrincipal = new MainWindow(user);
 
-            // 2. Mostrar la ventana principal
             ventanaPrincipal->showMaximized();
 
-            // 3. Cerrar la ventana de Login actual
             this->close();
     }else{
          ui->lErrorContrasea_IS->setVisible(true);
@@ -204,14 +204,6 @@ void LoginRegister::onEmailEditingFinished()
 {
     checkEmail();
 }
-
-
-
-
-
-// ======= Botones =======
-
-
 
 // ======= Añadir Usuario en Base de Datos =======
 void LoginRegister::addUserButton()
@@ -239,10 +231,8 @@ void LoginRegister::addUserButton()
             User *user = nav.findUser(ui->leUsuario->text());
             MainWindow *ventanaPrincipal = new MainWindow(user);
 
-            // 2. Mostrar la ventana principal
             ventanaPrincipal->showMaximized();
 
-            // 3. Cerrar la ventana de Login actual
             this->close();
         }
 
@@ -282,20 +272,16 @@ void LoginRegister::seleccionAvatar(){
 }
 void LoginRegister::cambiarPag1()
 {
-    // 1. Limpiar campos del formulario de LOGIN
     ui->leUsuario_IS->clear();
     ui->leContrasea_IS->clear();
     ui->lErrorEmail->setVisible(false);
     ui->lErrorPassword->setVisible(false);
     ui->lErrorRepPassword->setVisible(false);
     ui->lErrorNombreUsuario->setVisible(false);
-    QPixmap emptyPixmap;
-    ui->lAvatar->setPixmap(emptyPixmap);
     ui->stackedWidget->setCurrentIndex(1);
 }
 void LoginRegister::cambiarPag2()
 {
-    // 1. Limpiar campos del formulario de REGISTRO
     ui->leUsuario->clear();
     ui->leEmail->clear();
     ui->leContrasea->clear();
@@ -323,7 +309,6 @@ void LoginRegister::check_register_fields()
 }
 void LoginRegister::updateRegisterAcceptEnabled()
 {
-    // Criterio de validación estricto: TODOS deben ser válidos Y no vacíos.
     bool allValid = validEmail && validPassword && validUsername && validRepPassword && validAge &&
                     !ui->leUsuario->text().isEmpty() &&
                     !ui->leEmail->text().isEmpty() &&
@@ -364,29 +349,23 @@ void LoginRegister::configurarAvatar()
 {
     if (!ui->lAvatar || !ui->pbAvatarElegir) return;
 
-    // Según el XML que me pasaste, el avatar mide 128x128
     const int avatarSize = 128;
     const int avatarX = 5;
     const int avatarY = 5;
 
-    // AL SUBIR EL OFFSET, EL BOTÓN SE METE HACIA EL CENTRO
-    // Prueba con 45 para que esté bien encima de la imagen
     const int offset = 45;
 
-    // Calculamos la posición
+
     int newX = avatarX + avatarSize - offset;
     int newY = avatarY + avatarSize - offset;
 
-    // Mover y asegurar que esté al frente
     ui->pbAvatarElegir->move(newX, newY);
     ui->pbAvatarElegir->raise();
 }
 void LoginRegister::resizeEvent(QResizeEvent *event)
 {
-    // Llama a la implementación base para que la QMainWindow gestione sus layouts
     QMainWindow::resizeEvent(event);
 
-    // Recalcula la posición del botón de edición
     configurarAvatar();
 }
 void LoginRegister::checkAge()
@@ -398,8 +377,6 @@ void LoginRegister::checkAge()
     if (date.addYears(16) > today_date) {
         validAge = false;
         ui->lErrorFecha->setVisible(true);
-        // No ponemos setFocus() aquí porque se dispararía cada vez que el usuario
-        // intenta cambiar el día/mes, lo cual es molesto.
     } else {
         validAge = true;
         ui->lErrorFecha->setVisible(false);

@@ -83,5 +83,5 @@ void stats::on_btnVolver_clicked()
         parentWidget()->show();
     }
 
-    this->close(); // Cierra la ventana actual
+    this->close();
 }

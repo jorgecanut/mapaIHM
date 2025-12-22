@@ -37,11 +37,10 @@ MainWindow::MainWindow(User *user, QWidget *parent)
 
     QWidget *spacer = new QWidget(this);
 
-    // 2. Configurarlo para que se expanda y empuje lo que tenga a su derecha
+    // 2. Configurar para que se expanda y empuje lo que tenga a su derecha
     spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
-    // 3. Insertarlo en la toolbar JUSTO ANTES de "Mi Perfil"
-    // Esto enviará a "Mi Perfil" y a "Cerrar Sesión" al extremo derecho.
+    //Insertar en la toolbar antes de "Mi Perfil"
     ui->toolBar->insertWidget(ui->actionEstadisticas, spacer);
 
     QFile file(":/estilos/estilo.qss"); // Ruta al archivo en el recurso
@@ -566,8 +565,6 @@ void MainWindow::ponerSvg(QGraphicsSvgItem *svgItem, double escaladoHerramienta)
 void MainWindow::abrirPerfil(){
     Perfil ventanaPerfil(m_user, this);
     if (ventanaPerfil.exec() == QDialog::Accepted) {
-        // Opcional: Si el usuario cambió su avatar o nombre,
-        // podrías refrescar algún label de la MainWindow aquí.
         qDebug() << "Cambios guardados y volviendo al mapa...";
     }
 }
@@ -782,7 +779,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
 
     // COMPAS
     if (obj == view->viewport() && herramientaActual == HerramientaActiva::Compas) {
-        // FASE 1: Definir centro (primer click)
+        //Definir centro (primer click)
         if (!centroDefinido) {
             if (event->type() == QEvent::MouseButtonPress) {
                 QMouseEvent *e = static_cast<QMouseEvent*>(event);
@@ -806,9 +803,9 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
                 }
             }
         }
-        // FASE 2 y 3: Arrastrar para definir radio y dibujar
+        //Arrastrar para definir radio y dibujar
         else if (centroDefinido) {
-            // Iniciar arrastre (mousedown)
+            // Iniciar arrastre
             if (event->type() == QEvent::MouseButtonPress) {
                 QMouseEvent *e = static_cast<QMouseEvent*>(event);
                 if (e->button() == Qt::LeftButton) {
@@ -830,7 +827,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
                 }
             }
 
-            // Dibujar mientras arrastra (mousemove)
+            // Dibujar mientras arrastra
             else if (event->type() == QEvent::MouseMove && radioDefinido) {
                 QMouseEvent *e = static_cast<QMouseEvent*>(event);
                 QPointF posRaton = view->mapToScene(e->pos());
@@ -842,7 +839,6 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
                 // Calcular diferencia angular normalizada
                 qreal deltaAngulo = anguloActual - anguloAnteriorCompas;
 
-                // Normalizar para evitar saltos de 360° a 0°
                 if (deltaAngulo > 180) {
                     deltaAngulo -= 360;
                 } else if (deltaAngulo < -180) {
@@ -884,7 +880,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
                 return true;
             }
 
-            // FINALIZAR al soltar el ratón (mouseup)
+            // Finalizar al soltar el ratón
             else if (event->type() == QEvent::MouseButtonRelease && radioDefinido) {
                 QMouseEvent *e = static_cast<QMouseEvent*>(event);
                 if (e->button() == Qt::LeftButton) {
@@ -955,21 +951,12 @@ void MainWindow::cargarPregunta(int index){
     }
 
     aplicarEstadoPregunta(index);
-    /*ui->rb1->setChecked(false);
-    ui->rb2->setChecked(false);
-    ui->rb3->setChecked(false);
-    ui->rb4->setChecked(false);
-
-    ui->rb1->setAutoExclusive(true);
-    ui->rb2->setAutoExclusive(true);
-    ui->rb3->setAutoExclusive(true);
-    ui->rb4->setAutoExclusive(true);*/
 }
 
 void MainWindow::toggleDockPreguntas()
 {
     if (dockExpandido) {
-        // Colapsar
+        // Cerrar
         ui->dockWidget->setMinimumWidth(30);
         ui->dockWidget->setMaximumWidth(30);
         ui->pbTogglePreguntas->setText("⮞");
@@ -985,7 +972,7 @@ void MainWindow::toggleDockPreguntas()
         ui->pbAnterior->setVisible(false);
         ui->pbResolverPreguntas->setVisible(false);
     } else {
-        // Expandir
+        // Abrir
         ui->dockWidget->setMinimumWidth(dockWidthExpandido);
         ui->dockWidget->setMaximumWidth(dockWidthExpandido);
         ui->pbTogglePreguntas->setText("⮜");
@@ -1107,23 +1094,21 @@ void MainWindow::aplicarEstadoPregunta(int index){
 void MainWindow::moverRegla() {
     if (!reglaActual || !reglaActiva) return;
 
-    // --- VALORES A AJUSTAR (Prueba hasta que cuadre con tu mapa) ---
-    const QPointF posicionMapa(8200, 3800); // Cambia estos números (X, Y)
-    const qreal anguloVertical = -90.0;       // Cambia esto (0, 90, 180, etc.)
-    // --------------------------------------------------------------
+    const QPointF posicionMapa(8200, 3800);
+    const qreal anguloVertical = -90.0;
 
     if (!reglaApartada) {
-        // 1. Guardar estado actual (Posición y Rotación)
+        //Guardar estado actual (Posición y Rotación)
         posicionOriginalRegla = reglaActual->pos();
         rotacionOriginalRegla = reglaActual->rotation();
 
-        // 2. Mover y "poner de pie"
+        //Mover y "poner de pie"
         reglaActual->setRotation(anguloVertical);
         reglaActual->setPos(posicionMapa);
 
         reglaApartada = true;
     } else {
-        // 3. Volver a como estaba antes
+        //Volver a como estaba antes
         reglaActual->setRotation(rotacionOriginalRegla);
         reglaActual->setPos(posicionOriginalRegla);
 
