@@ -160,6 +160,10 @@ void Perfil::updateUserButton()
                    ui->leContrasea->text(),
                    ui->lAvatar->pixmap().toImage(),
                    ui->daFechaNacimiento->date());
+            const auto &historialAntiguo = m_user->sessions();
+            for(const Session &s : historialAntiguo){
+                u.addSession(s);
+            }
             nav.updateUser(u);
             *m_user = u;
             QMessageBox::information(this, "Información", "Información actualizada correctamente");

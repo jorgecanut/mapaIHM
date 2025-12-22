@@ -29,16 +29,9 @@
         <file>icons/cursor.png</file>
     </qresource>
     <qresource prefix="/iconos_usuarios">
-        <file>oso.svg</file>
-        <file>aguacate.svg</file>
         <file>batman.svg</file>
-        <file>cactus.svg</file>
-        <file>joker.svg</file>
-        <file>perezoso.svg</file>
         <file>vampiro.svg</file>
         <file>zombie.svg</file>
-        <file>arana.svg</file>
-        <file>cafe.svg</file>
     </qresource>
     <qresource prefix="/estilos">
         <file>estilo.qss</file>
