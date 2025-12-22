@@ -14,10 +14,8 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     , escalado(0.2)
     , herramientaActual(HerramientaActiva::Ninguna)
     , reglaActual(nullptr)
-    , compasActual(nullptr)
     , transportadorActual(nullptr)
     , reglaActiva(false)
-    , compasActivo(false)
     , transportadorActivo(false)
     , lineaActual(nullptr)
     , colorLinea(Qt::black)
@@ -26,6 +24,13 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     , colorTexto(Qt::black)
     , rotacionActiva(false)
     , pivotPoint(nullptr)
+    , circuloGuia(nullptr)
+    , arcoActual(nullptr)
+    , puntoMarcaCentro(nullptr)
+    , svgCompas(nullptr)
+    , centroDefinido(false)
+    , radioDefinido(false)
+    , radioCompas(0)
 
 {
     ui->setupUi(this);
@@ -58,12 +63,12 @@ MainWindow::MainWindow(User *user, QWidget *parent)
     view->setDragMode(QGraphicsView::ScrollHandDrag);
 
     ui->panelLapiz->setParent(view);
-    ui->panelLapiz->move(20, 0);
+    ui->panelLapiz->move(0, 0);
     ui->panelLapiz->raise();
     ui->panelLapiz->hide();
 
     ui->panelTexto->setParent(view);
-    ui->panelTexto->move(20, 0);
+    ui->panelTexto->move(0, 0);
     ui->panelTexto->raise();
     ui->panelTexto->hide();
 
@@ -262,6 +267,8 @@ void MainWindow::actualizarAcciones(){
     // Usamos qgraphicsitem_cast que es más seguro y rápido que dynamic_cast en Qt
     QGraphicsLineItem* linea = qgraphicsitem_cast<QGraphicsLineItem*>(item);
     QGraphicsTextItem* texto = qgraphicsitem_cast<QGraphicsTextItem*>(item);
+    QGraphicsEllipseItem* elipse = qgraphicsitem_cast<QGraphicsEllipseItem*>(item);
+    QGraphicsPathItem* path = qgraphicsitem_cast<QGraphicsPathItem*>(item);
 
     if (linea) {
         lineaActual = linea;
@@ -277,6 +284,22 @@ void MainWindow::actualizarAcciones(){
         ui->fontType->setCurrentFont(texto->font());
         ui->fontSize->setCurrentText(QString::number(texto->font().pointSize()));
         colorTexto = texto->defaultTextColor();
+    }
+    else if (elipse) {
+        if (elipse->brush().style() == Qt::NoBrush || elipse->brush().color() != Qt::transparent) {
+            ui->panelLapiz->show();
+            ui->panelTexto->hide();
+            ui->sliderGrosor2->setValue(elipse->pen().width());
+            colorLinea = elipse->pen().color();
+        }
+    }
+    else if (path) {
+        // Si es un arco del compás
+        arcoActual = path;
+        ui->panelLapiz->show();
+        ui->panelTexto->hide();
+        ui->sliderGrosor2->setValue(path->pen().width());
+        colorLinea = path->pen().color();
     }
 }
 
@@ -381,11 +404,17 @@ QPointF MainWindow::posicionRaton(){
 void MainWindow::regla() {
     setHerramienta(HerramientaActiva::Regla);
 }
+
 void MainWindow::transportador() {
     setHerramienta(HerramientaActiva::Transportador);
 }
+
 void MainWindow::compas() {
-    setHerramienta(HerramientaActiva::Compas);
+    setHerramienta(
+        herramientaActual == HerramientaActiva::Compas
+            ? HerramientaActiva::Ninguna
+            : HerramientaActiva::Compas
+        );
 }
 
 void MainWindow::lapiz() {
@@ -454,21 +483,41 @@ void MainWindow::setHerramienta(HerramientaActiva nueva)
         break;
 
     case HerramientaActiva::Compas:
-        if(!compasActivo){
-            compasActual = new QGraphicsSvgItem(":/icons/icons/compass_leg.svg");
-            ponerSvg(compasActual, 2);
-            compasActual->setPos(scene->sceneRect().center() - compasActual->boundingRect().center());
-            compasActivo = true;
+    {
+        // Reset completo del compás
+        if (circuloGuia) {
+            scene->removeItem(circuloGuia);
+            delete circuloGuia;
+            circuloGuia = nullptr;
         }
-        else{
-            scene->removeItem(compasActual);
-            delete compasActual;
-            compasActual = nullptr;
-            herramientaActual = HerramientaActiva::Ninguna;
-            view->viewport()->unsetCursor();
-            compasActivo = false;
+
+        if (arcoActual) {
+            scene->removeItem(arcoActual);
+            delete arcoActual;
+            arcoActual = nullptr;
         }
+
+        if (puntoMarcaCentro) {
+            scene->removeItem(puntoMarcaCentro);
+            delete puntoMarcaCentro;
+            puntoMarcaCentro = nullptr;
+        }
+
+        if (svgCompas) {
+            scene->removeItem(svgCompas);
+            delete svgCompas;
+            svgCompas = nullptr;
+        }
+
+        centroDefinido = false;
+        radioDefinido = false;
+        radioCompas = 0;
+
+        herramientaActual = HerramientaActiva::Compas;
+        view->viewport()->setCursor(
+            QCursor(QPixmap(":/icons/icons/compas-de-dibujo.png").scaled(24,24)));
         break;
+    }
 
     case HerramientaActiva::Transportador:
         if(!transportadorActivo){
@@ -535,9 +584,11 @@ void MainWindow::reset(){
 
     reglaActual = nullptr;
     transportadorActual = nullptr;
-    compasActual = nullptr;
     lineaActual = nullptr;
     textoActual = nullptr;
+    circuloGuia = nullptr;
+    arcoActual = nullptr;
+    centroDefinido = false;
 
     ui->panelLapiz->hide();
     ui->panelTexto->hide();
@@ -672,6 +723,22 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
                         delete punto;
                         break;
                     }
+                    else if (auto circulo = dynamic_cast<QGraphicsEllipseItem*>(item)) {
+                        if (circulo == circuloGuia) {
+                            // No borrar el círculo guía mientras estamos usando el compás
+                            continue;
+                        }
+                        scene->removeItem(circulo);
+                        delete circulo;
+                        break;
+                    }
+                    else if (auto path = dynamic_cast<QGraphicsPathItem*>(item)) {
+                        if (path == arcoActual)
+                            arcoActual = nullptr;
+                        scene->removeItem(path);
+                        delete path;
+                        break;
+                    }
                 }
             }
             return true;
@@ -706,6 +773,143 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
         }
     }
 
+    // COMPAS
+    if (obj == view->viewport() && herramientaActual == HerramientaActiva::Compas) {
+
+        // FASE 1: Definir centro (primer click)
+        if (!centroDefinido) {
+            if (event->type() == QEvent::MouseButtonPress) {
+                QMouseEvent *e = static_cast<QMouseEvent*>(event);
+                if (e->button() == Qt::LeftButton) {
+                    centroCompas = view->mapToScene(e->pos());
+
+                    // Crear marca visual del centro (punto rojo)
+                    puntoMarcaCentro = new QGraphicsEllipseItem(-5, -5, 10, 10);
+                    puntoMarcaCentro->setBrush(QBrush(Qt::red));
+                    puntoMarcaCentro->setPen(QPen(Qt::darkRed, 2));
+                    puntoMarcaCentro->setZValue(1001);
+                    puntoMarcaCentro->setPos(centroCompas);
+                    scene->addItem(puntoMarcaCentro);
+
+                    centroDefinido = true;
+                    return true;
+                }
+            }
+        }
+        // FASE 2: Definir radio (segundo click)
+        else if (!radioDefinido) {
+            if (event->type() == QEvent::MouseButtonPress) {
+                QMouseEvent *e = static_cast<QMouseEvent*>(event);
+                if (e->button() == Qt::LeftButton) {
+                    QPointF puntoRadio = view->mapToScene(e->pos());
+                    radioCompas = QLineF(centroCompas, puntoRadio).length();
+
+                    // Guardar ángulo inicial
+                    QLineF lineaInicial(centroCompas, puntoRadio);
+                    anguloInicioCompas = lineaInicial.angle();
+                    anguloAcumulado = 0;
+
+                    // Crear SVG del compás en el centro
+                    svgCompas = new QGraphicsSvgItem(":/icons/icons/compass_leg.svg");
+                    svgCompas->setScale(0.5);
+                    svgCompas->setPos(centroCompas.x() - svgCompas->boundingRect().width()/4,
+                                      centroCompas.y() - svgCompas->boundingRect().height()/4);
+                    svgCompas->setZValue(1002);
+                    scene->addItem(svgCompas);
+
+                    radioDefinido = true;
+                    return true;
+                }
+            }
+        }
+        // FASE 3: Dibujar círculo siguiendo el ratón
+        else {
+            if (event->type() == QEvent::MouseMove) {
+                QMouseEvent *e = static_cast<QMouseEvent*>(event);
+                QPointF posRaton = view->mapToScene(e->pos());
+
+                // Calcular ángulo actual desde el centro hasta el ratón
+                QLineF lineaHastaRaton(centroCompas, posRaton);
+                qreal anguloActual = lineaHastaRaton.angle();
+
+                // Calcular diferencia angular normalizada
+                qreal deltaAngulo = anguloActual - anguloAnteriorCompas;
+
+                // Normalizar para evitar saltos de 360° a 0°
+                if (deltaAngulo > 180) {
+                    deltaAngulo -= 360;
+                } else if (deltaAngulo < -180) {
+                    deltaAngulo += 360;
+                }
+
+                // Acumular el ángulo recorrido
+                anguloAcumulado += deltaAngulo;
+                anguloAnteriorCompas = anguloActual;
+
+                // Dibujar arco desde el punto inicial
+                QRectF rect(
+                    centroCompas.x() - radioCompas,
+                    centroCompas.y() - radioCompas,
+                    radioCompas * 2,
+                    radioCompas * 2
+                    );
+
+                QPainterPath path;
+                path.arcMoveTo(rect, anguloInicioCompas);
+                path.arcTo(rect, anguloInicioCompas, anguloAcumulado);
+
+                if (!arcoActual) {
+                    arcoActual = new QGraphicsPathItem();
+                    QPen pen(colorLinea, grosorLinea);
+                    pen.setCapStyle(Qt::RoundCap);
+                    arcoActual->setPen(pen);
+                    arcoActual->setFlag(QGraphicsItem::ItemIsMovable);
+                    arcoActual->setFlag(QGraphicsItem::ItemIsSelectable);
+                    arcoActual->setZValue(999);
+                    scene->addItem(arcoActual);
+
+                    // Inicializar ángulo anterior
+                    anguloAnteriorCompas = anguloInicioCompas;
+                }
+
+                arcoActual->setPath(path);
+                return true;
+            }
+
+            // FASE 4: Finalizar (tercer click)
+            if (event->type() == QEvent::MouseButtonPress) {
+                QMouseEvent *e = static_cast<QMouseEvent*>(event);
+                if (e->button() == Qt::LeftButton) {
+
+                    // Limpiar elementos de ayuda visual
+                    if (puntoMarcaCentro) {
+                        scene->removeItem(puntoMarcaCentro);
+                        delete puntoMarcaCentro;
+                        puntoMarcaCentro = nullptr;
+                    }
+
+                    if (svgCompas) {
+                        scene->removeItem(svgCompas);
+                        delete svgCompas;
+                        svgCompas = nullptr;
+                    }
+
+                    // Desactivar herramienta
+                    herramientaActual = HerramientaActiva::Ninguna;
+                    view->viewport()->unsetCursor();
+                    ui->actionCompas->setChecked(false);
+
+                    // Resetear estado
+                    centroDefinido = false;
+                    radioDefinido = false;
+                    arcoActual = nullptr;
+                    anguloAcumulado = 0;
+
+                    return true;
+                }
+            }
+        }
+    }
     return QMainWindow::eventFilter(obj, event);
 }
 

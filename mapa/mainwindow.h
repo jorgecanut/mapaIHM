@@ -80,12 +80,10 @@ private:
 
     // ---- HERRAMIENTAS ITEM ---------
     QGraphicsSvgItem *reglaActual;
-    QGraphicsSvgItem *compasActual;
     QGraphicsSvgItem *transportadorActual;
 
     qreal rotacionOriginalRegla;
     bool reglaActiva;
-    bool compasActivo;
     bool transportadorActivo;
     bool reglaApartada = false;
 
@@ -107,6 +105,19 @@ private:
     // ------- ROTACION ------
     bool rotacionActiva = false;
     QGraphicsEllipseItem* pivotPoint = nullptr;
+
+    // --------- ELIPSES ------
+    QGraphicsEllipseItem *circuloGuia;
+    QGraphicsPathItem *arcoActual;
+    QGraphicsEllipseItem *puntoMarcaCentro;
+    QGraphicsSvgItem *svgCompas;
+    bool centroDefinido;
+    bool radioDefinido;
+    QPointF centroCompas;
+    qreal radioCompas;
+    qreal anguloInicioCompas;
+    qreal anguloAnteriorCompas;
+    qreal anguloAcumulado;
 
     // ----- COSAS UTILES ------
     void setHerramienta(HerramientaActiva nueva);
